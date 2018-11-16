@@ -14,3 +14,18 @@ print(isUnique("GeeksforGeeks"))
 #This soluation is O(n^2)
 
 #let's see if we can go faster
+
+def isUnique_(string_):
+    d = {}
+    for i in string_:
+        if i in d:
+            d[i] += 1
+
+        else:
+            d[i] = 1
+    for keys,value in d.items():
+        if value > 1:
+            return False
+    return True
+
+print(isUnique_("camilo"))
