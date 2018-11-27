@@ -8,6 +8,8 @@ Hints:#51, #100
 
 
 def rotate_matrix(matrix):
+    matrix.reverse()# we frist reverse the matrix then we take its transpose
+
     m = len(matrix)
     n = len(matrix[0])
     for i in range(m):
@@ -16,21 +18,10 @@ def rotate_matrix(matrix):
             matrix[i][j] = matrix[j][i]
             matrix[j][i] = temp
 
-    #flip_it(matrix)
-#This give us the transpose of a matrix. Now we need to flip it on its image
-"""
-def flip_it(matrix):
-    row = len(matrix)-1
-    col = len(matrix[0])-1
-
-    for i in range(row):
-        for j in range(col/2):
-            matrix[i][j],matrix[ i][col - 1 - j] = matrix[ i][col - 1 - j] ,matrix[i][j]
-
-"""
-
 
 matrix = [[1,2,3],[4,5,6],[7,8,9]]
 rotate_matrix(matrix)
-#flip_it(matrix)
+#[[7, 4, 1], [8, 5, 2], [9, 6, 3]]
+
+
 print(matrix)
