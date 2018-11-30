@@ -1,3 +1,11 @@
+"""
+Check Permutation: Given two strings,write a method to decide if
+one is a permutation of the other.
+"""
+
+
+
+
 def perm_check(str_1,str_2):
     if len(str_1) != len(str_2):#If both str are diiferent lenghts return false
         return False
