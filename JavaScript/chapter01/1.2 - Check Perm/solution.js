@@ -13,6 +13,3 @@ var checkPerm = function(stringOne,  stringTwo) {
         return sortStringOne === sortStringTwo;
     }
 };
-
-//Tests 
-console.log(checkPerm('aba' , 'aab'), true); 
