@@ -19,7 +19,6 @@ var findKthToLast = function(k, head) {
 
 /* Tests */ 
 var a = new linkedList('1');
-var a = new linkedList('1');
 var b = new linkedList('2');
 var c = new linkedList('3');
 var d = new linkedList('4');
