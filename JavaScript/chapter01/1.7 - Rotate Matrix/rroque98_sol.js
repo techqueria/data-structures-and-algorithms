@@ -22,8 +22,3 @@ const rotateImage = (nestedArr) => {
 // TESTS:
 console.log(JSON.stringify(rotateImage([[1,2,3],[4,5,6]])) === JSON.stringify([[4,1],[5,2],[6,3]]));
 console.log(JSON.stringify(rotateImage([])) === JSON.stringify([]));
-
-// input: array of array
-// output: array of array rotated
-// constraits: Do it in place
-// edge cases: rotate clockwise? is this represented by an array of arrays of numbers?
