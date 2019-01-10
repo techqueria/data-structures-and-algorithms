@@ -23,8 +23,10 @@ function URLify(arr, len) {
 
 //testing
 let arr = ['M', 'r', ' ', 'J', 'o', 'h', 'n', ' ', 'S', 'm', 'i', 't', 'h', ' ', ' ', ' ', ' '];
+
 //before
 console.log(arr);
 let ans = URLify(arr, 13);
+
 //after
 console.log(ans);
