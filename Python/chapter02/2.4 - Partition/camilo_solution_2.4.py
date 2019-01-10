@@ -1,15 +1,19 @@
 """
-Delete Middle Node: Implement an algorithm to delete a node in the middle
-(i.e., any node but the first and last node, not necessarily the exact middle)
-of a singly linked list, given only access to that node.
+Partition: Write code to partition a linked list around a value x, such that all
+ nodes less than x come before all nodes greater than or equal to x. If x is
+ contained within the list, the values of x only need to be after the elements
+ less than x (see below). The partition element x can appear anywhere in the
+ "right partition"; it does not need to appear between the left and right
+ partitions.
 EXAMPLE
-lnput:the node c from the linked list a->b->c->d->e->f
-Result: nothing is returned, but the new linked list looks like a->b->d->e- >f
-Hints:#72
+Input: 3 -> 5 -> 8 -> 5 -> 10 -> 2 -> 1[partition=5] Output: 3 -> 1 -> 2 ->
+10 -> 5 -> 5 -> 8
+Hints: #3, #24
 """
+
 class Node:
     #Singly link list
-    def __init__(self,data):
+    def __init__(self,data = None):
         self.data = data
         self.next = None
 
@@ -36,9 +40,6 @@ class linklist:
 
         current.next = node #point self.head to a new node
         self.size+=1
-
-
-
 
     def lenght(self):
         #note the count doesn't start at zero
@@ -80,16 +81,33 @@ class linklist:
         prev.next = curr.next
         curr = None
 
-    def Delete_Middle_Node(self):
-        counter = 1
-        curr = self.head
-        goal = (self.size//2)# floor division
+    def merge_link(self,NodesA,NodesB):
+
+        while NodesA is not None:
+             Nodec = Node()
+
+
+    def partition(self,num):
+
+        curr= self.head
         while curr is not None:
-            if counter == goal:
-                self.remove_node(curr.data)
-                return
-            counter+=1
-            curr = curr.next
+            if(curr.data > num):
+                smallNodes = self.push(curr.data)
+                curr = curr.next
+            else:
+                lagreNodes = self.(curr.data)
+                curr = curr.next
+
+
+
+
+
+
+
+
+
+
+
 
 
 
