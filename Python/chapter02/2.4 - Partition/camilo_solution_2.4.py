@@ -81,30 +81,23 @@ class linklist:
         prev.next = curr.next
         curr = None
 
-    def merge_link(self,NodesA,NodesB):
-
-        while NodesA is not None:
-             Nodec = Node()
-
-
     def partition(self,num):
-
+        #llist_A and llist_b to be continers
+        llist_A = linklist()
+        llist_B = linklist()
+        head_A = llist_A.head
+        head_B = llist_B.head
         curr= self.head
+        # Idea: Make two seperate llink and smash them together
         while curr is not None:
-            if(curr.data > num):
-                smallNodes = self.push(curr.data)
-                curr = curr.next
+            if curr.data <= num:
+                llist_A.push(curr.data)
             else:
-                lagreNodes = self.(curr.data)
-                curr = curr.next
-
-
-
-
-
-
-
-
+                llist_B.push(curr.data)
+        while head_B is not None:
+            llist_A.push(head_B.data)
+            head_B = head_B.next
+        llist_A.printList()
 
 
 
@@ -115,15 +108,15 @@ class linklist:
 
 
 llist = linklist()
-llist.push(1)
-llist.push(2)
 llist.push(3)
-llist.push(4)
 llist.push(5)
-llist.push(6)
+llist.push(8)
+llist.push(5)
+llist.push(10)
+llist.push(2)
+llist.push(1)
 llist.printList()
 llist.lenght()
+llist.partition(5)
 
-llist.Delete_Middle_Node()# 3 should be removed
-llist.printList()
 llist.lenght()
