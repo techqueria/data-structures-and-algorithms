@@ -83,21 +83,36 @@ class linklist:
 
     def partition(self,num):
         #llist_A and llist_b to be continers
-        llist_A = linklist()
-        llist_B = linklist()
-        head_A = llist_A.head
-        head_B = llist_B.head
-        curr= self.head
+        list_A = linklist()
+        list_B = linklist()
+        curr = self.head
         # Idea: Make two seperate llink and smash them together
         while curr is not None:
             if curr.data <= num:
-                llist_A.push(curr.data)
-            else:
-                llist_B.push(curr.data)
-        while head_B is not None:
-            llist_A.push(head_B.data)
-            head_B = head_B.next
-        llist_A.printList()
+                list_A.push(curr.data)
+            elif curr.data > num:
+                list_B.push(curr.data)
+            curr = curr.next
+        list_A.printList()
+        list_B.printList()
+
+        #Go through all of A the point the end of A to the begining of B
+        self.head = list_A.head
+        head_A = list_A.head
+        while head_A:
+            if head_A.next is not None:
+                head_A = head_A.next
+
+            head_A.next = list_B.head
+            head_A = head_A.next
+
+
+
+
+
+
+
+
 
 
 
@@ -118,5 +133,4 @@ llist.push(1)
 llist.printList()
 llist.lenght()
 llist.partition(5)
-
-llist.lenght()
+llist.printList()
