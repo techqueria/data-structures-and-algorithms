@@ -87,6 +87,7 @@ class linklist:
         list_B = linklist()
         curr = self.head
         # Idea: Make two seperate llink and smash them together
+
         while curr is not None:
             if curr.data <= num:
                 list_A.push(curr.data)
@@ -97,14 +98,12 @@ class linklist:
         list_B.printList()
 
         #Go through all of A the point the end of A to the begining of B
+
         self.head = list_A.head
         head_A = list_A.head
-        while head_A:
-            if head_A.next is not None:
-                head_A = head_A.next
-
-            head_A.next = list_B.head
+        while head_A.next:
             head_A = head_A.next
+        head_A.next = list_B.head
 
 
 
