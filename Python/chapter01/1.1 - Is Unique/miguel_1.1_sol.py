@@ -9,6 +9,7 @@ If the string is empty, then raise a ValueError exception
 If the input is NOT a string, then raise a TypeError exception
 """
 import unittest
+from typing import Callable
 
 
 def _validate_input_str(input_str: str) -> None:
@@ -72,7 +73,7 @@ def is_unique_no_additional_data_structures(input_str):
 
 
 class TestIsUniqueFunction(unittest.TestCase):
-    def _run_tests(self, f: callable([[str], None])) -> None:
+    def _run_tests(self, f: Callable[[str], None]) -> None:
         for case in ["techqueria", "bobby", "california"]:
             self.assertFalse(f(case), msg=case)
         for case in ["tacos", "swag", "orbit", "e"]:
