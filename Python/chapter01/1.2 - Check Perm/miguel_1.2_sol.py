@@ -28,16 +28,12 @@ def check_permutation(s1: str, s2: str) -> bool:
     :param s2: string of size m
     :return: True if s1 is a permutation of s2, False otherwise
     """
-    # build histogram of seen characters in s1
+    # precondition for a permutation, must be same length
+    if len(s1) != len(s2):
+        return False
+    # build histogram of seen characters in s1 and s2
     # using histogram because string could have repeated characters
     freqs_s1 = collections.Counter(s1)
-
-    # check if s2 characters exist in s1
-    for c in s2:
-        # if character in s2 not in s1, then this is not a permutation
-        if c not in freqs_s1:
-            return False
-
     freqs_s2 = collections.Counter(s2)
     # compare frequencies of characters for s1 and s2
     for key, val in freqs_s1.items():
