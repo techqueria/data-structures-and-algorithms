@@ -4,6 +4,7 @@ Python version 3.7.0
 Given two strings, write a method to decide if one is a permutation of the other.
 """
 import unittest
+import collections
 from typing import Callable
 
 
@@ -27,30 +28,18 @@ def check_permutation(s1: str, s2: str) -> bool:
     :param s2: string of size m
     :return: True if s1 is a permutation of s2, False otherwise
     """
-    # permutations must be of equal length, one-to-one
-    if len(s1) != len(s2):
-        return False
-    freqs_s1 = {}
     # build histogram of seen characters in s1
     # using histogram because string could have repeated characters
-    for c in s1:
-        if c not in freqs_s1:
-            freqs_s1[c] = 1
-            continue
-        freqs_s1[c] += 1
+    freqs_s1 = collections.Counter(s1)
 
-    freqs_s2 = {}
+    # check if s2 characters exist in s1
     for c in s2:
         # if character in s2 not in s1, then this is not a permutation
         if c not in freqs_s1:
             return False
-        # otherwise, populate as normal
-        if c not in freqs_s2:
-            freqs_s2[c] = 1
-            continue
-        freqs_s2[c] += 1
 
-    # compare frequences of characters for s1 and s2
+    freqs_s2 = collections.Counter(s2)
+    # compare frequencies of characters for s1 and s2
     for key, val in freqs_s1.items():
         if val != freqs_s2[key]:
             # character counts between s1 and s2 don't match
