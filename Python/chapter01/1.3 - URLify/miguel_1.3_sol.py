@@ -9,7 +9,6 @@ Since we are using python, no need to use true length.  I will have two function
 true_length and the other without.
 """
 import unittest
-from typing import Callable
 
 
 def urlify(s: str, true_length: int) -> str:
@@ -24,13 +23,24 @@ def urlify(s: str, true_length: int) -> str:
     """
     # Below link goes over string concat efficiency in python (I will use method 4
     # https://waymoot.org/home/python_string/
-    output = []
-    for c in s[0:true_length]:
+    # each space will make us replace it (with '%', then add 2 characters ('2', '0')
+    result = ['\x00'] * len(s)*2  # extra buffer space
+    i = 0
+    space_count = 0
+    added_chars_per_space = 2
+    for c in s:
+        if i == true_length + added_chars_per_space * space_count:
+            break
         if c == ' ':
-            output.append("%20")
+            result[i] = '%'
+            result[i+1] = '2'
+            result[i+2] = '0'
+            i += 3
+            space_count += 1
             continue
-        output.append(c)
-    return ''.join(output)
+        result[i] = c
+        i += 1
+    return ''.join(result).rstrip('\x00')
 
 
 def urlify_no_true_length(s: str) -> str:
@@ -55,7 +65,7 @@ def urlify_no_true_length(s: str) -> str:
 
 
 class TestUrlifyFunction(unittest.TestCase):
-    def _run_tests(self, f1: Callable[[str, int], str], f2: Callable[[str], str]) -> None:
+    def test_urlify(self):
         cases = [
             (("Mr John Smith     ", 13), "Mr%20John%20Smith"),
             (("Miguel Hernandez", 16), "Miguel%20Hernandez"),
@@ -65,7 +75,11 @@ class TestUrlifyFunction(unittest.TestCase):
             (("ihavenospaces", 13), "ihavenospaces"),
             (("nospacesIgnoreme", 8), "nospaces")
         ]
-        cases_no_true_length = [
+        for args, expected in cases:
+            self.assertEqual(urlify(*args), expected, msg=args)
+
+    def test_urlify_no_true_length(self):
+        cases = [
             ("Mr John Smith", "Mr%20John%20Smith"),
             ("Miguel Hernandez", "Miguel%20Hernandez"),
             (" Techqueria ", "%20Techqueria%20"),
@@ -74,13 +88,8 @@ class TestUrlifyFunction(unittest.TestCase):
             ("ihavenospaces", "ihavenospaces"),
             ("nospacesIgnoreme", "nospacesIgnoreme")
         ]
-        for args, expected in cases:
-            self.assertEqual(f1(*args), expected, msg=args)
-        for s, expected in cases_no_true_length:
-            self.assertEqual(f2(s), expected, msg=s)
-
-    def test_urlify(self):
-        self._run_tests(urlify, urlify_no_true_length)
+        for s, expected in cases:
+            self.assertEqual(urlify_no_true_length(s), expected, msg=s)
 
 
 if __name__ == '__main__':
