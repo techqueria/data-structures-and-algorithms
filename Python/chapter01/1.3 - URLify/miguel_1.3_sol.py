@@ -25,9 +25,7 @@ def urlify(s: str, true_length: int) -> str:
     # Below link goes over string concat efficiency in python (I will use method 4
     # https://waymoot.org/home/python_string/
     output = []
-    for i, c in enumerate(s):
-        if i == true_length:
-            break
+    for c in s[0:true_length]:
         if c == ' ':
             output.append("%20")
             continue
