@@ -19,15 +19,17 @@ def urlify(s: str, true_length: int) -> str:
     :param true_length: since s may have additional characters, we focus on true_length instead of actual s length
     :return: string with each space from s replaced with '%20'
     """
-    output = ""
+    # Below link goes over string concat efficiency in python (I will use method 4
+    # https://waymoot.org/home/python_string/
+    output = []
     for i, c in enumerate(s):
         if i == true_length:
             break
         if c == ' ':
-            output += "%20"
+            output.append("%20")
             continue
-        output += c
-    return output
+        output.append(c)
+    return ''.join(output)
 
 
 class TestUrlifyFunction(unittest.TestCase):
