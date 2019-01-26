@@ -24,22 +24,21 @@ def urlify(s: str, true_length: int) -> str:
     # Below link goes over string concat efficiency in python (I will use method 4
     # https://waymoot.org/home/python_string/
     # each space will make us replace it (with '%', then add 2 characters ('2', '0')
-    result = ['\x00'] * len(s)*2  # extra buffer space
-    i = 0
+    # must count spaces first to help us find out the size of the
+    result = ['\x00'] * true_length * 3
     space_count = 0
-    added_chars_per_space = 2
-    for c in s:
-        if i == true_length + added_chars_per_space * space_count:
-            break
-        if c == ' ':
-            result[i] = '%'
-            result[i+1] = '2'
-            result[i+2] = '0'
-            i += 3
+    chars_per_space = 2
+    idx = 0
+    for x in range(true_length):
+        if s[idx - space_count * chars_per_space] == ' ':
+            result[idx] = '%'
+            result[idx + 1] = '2'
+            result[idx + 2] = '0'
             space_count += 1
+            idx += 3
             continue
-        result[i] = c
-        i += 1
+        result[idx] = s[idx - space_count * chars_per_space]
+        idx += 1
     return ''.join(result).rstrip('\x00')
 
 
@@ -73,7 +72,8 @@ class TestUrlifyFunction(unittest.TestCase):
             (("a b c d e f g h", 15), "a%20b%20c%20d%20e%20f%20g%20h"),
             (("a b c d e f g h ignore this", 15), "a%20b%20c%20d%20e%20f%20g%20h"),
             (("ihavenospaces", 13), "ihavenospaces"),
-            (("nospacesIgnoreme", 8), "nospaces")
+            (("nospacesIgnoreme", 8), "nospaces"),
+            ((" ", 1), "%20")
         ]
         for args, expected in cases:
             self.assertEqual(urlify(*args), expected, msg=args)
@@ -86,7 +86,8 @@ class TestUrlifyFunction(unittest.TestCase):
             ("a b c d e f g h", "a%20b%20c%20d%20e%20f%20g%20h"),
             ("a b c d e f g h ignore this", "a%20b%20c%20d%20e%20f%20g%20h%20ignore%20this"),
             ("ihavenospaces", "ihavenospaces"),
-            ("nospacesIgnoreme", "nospacesIgnoreme")
+            ("nospacesIgnoreme", "nospacesIgnoreme"),
+            (" ", "%20")
         ]
         for s, expected in cases:
             self.assertEqual(urlify_no_true_length(s), expected, msg=s)
