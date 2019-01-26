@@ -33,16 +33,16 @@ def urlify(s: str, true_length: int) -> str:
 class TestUrlifyFunction(unittest.TestCase):
     def _run_tests(self, f: Callable[[str, int], str]) -> None:
         cases = [
-            ("Mr John Smith     ", 13, "Mr%20John%20Smith"),
-            ("Miguel Hernandez", 16, "Miguel%20Hernandez"),
-            (" Techqueria ", 11, "%20Techqueria"),
-            ("a b c d e f g h", 15, "a%20b%20c%20d%20e%20f%20g%20h"),
-            ("a b c d e f g h ignore this", 15, "a%20b%20c%20d%20e%20f%20g%20h"),
-            ("ihavenospaces", 13, "ihavenospaces"),
-            ("nospacesIgnoreme", 8, "nospaces")
+            (("Mr John Smith     ", 13), "Mr%20John%20Smith"),
+            (("Miguel Hernandez", 16), "Miguel%20Hernandez"),
+            ((" Techqueria ", 11), "%20Techqueria"),
+            (("a b c d e f g h", 15), "a%20b%20c%20d%20e%20f%20g%20h"),
+            (("a b c d e f g h ignore this", 15), "a%20b%20c%20d%20e%20f%20g%20h"),
+            (("ihavenospaces", 13), "ihavenospaces"),
+            (("nospacesIgnoreme", 8), "nospaces")
         ]
-        for case in cases:
-            self.assertEqual(f(case[0], case[1]), case[2], msg=case)
+        for args, expected in cases:
+            self.assertEqual(f(*args), expected, msg=args)
 
     def test_urlify(self):
         self._run_tests(urlify)
