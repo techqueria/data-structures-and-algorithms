@@ -1,5 +1,7 @@
 /* Implement a method to perform basic string 
-compression using the counts of repeated characters
+compression using the counts of repeated characters.
+If the compressed string length is more than original
+string length, return original string.
 Ex: 'aabcccccaaa' would become a2b1c5a3
 */
 
@@ -8,9 +10,9 @@ const stringCompression = (str) => {
     return '';
   }
   var compStr = '';
-  var count = 1;
+  var count = 0;
   var currentChar = str[0];
-  for (let i = 1; i < str.length; i++) {
+  for (let i = 0; i < str.length; i++) {
     let char = str[i];
     if (char === currentChar) {
       count++;
@@ -23,6 +25,9 @@ const stringCompression = (str) => {
       count = 1;
     }
   }
+  if (compStr.length > str.length) {
+    return str;
+  }
   return compStr;
 }
 
@@ -30,4 +35,6 @@ const stringCompression = (str) => {
 console.log(stringCompression('aabcccccaaa') === 'a2b1c5a3');
 console.log(stringCompression('cccccccc') === 'c8');
 console.log(stringCompression('') === '');
-console.log(stringCompression('AabccCccaaa') === 'A1a1b1c2C1c2a3');
+console.log(stringCompression('AabccCccaaa') === 'AabccCccaaa'); 
+// Explanation: 'A1a1b1c2C1c2a3' length is longer than original string so returns original string
+console.log(stringCompression('x') === 'x');
