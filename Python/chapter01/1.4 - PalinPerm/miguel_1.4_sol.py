@@ -7,15 +7,44 @@ rearrangement of letters.  The palindrome does not need to be limited to just di
 """
 import unittest
 import itertools as it
+import collections
+from typing import Callable
+
+
+def is_permutation_of_palindrome(word: str) -> bool:
+    """
+    Checks if a word is a palindrome by analyzing the frequencies of characters.
+    A palindrome is a word or phrase that is the same forwards and backwards.
+    When determining character frequencies, word will be put to lowercase
+    and spaces will not be counted
+    A palindrome also has the following property:
+    * all characters have an even count or all except one are even
+    Runtime: O(n)
+    Space Complexity: O(n)
+    :param word: the word we check, 'word' is a possible permutation of a palindrome
+    :return: true if word is a permutation of a palindrome, false otherwise
+    """
+    char_frequencies = collections.Counter(word.lower().replace(' ', ''))
+    num_odd_freq_chars = 0
+    num_even_freq_chars = 0
+
+    for key, val in char_frequencies.items():
+        if num_odd_freq_chars > 1:
+            return False
+        if val % 2 == 0:
+            num_even_freq_chars += 1
+        else:
+            num_odd_freq_chars += 1
+    return True
 
 
 def _is_palindrome(word: str) -> bool:
     """
-    Checks if word is a palindrome.
+    Checks if word is a palindrome by checking if the forward version is the same as the backward version.
     A palindrome is a word or phrase that is the same forwards and backwards.
     Whitespace will not be considered when determining palindrome.
     This function is case insensitive.
-    :param word: the word we check
+    :param word: the word we check, possible permutation of a palindrome
     :return: true if word is a palindrome, false otherwise
     """
     word_no_spaces = word.replace(' ', '').lower()
@@ -23,7 +52,7 @@ def _is_palindrome(word: str) -> bool:
     return word_no_spaces == reversed_word
 
 
-def is_permutation_of_palindrome(word: str) -> bool:
+def is_permutation_of_palindrome_brute_force(word: str) -> bool:
     """
     Given a string, this function will return whether the string is a permutation of a palindrome.
     A palindrome is a word or phrase that is the same forwards and backwards.
@@ -49,19 +78,23 @@ def is_permutation_of_palindrome(word: str) -> bool:
 
 
 class TestIsPermutationOfPalindromeFunction(unittest.TestCase):
-    def test_is_permutation_of_palindrome(self):
+    def _run_tests(self, f: Callable[[str], bool]) -> None:
         cases = [
             ("Tact Coa", True),
             ("car race", True),
             ("ppilffli", True),
             ("gwas", False),
-            ("sldkjflksd", False),
+            ("sldkjflks", False),
             (" ", True),
             ("", True),
             ("a", True)
         ]
         for word, expected in cases:
-            self.assertEqual(is_permutation_of_palindrome(word), expected, msg=word)
+            self.assertEqual(f(word), expected, msg=word)
+
+    def test_is_permutation_of_palindrome(self):
+        self._run_tests(is_permutation_of_palindrome_brute_force)
+        self._run_tests(is_permutation_of_palindrome)
 
     def test_is_palindrome(self):
         cases = [
@@ -72,7 +105,9 @@ class TestIsPermutationOfPalindromeFunction(unittest.TestCase):
             ("miguel", False),
             (" ", True),
             ("", True),
-            ("a", True)
+            ("a", True),
+            ("Tacoo Cat", True),
+            ("Tacooo Cat", True)
         ]
         for word, expected in cases:
             self.assertEqual(_is_palindrome(word), expected, msg=word)
