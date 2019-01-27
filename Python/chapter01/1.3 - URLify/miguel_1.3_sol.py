@@ -35,18 +35,21 @@ def urlify(s: str) -> str:
         :return: None
         """
         space_count = 0
-        chars_per_space = 2
-        idx = 0
-        for x in range(original_length):
-            if s[idx - space_count * chars_per_space] == ' ':
-                buf[idx] = '%'
-                buf[idx + 1] = '2'
-                buf[idx + 2] = '0'
+        for j in range(original_length):
+            if buf[j] == ' ':
                 space_count += 1
-                idx += 3
+
+        chars_per_space = 2
+        idx = original_length + space_count * chars_per_space
+        for i in range(original_length-1, -1, -1):
+            if buf[i] == ' ':
+                buf[idx-1] = '0'
+                buf[idx-2] = '2'
+                buf[idx-3] = '%'
+                idx -= 3
                 continue
-            buf[idx] = s[idx - space_count * chars_per_space]
-            idx += 1
+            buf[idx-1] = buf[i]
+            idx -= 1
     _challenge(buf, len(s))
     return ''.join(buf).rstrip('\x00')
 
