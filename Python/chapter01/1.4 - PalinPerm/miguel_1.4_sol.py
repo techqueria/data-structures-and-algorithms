@@ -26,14 +26,11 @@ def is_permutation_of_palindrome(word: str) -> bool:
     """
     char_frequencies = collections.Counter(word.lower().replace(' ', ''))
     num_odd_freq_chars = 0
-    num_even_freq_chars = 0
 
     for key, val in char_frequencies.items():
         if num_odd_freq_chars > 1:
             return False
-        if val % 2 == 0:
-            num_even_freq_chars += 1
-        else:
+        if val % 2 != 0:
             num_odd_freq_chars += 1
     return True
 
