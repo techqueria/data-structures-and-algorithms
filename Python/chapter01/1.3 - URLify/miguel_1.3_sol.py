@@ -9,37 +9,46 @@ Since we are using python, no need to use true length.  I will have two function
 true_length and the other without.
 """
 import unittest
+from typing import List
 
 
-def urlify(s: str, true_length: int) -> str:
+def urlify(s: str) -> str:
     """
-    Given a string and it's "true" length, this function will return a new string
+    Given a string, this function will return a new string
     that replaces all of the spaces of the input string with '%20'.
-    Precondition(s):
-    - length of s <= true_length
     :param s: the original string to 'urlify'
-    :param true_length: since s may have additional characters, we focus on true_length instead of actual s length
     :return: string with each space from s replaced with '%20'
     """
-    # Below link goes over string concat efficiency in python (I will use method 4
-    # https://waymoot.org/home/python_string/
-    # each space will make us replace it (with '%', then add 2 characters ('2', '0')
-    # must count spaces first to help us find out the size of the
-    result = ['\x00'] * true_length * 3
-    space_count = 0
-    chars_per_space = 2
-    idx = 0
-    for x in range(true_length):
-        if s[idx - space_count * chars_per_space] == ' ':
-            result[idx] = '%'
-            result[idx + 1] = '2'
-            result[idx + 2] = '0'
-            space_count += 1
-            idx += 3
-            continue
-        result[idx] = s[idx - space_count * chars_per_space]
-        idx += 1
-    return ''.join(result).rstrip('\x00')
+    buf = ['\x00'] * (len(s) * 3)
+    for i, c in enumerate(s):
+        buf[i] = c
+
+    def _challenge(buf: List[str], original_length: int) -> None:
+        """
+        Your code here. Challenge rules:
+        * You can only reference |buf| and |original_length|, not |s|.
+        * You can only allocate O(1) additional memory
+        * You need to modify |buf| in-place so that the right answer is returned.
+        * You cannot modify any part of the wrapper function.
+        :param buf: buffer containing characters
+        :param original_length: original length of string
+        :return: None
+        """
+        space_count = 0
+        chars_per_space = 2
+        idx = 0
+        for x in range(original_length):
+            if s[idx - space_count * chars_per_space] == ' ':
+                buf[idx] = '%'
+                buf[idx + 1] = '2'
+                buf[idx + 2] = '0'
+                space_count += 1
+                idx += 3
+                continue
+            buf[idx] = s[idx - space_count * chars_per_space]
+            idx += 1
+    _challenge(buf, len(s))
+    return ''.join(buf).rstrip('\x00')
 
 
 def urlify_no_true_length(s: str) -> str:
@@ -66,17 +75,16 @@ def urlify_no_true_length(s: str) -> str:
 class TestUrlifyFunction(unittest.TestCase):
     def test_urlify(self):
         cases = [
-            (("Mr John Smith     ", 13), "Mr%20John%20Smith"),
-            (("Miguel Hernandez", 16), "Miguel%20Hernandez"),
-            ((" Techqueria ", 11), "%20Techqueria"),
-            (("a b c d e f g h", 15), "a%20b%20c%20d%20e%20f%20g%20h"),
-            (("a b c d e f g h ignore this", 15), "a%20b%20c%20d%20e%20f%20g%20h"),
-            (("ihavenospaces", 13), "ihavenospaces"),
-            (("nospacesIgnoreme", 8), "nospaces"),
-            ((" ", 1), "%20")
+            ("Mr John Smith", "Mr%20John%20Smith"),
+            ("Miguel Hernandez", "Miguel%20Hernandez"),
+            (" Techqueria", "%20Techqueria"),
+            ("a b c d e f g h", "a%20b%20c%20d%20e%20f%20g%20h"),
+            ("ihavenospaces", "ihavenospaces"),
+            ("nospaces", "nospaces"),
+            (" ", "%20")
         ]
-        for args, expected in cases:
-            self.assertEqual(urlify(*args), expected, msg=args)
+        for s, expected in cases:
+            self.assertEqual(urlify(s), expected, msg=s)
 
     def test_urlify_no_true_length(self):
         cases = [
