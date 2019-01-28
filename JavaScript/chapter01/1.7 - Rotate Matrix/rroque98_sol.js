@@ -22,3 +22,4 @@ const rotateImage = (nestedArr) => {
 // TESTS:
 console.log(JSON.stringify(rotateImage([[1,2,3],[4,5,6]])) === JSON.stringify([[4,1],[5,2],[6,3]]));
 console.log(JSON.stringify(rotateImage([])) === JSON.stringify([]));
+console.log(JSON.stringify(rotateImage([[2]])) === JSON.stringify([[2]]));
