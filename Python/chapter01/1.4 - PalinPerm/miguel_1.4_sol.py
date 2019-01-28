@@ -42,6 +42,8 @@ def _is_palindrome(s: str) -> bool:
     A palindrome is a word or phrase that is the same forwards and backwards.
     Whitespace will not be considered when determining palindrome.
     This function is case insensitive.
+    Runtime:  O(n)
+    Space Complexity:  O(n)
     :param s: the string we check, possible permutation of a palindrome
     :return: true if s is a palindrome, false otherwise
     """
@@ -60,16 +62,15 @@ def is_permutation_of_palindrome_brute_force(s: str) -> bool:
     the reversed version.  So, the space will not be taken into account only when determining palindrome.
     Assuming ASCII
     Runtime is O(n!)
-    Space complexity is O(n!)
+    Space complexity is O(n)
     Given:      Expect:
     Tact Coa        True (permutations: "taco cat", "atco cta")
     :param s: the string that we want to check for perm of a palindrome
     :return: True if s is a palindrome, False otherwise.
     """
     s_no_spaces = s.replace(' ', '')
-    perms = [''.join(p) for p in it.permutations(s_no_spaces)]
-    for p in perms:
-        if _is_palindrome(p):
+    for p in it.permutations(s_no_spaces):
+        if _is_palindrome(''.join(p)):
             return True
     return False
 
