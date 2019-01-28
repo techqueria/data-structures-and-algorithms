@@ -28,10 +28,11 @@ def is_permutation_of_palindrome(s: str) -> bool:
     num_odd_freq_chars = 0
 
     for key, val in char_frequencies.items():
+        if val % 2 == 0:
+            continue
+        num_odd_freq_chars += 1
         if num_odd_freq_chars > 1:
             return False
-        if val % 2 != 0:
-            num_odd_freq_chars += 1
     return True
 
 
