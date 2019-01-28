@@ -15,15 +15,14 @@ const isPermutation = (str1, str2) =>{
   return true;
   //******** helper function ******
   function determineCharCount(string) {
-    const obj = {};
-    for (let char of string) {
-      if (obj[char] !== undefined) {
-        obj[char]++;
+    return string.split('').reduce((acc, char) => {
+      if (acc[char] !== undefined) {
+        acc[char]++;
       } else {
-        obj[char] = 1;
+        acc[char] = 1;
       }
-    }
-    return obj;
+      return acc;
+    }, {});
   }
 }
 
