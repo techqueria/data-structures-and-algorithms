@@ -15,15 +15,15 @@ def palperm(string):
         string (str): a string to check for all palindrome permutations
     '''
     table = {}
-    count = 0
     for letter in string.lower().replace(" ", ""):
         table[letter] = table.get(letter, 0) + 1
 
+    count = 0
     for key in table:
-        if count > 1:
-            return False
         if table[key] % 2 == 1:
             count += 1
+        if count > 1:
+            return False
     return True
 
 def palperm2(string):
