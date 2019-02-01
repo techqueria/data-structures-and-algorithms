@@ -1,11 +1,15 @@
 # data-and-algorithms
 Let's go over data structures and algorithms together! 
+
 We will use [Cracking the Coding Interview Book](http://www.crackingthecodinginterview.com/) as reference.
 
-Feel free to add your solutions in your channel of your choice 😃
+Feel free to add your solutions in your programming language of your choice 😃
 
-Run this script to create the folder structure for your favorite programming language
-`sh createFolders.sh  <Programming Language Name>`
+
+Run the following script to create the directory structure for your programming language 
+if one is not already created
+
+    `bash createDirectories.sh  <Programming Language>`
 
 ## Contributing
 ---
@@ -28,4 +32,5 @@ Check out [Noé Lomelí](https://github.com/noelomeli)'s video for [visual direc
 Request an invite here: [techqueria.org/slack](https://techqueria.org/communities/slack/)
 
 Follow along with the community on the `#data-and-algorithms` channel on our Slack 
+
 Make sure to also check out our `#python` `#ruby` `#javascript` and `#golang` channels while you're there
