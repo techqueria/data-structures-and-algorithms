@@ -54,7 +54,8 @@ class TestOneAwayFunction(unittest.TestCase):
             ("a", "", True),
             ("", "b", True),
             ("a", "b", True),
-            ("", "", True)
+            ("", "", True),
+            ("pale", "elap", False),
         ]
         for s1, s2, expected in cases:
             self.assertEqual(f(s1, s2), expected, msg=(s1, s2))
