@@ -161,18 +161,19 @@ def intersection(listA,ListB):
 
 # 1->2->3->4->5->6->7
 # 3->5->6->7
-llist_1 = linklist()
-llist_2 = linklist()
-llist_1.push(1)
-llist_1.push(3)
-llist_1.push(5)
-llist_1.push(7)
-llist_1.push(9)
-llist_1.push(11)
-
-llist_2.push(2)
-llist_2.push(4)
-llist_2.push(9)
-llist_2.push(11)
+class Test(TestCase):
+    def setUp():
+        llist_1 = linklist()
+        llist_2 = linklist()
+        llist_1.push(1)
+        llist_1.push(3)
+        llist_1.push(5)
+        llist_1.push(7)
+        llist_1.push(9)
+        llist_1.push(11)
+        llist_2.push(2)
+        llist_2.push(4)
+        llist_2.push(9)
+        llist_2.push(11)
 
 print(intersection(llist_1,llist_2))
