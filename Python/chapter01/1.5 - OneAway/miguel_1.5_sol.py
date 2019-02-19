@@ -43,17 +43,16 @@ def one_away(s1: str, s2: str) -> bool:
     s_short = s1 if len(s1) < len(s2) else s2
     s_long = s1 if len(s1) > len(s2) else s2
 
-    addend = 0
+    added = 0
     for i, c in enumerate(s_short):
-        if c == s_long[i + addend]:
+        if c == s_long[i + added]:
             continue
-        if i == i + addend:
-            # addend is 0, will check next char in next iteration
-            addend += 1
-            continue
-        # otherwise, addend is not 0, and we did not match characters.
-        # guaranteed at least 2 edit distance
-        return False
+        # chars didn't match, will check next char in next iteration
+        added += 1
+        if added > 1:
+            # added more than once, and we did not match characters.
+            # guaranteed at least 2 edit distance
+            return False
     return True
 
 
