@@ -6,50 +6,71 @@ const zeroMatrix = nestedArr => {
   const rowsAndColsWithZeros = checkForZeroIndex(nestedArr);
   const rowLength = nestedArr[0].length;
   const columnLength = nestedArr.length;
-  for (const rowIndex of rowsAndColsWithZeros['rows']) {
-    for (let x = 0; x < rowLength; x++) {
-      nestedArr[rowIndex][x] = 0;
+  for (const row in rowsAndColsWithZeros['rows']) {
+    for (let col = 0; col < rowLength; col++) {
+      nestedArr[row][col] = 0;
     }
   }
-  for (const colIndex of rowsAndColsWithZeros['columns']) {
-    for (let x = 0; x < columnLength; x++) {
-      nestedArr[x][colIndex] = 0;
+  for (const col in rowsAndColsWithZeros['columns']) {
+    for (let row = 0; row < columnLength; row++) {
+      nestedArr[row][col] = 0;
     }
   }
   return nestedArr;
-
-  // **** Helper functions ****
-  function checkForZeroIndex(nestArr) {
-    let zeroIndices = { rows: [], columns: [] };
-    for (let i = 0; i < nestArr.length; i++) {
-      for (let x = 0; x < nestArr[i].length; x++) {
-        if (nestArr[i][x] === 0) {
-          zeroIndices['rows'].push(i);
-          zeroIndices['columns'].push(x);
-        }
-      }
-    }
-    return zeroIndices;
-  }
 };
 
+// **** Helper function ****
+function checkForZeroIndex(nestArr) {
+  let zeroIndices = { rows: {}, columns: {} };
+  for (let row = 0; row < nestArr.length; row++) {
+    for (let col = 0; col < nestArr[row].length; col++) {
+      if (nestArr[row][col] === 0) {
+        zeroIndices['rows'][row] = true;
+        zeroIndices['columns'][col] = true;
+      }
+    }
+  }
+  return zeroIndices;
+}
+
 // **** TESTS ****:
-console.log(JSON.stringify(zeroMatrix([[]])) === JSON.stringify([[]]));
+let actual = zeroMatrix([[]]);
+let expected = [[]];
+isEqual(actual, expected);
 
-const testArr1 = [[3, 5, 6], [1, 0, 2], [4, 4, 5], [2, 2, 2]];
-const resultArr1 = [[3, 0, 6], [0, 0, 0], [4, 0, 5], [2, 0, 2]];
-console.log(
-  JSON.stringify(zeroMatrix(testArr1)) === JSON.stringify(resultArr1)
-);
+actual = zeroMatrix([[3, 5, 6], [1, 0, 2], [4, 4, 5], [2, 2, 2]]);
+expected = [[3, 0, 6], [0, 0, 0], [4, 0, 5], [2, 0, 2]];
+isEqual(actual, expected);
 
-const testArr2 = [[3, 5, 6], [1, 0, 2], [4, 4, 0], [2, 0, 2]];
-const resultArr2 = [[3, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]];
-console.log(
-  JSON.stringify(zeroMatrix(testArr2)) === JSON.stringify(resultArr2)
-);
+actual = zeroMatrix([[3, 5, 6], [1, 0, 2], [4, 4, 0], [2, 0, 2]]);
+expected = [[3, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]];
+isEqual(actual, expected);
 
-const testArr3 = [[3, 5, 6], [0, 0, 2], [4, 4, 0], [2, 0, 2]];
-const resultArr3 = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]];
-console.log(
-  JSON.stringify(zeroMatrix(testArr3)) === JSON.stringify(resultArr3)
-);
+actual = zeroMatrix([[3, 5, 6], [0, 0, 2], [4, 4, 0], [2, 0, 2]]);
+expected = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]];
+isEqual(actual, expected);
+
+function isEqual(actual, expected) {
+  console.log(JSON.stringify(actual) === JSON.stringify(expected));
+}
+
+// ****HELPER FUNCTION TESTS ****:
+actual = checkForZeroIndex([[1, 2, 0]]);
+expected = { rows: { 0: true }, columns: { 2: true } };
+testCheckForZeroIndex(actual, expected);
+
+actual = checkForZeroIndex([[0]]);
+expected = { rows: { 0: true }, columns: { 0: true } };
+testCheckForZeroIndex(actual, expected);
+
+actual = checkForZeroIndex([[1, 2, 3], [4, 0, 5], [6, 0, 8]]);
+expected = { rows: { 1: true, 2: true }, columns: { 1: true } };
+testCheckForZeroIndex(actual, expected);
+
+function testCheckForZeroIndex(actual, expected) {
+  let rows = JSON.stringify(actual.rows);
+  let cols = JSON.stringify(actual.columns);
+  let expRows = JSON.stringify(expected.rows);
+  let expCols = JSON.stringify(expected.columns);
+  console.log(rows === expRows && cols === expCols);
+}
