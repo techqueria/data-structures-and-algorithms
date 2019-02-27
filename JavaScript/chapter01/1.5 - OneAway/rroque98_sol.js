@@ -35,30 +35,38 @@ const isOneAway = (str1, str2) => {
   return true;
 };
 
-// TESTS
-console.log(isOneAway('pale', 'ple') === true); // deletion
-console.log(isOneAway('pale', 'opale') === true); // insertion in beginning
-console.log(isOneAway('pale', 'palse') === true); // insertion in middle
-console.log(isOneAway('pale', 'pales') === true); // insertion at end
-console.log(isOneAway('pale', 'bale') === true); // replacement
-console.log(isOneAway('pale', 'ae') === false); // greater than 1 deletions
-console.log(isOneAway('pale', 'ppalpe') === false); // greater than 1 insertions
-console.log(isOneAway('pale', 'bake') === false); // greater than 1 replacements
-console.log(isOneAway('pale', 'balpe') === false); // 1 insertion, 1 replacement
-console.log(isOneAway('pale', 'plo') === false); // 1 deletion, 1 replacement
-console.log(isOneAway('pale', 'ales') === false); // 1 deletion, 1 insertion
-// swap str1 with str2
-console.log(isOneAway('ple', 'pale') === true); // deletion
-console.log(isOneAway('opale', 'pale') === true); // insertion in beginning
-console.log(isOneAway('palse', 'pale') === true); // insertion in middle
-console.log(isOneAway('pales', 'pale') === true); // insertion at end
-console.log(isOneAway('bale', 'pale') === true); // replacement
-console.log(isOneAway('ae', 'pale') === false); // greater than 1 deletions
-console.log(isOneAway('ppalpe', 'pale') === false); // greater than 1 insertions
-console.log(isOneAway('bake', 'pale') === false); // greater than 1 replacements
-console.log(isOneAway('balpe', 'pale') === false); // 1 insertion, 1 replacement
-console.log(isOneAway('plo', 'pale') === false); // 1 deletion, 1 replacement
-console.log(isOneAway('ales', 'pale') === false); // 1 deletion, 1 insertion
-console.log(isOneAway('p', 'b') === true);
-console.log(isOneAway('', '') === true);
-console.log(isOneAway('p', 'p') === true);
+// ****** TESTS ******
+function runTests(cases, expected) {
+  for (const [str1, str2] of cases) {
+    console.log(
+      isOneAway(str1, str2) === expected && isOneAway(str2, str1) === expected
+    );
+  }
+}
+
+runTests(
+  [
+    ['pale', 'ple'], // deletion
+    ['pale', 'opale'], // insertion in beginning
+    ['pale', 'palse'], // insertion in middle
+    ['pale', 'pales'], // insertion at end
+    ['pale', 'bale'], // replacement
+    ['p', 'b'],
+    ['p', 'p'],
+    ['p', ''],
+    ['', '']
+  ],
+  true
+);
+
+runTests(
+  [
+    ['pale', 'ae'], // greater than 1 deletions
+    ['pale', 'ppalpe'], // greater than 1 insertions
+    ['pale', 'bake'], // greater than 1 replacements
+    ['pale', 'balpe'], // 1 insertion, 1 replacement
+    ['pale', 'plo'], // 1 deletion, 1 replacement
+    ['pale', 'ales'] // 1 deletion, 1 insertion
+  ],
+  false
+);
