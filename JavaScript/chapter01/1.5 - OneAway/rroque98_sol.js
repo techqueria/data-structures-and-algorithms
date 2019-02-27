@@ -22,15 +22,16 @@ const isOneAway = (str1, str2) => {
     return true;
   }
   const longStr = str1.length > str2.length ? str1 : str2;
-  const shortStr = str1.length < str2.length ? str1 : str2;
+  const shortStr = str1.length <= str2.length ? str1 : str2;
   for (let i = 0, x = 0; i < longStr.length && x < shortStr.length; i++, x++) {
-    if (longStr[i] !== shortStr[x]) {
-      errorCount++;
-      if (errorCount > 1) {
-        return false;
-      }
-      i++;
+    if (longStr[i] === shortStr[x]) {
+      continue;
     }
+    errorCount++;
+    if (errorCount > 1) {
+      return false;
+    }
+    i++;
   }
   return true;
 };
