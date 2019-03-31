@@ -25,7 +25,7 @@ def str_compression(s: str) -> str:
     compressed = []
     prev_char = s[0]
     count = 1
-    for c in s[1:len(s)]:
+    for c in s[1:]:
         if c == prev_char:
             count += 1
             continue
