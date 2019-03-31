@@ -29,17 +29,15 @@ def str_compression(s: str) -> str:
         if c == prev_char:
             count += 1
             continue
-        compressed.append(prev_char)
-        compressed.append(str(count)[0])
+        compressed.append('{}{}'.format(prev_char, str(count)[0]))
         prev_char = c
         count = 1
     # clean up: last character count
-    compressed.append(prev_char)
-    compressed.append(str(count)[0])
-
+    compressed.append('{}{}'.format(prev_char, str(count)[0]))
+    compressed = ''.join(compressed)
     if len(compressed) >= len(s):
         return s
-    return ''.join(compressed)
+    return compressed
 
 
 class TestStringCompressionFunction(unittest.TestCase):
