@@ -37,7 +37,9 @@ def str_compression(s: str) -> str:
     compressed.append(prev_char)
     compressed.append(str(count)[0])
 
-    return ''.join(compressed) if len(compressed) < len(s) else s
+    if len(compressed) >= len(s):
+        return s
+    return ''.join(compressed)
 
 
 class TestStringCompressionFunction(unittest.TestCase):
