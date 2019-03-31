@@ -8,7 +8,6 @@ should return the original string. You can assume the string has only uppercase 
 letters (a-z).
 """
 import unittest
-from typing import Callable
 
 
 def str_compression(s: str) -> str:
@@ -29,11 +28,11 @@ def str_compression(s: str) -> str:
         if c == prev_char:
             count += 1
             continue
-        compressed.append('{}{}'.format(prev_char, str(count)))
+        compressed.append(f'{prev_char}{count}')
         prev_char = c
         count = 1
     # clean up: last character count
-    compressed.append('{}{}'.format(prev_char, str(count)))
+    compressed.append(f'{prev_char}{count}')
     compressed = ''.join(compressed)
     if len(compressed) >= len(s):
         return s
