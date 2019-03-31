@@ -29,11 +29,11 @@ def str_compression(s: str) -> str:
         if c == prev_char:
             count += 1
             continue
-        compressed.append('{}{}'.format(prev_char, str(count)[0]))
+        compressed.append('{}{}'.format(prev_char, str(count)))
         prev_char = c
         count = 1
     # clean up: last character count
-    compressed.append('{}{}'.format(prev_char, str(count)[0]))
+    compressed.append('{}{}'.format(prev_char, str(count)))
     compressed = ''.join(compressed)
     if len(compressed) >= len(s):
         return s
@@ -48,7 +48,8 @@ class TestStringCompressionFunction(unittest.TestCase):
             ('aabbccdd', 'aabbccdd'),
             ('', ''),
             ('c', 'c'),
-            ('aaAAccCCCCC', 'a2A2c2C5')
+            ('aaAAccCCCCC', 'a2A2c2C5'),
+            ('aaaaaaaaaa', 'a10')
         ]
         for s, expected in cases:
             self.assertEqual(str_compression(s), expected, msg=(s, expected))
