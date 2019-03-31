@@ -43,7 +43,7 @@ def str_compression(s: str) -> str:
 
 
 class TestStringCompressionFunction(unittest.TestCase):
-    def _run_tests(self, f: Callable[[str], str]) -> None:
+    def test_string_compression(self):
         cases = [
             ('aabcccccaaa', 'a2b1c5a3'),
             ('abcde', 'abcde'),
@@ -53,10 +53,7 @@ class TestStringCompressionFunction(unittest.TestCase):
             ('aaAAccCCCCC', 'a2A2c2C5')
         ]
         for s, expected in cases:
-            self.assertEqual(f(s), expected, msg=(s, expected))
-
-    def test_string_compression(self):
-        self._run_tests(str_compression)
+            self.assertEqual(str_compression(s), expected, msg=(s, expected))
 
 
 if __name__ == '__main__':
