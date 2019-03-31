@@ -4,40 +4,69 @@ Given 2 strings write a function that will check if it is
 1 or 0 edits away*/
 
 const isOneAway = (str1, str2) => {
+  const diffInLen = Math.abs(str1.length - str2.length);
+  if (diffInLen > 1) {
+    return false;
+  }
+
+  let errorCount = 0;
   if (str1.length === str2.length) {
-    let errorCount = 0;
     for (let i = 0; i < str1.length; i++) {
       if (str1[i] !== str2[i]) {
         errorCount++;
-      }
-      if (errorCount > 1) {
-        return false;
+        if (errorCount > 1) {
+          return false;
+        }
       }
     }
-  } else {
-    let errorCount = 0;
-    const longestStr = findLongestStr(str1, str2);
-    let x = 0;
-    for(let i = 0; i < longestStr; i++) {
-      if (str1[i] !== str2[x]) {
-        errorCount++;
-        x++;
-      }
-      if (errorCount > 1) {
-        return false;
-      }
-      x++;
+    return true;
+  }
+  const longStr = str1.length > str2.length ? str1 : str2;
+  const shortStr = str1.length <= str2.length ? str1 : str2;
+  for (let i = 0; i + errorCount < longStr.length; i++) {
+    if (longStr[i + errorCount] === shortStr[i]) {
+      continue;
     }
-    // ***** Helper functions ********
-    function findLongestStr(str1, str2) {
-      str1 > str2 ? str1 : str2;
+    errorCount++;
+    if (errorCount > 1) {
+      return false;
     }
   }
   return true;
+};
+
+// ****** TESTS ******
+function runTests(cases, expected) {
+  for (const [str1, str2] of cases) {
+    console.log(
+      isOneAway(str1, str2) === expected && isOneAway(str2, str1) === expected
+    );
+  }
 }
 
-// TESTS
-console.log(isOneAway('pale', 'ple') === true);
-console.log(isOneAway('pales', 'pale') === true);
-console.log(isOneAway('pale', 'bale') === true);
-console.log(isOneAway('pale', 'bake') === false);
+runTests(
+  [
+    ['pale', 'ple'], // deletion
+    ['pale', 'opale'], // insertion in beginning
+    ['pale', 'palse'], // insertion in middle
+    ['pale', 'pales'], // insertion at end
+    ['pale', 'bale'], // replacement
+    ['p', 'b'],
+    ['p', 'p'],
+    ['p', ''],
+    ['', '']
+  ],
+  true
+);
+
+runTests(
+  [
+    ['pale', 'ae'], // greater than 1 deletions
+    ['pale', 'ppalpe'], // greater than 1 insertions
+    ['pale', 'bake'], // greater than 1 replacements
+    ['pale', 'balpe'], // 1 insertion, 1 replacement
+    ['pale', 'plo'], // 1 deletion, 1 replacement
+    ['pale', 'ales'] // 1 deletion, 1 insertion
+  ],
+  false
+);
