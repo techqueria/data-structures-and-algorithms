@@ -25,6 +25,33 @@ def rotate_matrix(matrix: List[List[int]]) -> List[List[int]]:
     return rotated
 
 
+def perform_full_rotation(matrix: List[List[int]], row: int, col: int, N: Optional[int] = None):
+    """
+    Helper function that performs four 90 degree rotations starting at row, col.
+    :param matrix: an NxN matrix
+    :param row: starting row
+    :param col: starting column
+    :param N: size of matrix
+    :return:
+    """
+    if N is None:
+        N = len(matrix)
+    num_rotations = 4
+    start_row = row
+    rotated_row = row
+    rotated_col = col
+    temp_new = matrix[row][col]
+    for r in range(0, num_rotations):
+        temp = temp_new
+        # compute new rotated indices
+        prev_col = rotated_col
+        rotated_col = N - 1 - rotated_row + (start_row * 2)  # offset to account for reduced N
+        rotated_row = prev_col
+        # store value at newly computed indices
+        temp_new = matrix[rotated_row][rotated_col]
+        matrix[rotated_row][rotated_col] = temp
+
+
 def rotate_matrix_in_place(
         matrix: List[List[int]],
         start_row: int = 0,
@@ -44,22 +71,10 @@ def rotate_matrix_in_place(
 
     if N is None:
         N = len(matrix)
-    num_rotations = 4
     if N == 0 or N == 1:
         return matrix
     for col in range(start_col, N - 1 + start_col):
-        rotated_row = start_row
-        rotated_col = col
-        temp_new = matrix[start_row][col]
-        for r in range(0, num_rotations):
-            temp = temp_new
-            # compute new rotated indices
-            prev_col = rotated_col
-            rotated_col = N - 1 - rotated_row + (start_row * 2)  # offset to account for reduced N
-            rotated_row = prev_col
-            # store value at newly computed indices
-            temp_new = matrix[rotated_row][rotated_col]
-            matrix[rotated_row][rotated_col] = temp
+        perform_full_rotation(matrix, start_row, col, N)
     return rotate_matrix_in_place(matrix, start_row + 1, start_col + 1, N - 2)
 
 
