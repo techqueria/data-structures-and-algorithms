@@ -5,10 +5,10 @@ Given an image represented by an NxN matrix, where each pixel in the image is 4 
 the image by 90 degrees.  Can you do this in place?
 """
 import unittest
-from typing import List
+from typing import List, Optional
 
 
-def rotate_matrix(matrix: List[List[int]], N: int) -> List[List[int]]:
+def rotate_matrix(matrix: List[List[int]]) -> List[List[int]]:
     """
     Rotate matrix will rotate the given matrix by 90 degrees.
     Runtime: O(N^2), asymptotic runtime depends on N
@@ -17,6 +17,7 @@ def rotate_matrix(matrix: List[List[int]], N: int) -> List[List[int]]:
     :param N: the size of the matrix (NxN)
     :return: a newly rotated matrix
     """
+    N = len(matrix)
     rotated = [[0 for i in range(N)] for j in range(N)]
     for i in range(N):
         for j in range(N):
@@ -24,7 +25,11 @@ def rotate_matrix(matrix: List[List[int]], N: int) -> List[List[int]]:
     return rotated
 
 
-def rotate_matrix_in_place(matrix: List[List[int]], start_row: int, start_col: int, N: int) -> List[List[int]]:
+def rotate_matrix_in_place(
+        matrix: List[List[int]],
+        start_row: int = 0,
+        start_col: int = 0,
+        N: Optional[int] = None) -> List[List[int]]:
     """
     Does the same as rotate_matrix, but in place.
     Runtime: O(N^2), asymptotic runtime depends on N. We make N^2 swaps.
@@ -36,6 +41,9 @@ def rotate_matrix_in_place(matrix: List[List[int]], start_row: int, start_col: i
     :param N: the size of the matrix (NxN)
     :return: the input matrix, but rotated
     """
+
+    if N is None:
+        N = len(matrix)
     num_rotations = 4
     if N == 0 or N == 1:
         return matrix
@@ -70,7 +78,6 @@ class TestRotateMatrixFunction(unittest.TestCase):
                     [9, 10, 11, 12],
                     [13, 14, 15, 16]
                 ],
-                4,
                 [
                     [13, 9, 5, 1],
                     [14, 10, 6, 2],
@@ -84,7 +91,6 @@ class TestRotateMatrixFunction(unittest.TestCase):
                     [4, 5, 6],
                     [7, 8, 9]
                 ],
-                3,
                 [
                     [7, 4, 1],
                     [8, 5, 2],
@@ -95,7 +101,6 @@ class TestRotateMatrixFunction(unittest.TestCase):
                 [
                     [1]
                 ],
-                1,
                 [
                     [1]
                 ]
@@ -109,7 +114,6 @@ class TestRotateMatrixFunction(unittest.TestCase):
                     [25, 26, 27, 28, 29, 30],
                     [31, 32, 33, 34, 35, 36]
                 ],
-                6,
                 [
                     [31, 25, 19, 13, 7, 1],
                     [32, 26, 20, 14, 8, 2],
@@ -127,7 +131,6 @@ class TestRotateMatrixFunction(unittest.TestCase):
                     [16, 17, 18, 19, 20],
                     [21, 22, 23, 24, 25]
                 ],
-                5,
                 [
                     [21, 16, 11, 6, 1],
                     [22, 17, 12, 7, 2],
@@ -146,7 +149,6 @@ class TestRotateMatrixFunction(unittest.TestCase):
                     [36, 37, 38, 39, 40, 41, 42],
                     [43, 44, 45, 46, 47, 48, 49]
                 ],
-                7,
                 [
                     [43, 36, 29, 22, 15, 8, 1],
                     [44, 37, 30, 23, 16, 9, 2],
@@ -160,14 +162,12 @@ class TestRotateMatrixFunction(unittest.TestCase):
         ]
 
     def test_rotate_matrix(self):
-        for matrix, N, expected in self.cases:
-            self.assertEqual(rotate_matrix(matrix, N), expected, msg=(matrix, N, expected))
+        for matrix, expected in self.cases:
+            self.assertEqual(rotate_matrix(matrix), expected, msg=(matrix, expected))
 
     def test_rotate_matrix_in_place(self):
-        start_row = 0
-        start_col = 0
-        for matrix, N, expected in self.cases:
-            self.assertEqual(rotate_matrix_in_place(matrix, start_row, start_col, N), expected, msg=(matrix, N, expected))
+        for matrix, expected in self.cases:
+            self.assertEqual(rotate_matrix_in_place(matrix), expected, msg=(matrix, expected))
 
 
 if __name__ == '__main__':
