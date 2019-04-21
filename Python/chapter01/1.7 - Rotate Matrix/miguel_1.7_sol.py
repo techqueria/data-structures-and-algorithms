@@ -47,8 +47,7 @@ def rotate_matrix_in_place(
     num_rotations = 4
     if N == 0 or N == 1:
         return matrix
-    col = start_col
-    while True:
+    for col in range(start_col, N - 1 + start_col):
         rotated_row = start_row
         rotated_col = col
         temp_new = matrix[start_row][col]
@@ -61,9 +60,6 @@ def rotate_matrix_in_place(
             # store value at newly computed indices
             temp_new = matrix[rotated_row][rotated_col]
             matrix[rotated_row][rotated_col] = temp
-        if col - start_col >= N - 2:
-            break
-        col = col + 1
     return rotate_matrix_in_place(matrix, start_row + 1, start_col + 1, N - 2)
 
 
