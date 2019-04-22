@@ -39,11 +39,10 @@ def _perform_full_rotation(matrix: List[List[int]], row: int, col: int, M: int):
     rotated_row = row
     rotated_col = col
     temp_new = matrix[row][col]
-    for r in range(0, num_rotations):
+    for _ in range(0, num_rotations):
         # compute new rotated indices
-        prev_col = rotated_col
-        rotated_col = M - 1 - rotated_row + (start_row * 2)  # offset to account for reduced N
-        rotated_row = prev_col
+        # (start_row * 2) is an offset to account for reduced M
+        rotated_col, rotated_row = M - 1 - rotated_row + (start_row * 2), rotated_col
         # store value at newly computed indices
         temp_new, matrix[rotated_row][rotated_col] = matrix[rotated_row][rotated_col], temp_new
 
@@ -56,12 +55,10 @@ def rotate_matrix_in_place(matrix: List[List[int]]) -> List[List[int]]:
     :param matrix: an NxN matrix
     :return: the input matrix, but rotated
     """
-    start_row = 0
     N = len(matrix)
-    for n in range(N, 1, -2):
+    for start_row, n in enumerate(range(N, 1, -2)):
         for col in range(start_row, n - 1 + start_row):
             _perform_full_rotation(matrix, start_row, col, n)
-        start_row += 1
     return matrix
 
 
