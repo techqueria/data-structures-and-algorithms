@@ -5,7 +5,7 @@ Given an image represented by an NxN matrix, where each pixel in the image is 4 
 the image by 90 degrees.  Can you do this in place?
 """
 import unittest
-from typing import List, Optional
+from typing import List
 
 
 def rotate_matrix(matrix: List[List[int]]) -> List[List[int]]:
@@ -48,30 +48,21 @@ def _perform_full_rotation(matrix: List[List[int]], row: int, col: int, M: int):
         temp_new, matrix[rotated_row][rotated_col] = matrix[rotated_row][rotated_col], temp_new
 
 
-def rotate_matrix_in_place(
-        matrix: List[List[int]],
-        start_row: int = 0,
-        start_col: int = 0,
-        N: Optional[int] = None) -> List[List[int]]:
+def rotate_matrix_in_place(matrix: List[List[int]]) -> List[List[int]]:
     """
     Does the same as rotate_matrix, but in place.
     Runtime: O(N^2), asymptotic runtime depends on N. We make N^2 swaps.
     Space Complexity: O(1), constant amount of temp variables that does not depend on N.
-                        Note: I am assuming that compiler will optimize the tail recursion.
     :param matrix: an NxN matrix
-    :param start_row: starting row index
-    :param start_col: starting col index
-    :param N: the size of the matrix (NxN)
     :return: the input matrix, but rotated
     """
-
-    if N is None:
-        N = len(matrix)
-    if N == 0 or N == 1:
-        return matrix
-    for col in range(start_col, N - 1 + start_col):
-        _perform_full_rotation(matrix, start_row, col, N)
-    return rotate_matrix_in_place(matrix, start_row + 1, start_col + 1, N - 2)
+    start_row = 0
+    N = len(matrix)
+    for n in range(N, 1, -2):
+        for col in range(start_row, n - 1 + start_row):
+            _perform_full_rotation(matrix, start_row, col, n)
+        start_row += 1
+    return matrix
 
 
 class TestRotateMatrixFunction(unittest.TestCase):
