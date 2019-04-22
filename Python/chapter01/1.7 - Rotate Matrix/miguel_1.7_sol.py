@@ -40,14 +40,12 @@ def _perform_full_rotation(matrix: List[List[int]], row: int, col: int, M: int):
     rotated_col = col
     temp_new = matrix[row][col]
     for r in range(0, num_rotations):
-        temp = temp_new
         # compute new rotated indices
         prev_col = rotated_col
         rotated_col = M - 1 - rotated_row + (start_row * 2)  # offset to account for reduced N
         rotated_row = prev_col
         # store value at newly computed indices
-        temp_new = matrix[rotated_row][rotated_col]
-        matrix[rotated_row][rotated_col] = temp
+        temp_new, matrix[rotated_row][rotated_col] = matrix[rotated_row][rotated_col], temp_new
 
 
 def rotate_matrix_in_place(
