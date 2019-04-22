@@ -25,17 +25,15 @@ def rotate_matrix(matrix: List[List[int]]) -> List[List[int]]:
     return rotated
 
 
-def _perform_full_rotation(matrix: List[List[int]], row: int, col: int, N: Optional[int] = None):
+def _perform_full_rotation(matrix: List[List[int]], row: int, col: int, M: int):
     """
     Helper function that performs four 90 degree rotations starting at row, col.
-    :param matrix: an NxN matrix
+    :param matrix: an MxM sub-matrix out of an NxN matrix
     :param row: starting row
     :param col: starting column
-    :param N: size of matrix
+    :param M: size of sub-matrix
     :return:
     """
-    if N is None:
-        N = len(matrix)
     num_rotations = 4
     start_row = row
     rotated_row = row
@@ -45,7 +43,7 @@ def _perform_full_rotation(matrix: List[List[int]], row: int, col: int, N: Optio
         temp = temp_new
         # compute new rotated indices
         prev_col = rotated_col
-        rotated_col = N - 1 - rotated_row + (start_row * 2)  # offset to account for reduced N
+        rotated_col = M - 1 - rotated_row + (start_row * 2)  # offset to account for reduced N
         rotated_row = prev_col
         # store value at newly computed indices
         temp_new = matrix[rotated_row][rotated_col]
