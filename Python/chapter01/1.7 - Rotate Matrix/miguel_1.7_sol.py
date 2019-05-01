@@ -28,6 +28,15 @@ def rotate_matrix(matrix: List[List[int]]) -> List[List[int]]:
 def _perform_full_rotation(matrix: List[List[int]], row: int, col: int, M: int):
     """
     Helper function that performs four 90 degree rotations starting at row, col.
+    at a particular row and column from the matrix, there will be 4 rotations.
+    visually, the algorithm looks like this:
+    [start] (4th swap with original 3rd) - - - - - - - - - - - - - - - - - - -> (1st gets swapped with start)
+                |                                                                       |
+                |                                                                       |
+                |                                                                       |
+                |                                                                       |
+    (3rd swap with original 2nd) < - - - - - - - - - - - - - - - - - - - - - -  (2nd gets swapped with original 1st)
+    this results in a full rotation in-place of a particular row and col coordinate.
     :param matrix: an MxM sub-matrix out of an NxN matrix
     :param row: starting row
     :param col: starting column
@@ -41,7 +50,7 @@ def _perform_full_rotation(matrix: List[List[int]], row: int, col: int, M: int):
     temp_new = matrix[row][col]
     for _ in range(0, num_rotations):
         # compute new rotated indices
-        # (start_row * 2) is an offset to account for reduced M
+        # (start_row * 2) is an offset to account for reduced M into sub-matrices of matrix
         rotated_col, rotated_row = M - 1 - rotated_row + (start_row * 2), rotated_col
         # store value at newly computed indices
         temp_new, matrix[rotated_row][rotated_col] = matrix[rotated_row][rotated_col], temp_new
@@ -56,8 +65,15 @@ def rotate_matrix_in_place(matrix: List[List[int]]) -> List[List[int]]:
     :return: the input matrix, but rotated
     """
     N = len(matrix)
+    # outer loop will keep reducing the matrix size 'n' by 2.
+    # For example, a 6x6 matrix contains a 4x4 sub-matrix, we reduce
+    # because at first, the values on the perimeter of the matrix will
+    # be rotated after the inner for-loop, and we want to start rotating
+    # the next sub-matrix perimeter.
     for start_row, n in enumerate(range(N, 1, -2)):
+        # rotate along the current row's columns of the current sub-matrix perimeter
         for col in range(start_row, n - 1 + start_row):
+            # performs 4 rotations for the current sub-matrix coordinate
             _perform_full_rotation(matrix, start_row, col, n)
     return matrix
 
