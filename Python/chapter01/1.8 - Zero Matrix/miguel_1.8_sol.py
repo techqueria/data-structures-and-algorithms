@@ -22,19 +22,20 @@ def zero_matrix(matrix: List[List[int]]) -> List[List[int]]:
     zeroed_rows = set()
     zeroed_cols = set()
 
-    for row in range(M):
-        for col, num in enumerate(matrix[row]):
-            if num != 0 or row in zeroed_rows or col in zeroed_cols:
+    for i, row in enumerate(matrix):
+        for j, num in enumerate(row):
+            if num != 0 or i in zeroed_rows or j in zeroed_cols:
                 continue
             # otherwise, set row to 0 by looping through columns of current row
-            for i in range(N):
-                matrix[row][i] = 0
+            for k in range(N):
+                matrix[i][k] = 0
             # set column to 0 by looping through rows of current column
-            for j in range(M):
-                matrix[j][col] = 0
+            for l in range(M):
+                matrix[l][j] = 0
             # update zeroed row and col sets
-            zeroed_cols.add(col)
-            zeroed_rows.add(row)
+            zeroed_cols.add(j)
+            zeroed_rows.add(i)
+            break
     return matrix
 
 
