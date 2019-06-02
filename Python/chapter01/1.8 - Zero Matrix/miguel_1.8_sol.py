@@ -1,7 +1,8 @@
 """
 Python version 3.7.0
 1.8 - Zero Matrix
-Write an algorithm such that if an element in an MxN matrix is 0, its entire row and column are set to 0
+Write an algorithm such that if an element in an MxN matrix is 0,
+its entire row and column are set to 0
 """
 import unittest
 from typing import List
@@ -9,10 +10,12 @@ from typing import List
 
 def zero_matrix(matrix: List[List[int]]) -> List[List[int]]:
     """
-    zero_matrix will take in an MxN matrix and when a 0 element is found, the whole column and row
-    will be set to 0. The algorithm works by first scanning for rows and columns where there is a 0
-    and store into a set.
-    Then we go through each stored row and column indices and proceed to set the rows and columns to 0.
+    zero_matrix will take in an MxN matrix and when a 0 element is found,
+    the whole column and row will be set to 0.
+    The algorithm works by first scanning for
+    rows and columns where there is a 0 and store into a set.
+    Then we go through each stored row and column indices
+    and proceed to set the rows and columns to 0.
     Runtime: O(M * N)
     Space Complexity: O(M + N)
     :param matrix: an MxN matrix.  M is the number of rows, N is the number of columns
