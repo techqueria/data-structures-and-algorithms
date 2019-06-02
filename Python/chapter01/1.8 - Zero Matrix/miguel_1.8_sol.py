@@ -10,30 +10,33 @@ from typing import List
 def zero_matrix(matrix: List[List[int]]) -> List[List[int]]:
     """
     zero_matrix will take in an MxN matrix and when a 0 element is found, the whole column and row
-    will be set to 0. The algorithm works by first scanning for coordinates where there are 0s and
-    storing those coordinates.
-    Then we go through each coordinate and set the row and column at that coordinate equal to 0.
+    will be set to 0. The algorithm works by first scanning for rows and columns where there is a 0
+    and store into a set.
+    Then we go through each stored row and column indices and proceed to set the rows and columns to 0.
     Runtime: O(M * N)
-    Space Complexity: O(M * N) - worst case, input matrix has all zero values
+    Space Complexity: O(M + N)
     :param matrix: an MxN matrix.  M is the number of rows, N is the number of columns
     :return: a zero-modified matrix
     """
     M = len(matrix)
     N = len(matrix[0])
 
-    zero_coordinates = []
+    rows_to_zero = set()
+    cols_to_zero = set()
     # first, scan for coordinates of 0s
     for i, row in enumerate(matrix):
         for j, num in enumerate(row):
             if num != 0:
                 continue
-            # otherwise, save the coordinate
-            zero_coordinates.append((i, j))
-    # then, set row and col to zero of each coordinate
-    for i, j in zero_coordinates:
+            # otherwise, save row or col to rows or cols to zero set
+            rows_to_zero.add(i)
+            cols_to_zero.add(j)
+    for i in rows_to_zero:
         # set row to 0 by looping through columns of current row
         for k in range(N):
             matrix[i][k] = 0
+
+    for j in cols_to_zero:
         # set column to 0 by looping through rows of current column
         for l in range(M):
             matrix[l][j] = 0
@@ -167,6 +170,10 @@ class TestZeroMatrixFunction(unittest.TestCase):
                     [0, 0, 0, 0],
                     [0, 0, 0, 0]
                 ]
+            ),
+            (
+                [[0] * 1000 for _ in range(1000)],
+                [[0] * 1000 for _ in range(1000)],
             )
         ]
 
