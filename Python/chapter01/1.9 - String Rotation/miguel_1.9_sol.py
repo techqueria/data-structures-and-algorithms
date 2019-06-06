@@ -34,7 +34,7 @@ def string_rotation(s1: str, s2: str) -> bool:
     a larger string ..ab..
     This is guaranteed to happen if we have s1 + s1 = baba
     because ab shows up in there.
-    Runtime: O(n)
+    Runtime: worst case: O(n^2) - substring found at end of full string
     Space Complexity:  O(1)
     :param s1: the rotated string
     :param s2: the original string
