@@ -25,8 +25,15 @@ def string_rotation(s1: str, s2: str) -> bool:
     """
     Given two strings, string_rotation will check if s2 is a rotation of s1
     using only one call to isSubstring.
-    If s2 is a rotation of s1, then when we add s1 to itself, s2
-    must be a substring of s1 + s1
+    Assume s2 is a rotation of s1.  s1 is a rearrangement of s2.
+    Choosing an index where we rotate to be any index,
+    let s1 and s2 consist of two parts, a and b.
+    The original string will be s2 = ab.
+    The rotated string will be s1 = ba.
+    Since we are using substring, we want s2 = ab to appear in
+    a larger string ..ab..
+    This is guaranteed to happen if we have s1 + s1 = baba
+    because ab shows up in there.
     Runtime: O(n)
     Space Complexity:  O(1)
     :param s1: the rotated string
