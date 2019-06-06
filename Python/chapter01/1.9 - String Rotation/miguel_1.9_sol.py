@@ -25,15 +25,9 @@ def string_rotation(s1: str, s2: str) -> bool:
     """
     Given two strings, string_rotation will check if s2 is a rotation of s1
     using only one call to isSubstring.
-    We will loop through the original string and compare chars of
-    rotated string.  At the first character equality, we will
-    compare the rest of the original string to the rotated
-    string's substring of the same length.
-    If they match, then we save the index of the
-    rotated string + 1, and if whatever is left of
-    s1 is a substring of s2, then we must have a
-    rotation since we compared the complementary part already.
-    Runtime: Worst case:  O(n^2)
+    If s2 is a rotation of s1, then when we add s1 to itself, s2
+    must be a substring of s1 + s1
+    Runtime: O(n)
     Space Complexity:  O(1)
     :param s1: the rotated string
     :param s2: the original string
@@ -42,25 +36,7 @@ def string_rotation(s1: str, s2: str) -> bool:
     # not rotation if lengths don't match
     if len(s1) != len(s2):
         return False
-    # if they match, but both empty, return true
-    if s1 == '' and s2 == '':
-        return True
-    size = len(s1)
-    start_idx = -1
-    for i, c in enumerate(s2):
-        if c != s1[0]:
-            continue
-        # check if substring in s2 from i to the end
-        # matches s1 from beginning to remaining length of s2
-        if s2[i:] == s1[0:size - i]:
-            # store starting idx of remaining substring in s2
-            start_idx = size - i
-            break
-    if start_idx == -1:
-        return False
-    if is_substring(s1[start_idx:], s2):
-        return True
-    return False
+    return is_substring(s2, s1 + s1)
 
 
 class TestStringRotation(unittest.TestCase):
