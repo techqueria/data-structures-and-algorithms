@@ -98,7 +98,7 @@ def remove_dups_no_buffer(ll: LinkedList) -> LinkedList:
     :return: a linked list without duplicates
     """
     n = ll.head
-    while n.next is not None:
+    while n is not None:
         curr_data = n.data
         m = n.next
         prev = n
@@ -115,11 +115,6 @@ def remove_dups_no_buffer(ll: LinkedList) -> LinkedList:
                 prev = m
                 m = m.next
         n = n.next
-        # if the following is true, this
-        # means we are at the end of the ll
-        # and we removed a value at the end
-        if n is None:
-            break
     return ll
 
 
