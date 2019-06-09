@@ -71,6 +71,25 @@ def build_linked_list(numbers: List[int]) -> LinkedList:
 def remove_dups(ll: LinkedList) -> LinkedList:
     """
     remove_dups will remove duplicates from the
+    input linked list ll. A temporary buffer
+    is used.
+    Runtime: O(N)
+    Space Complexity: O(N)
+    :param ll: a linked list
+    :return: a linked list without duplicates
+    """
+    n = ll.head
+    unique_vals = set()
+    while n.next is not None:
+        unique_vals.add(n.data)
+        n = n.next
+    unique_vals.add(n.data)
+    return build_linked_list(list(unique_vals))
+
+
+def remove_dups_no_buffer(ll: LinkedList) -> LinkedList:
+    """
+    remove_dups will remove duplicates from the
     input linked list ll. No temporary buffer
     used.
     Runtime: O(N^2)
@@ -141,6 +160,10 @@ class TestRemoveDups(unittest.TestCase):
     def test_remove_dups(self):
         for ll, expected in self.test_cases:
             self.assertEqual(remove_dups(ll), expected)
+
+    def test_remove_dups_no_buffer(self):
+        for ll, expected in self.test_cases:
+            self.assertEqual(remove_dups_no_buffer(ll), expected)
 
 
 if __name__ == '__main__':
