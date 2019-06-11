@@ -19,18 +19,19 @@ class Node:
 class LinkedList:
     def __init__(self, initial_value: int = None):
         self.head = None
+        self.tail = None
         if initial_value is not None:
             self.head = Node(initial_value)
+            self.tail = self.head
 
     def append_to_tail(self, d: int) -> None:
         if self.head is None:
             self.head = Node(d)
+            self.tail = self.head
             return
         end = Node(d)
-        n = self.head
-        while n.next is not None:
-            n = n.next
-        n.next = end
+        self.tail.next = end
+        self.tail = end
 
     def append_to_head(self, d: int) -> None:
         new_head = Node(d)
