@@ -42,7 +42,7 @@ class LinkedList:
 
     def __str__(self):
         if self.head is None:
-            return '<empty'
+            return '<empty>'
         ll = []
         n = self.head
         while n.next is not None:
