@@ -17,8 +17,10 @@ class Node:
 
 
 class LinkedList:
-    def __init__(self):
+    def __init__(self, initial_value: int = None):
         self.head = None
+        if initial_value is not None:
+            self.head = Node(initial_value)
 
     def append_to_tail(self, d: int) -> None:
         if self.head is None:
@@ -79,12 +81,14 @@ def remove_dups(ll: LinkedList) -> LinkedList:
     :return: a linked list without duplicates
     """
     n = ll.head
-    unique_vals = set()
-    while n.next is not None:
+    unique_vals = {n.data}  # set literal
+    output_ll = LinkedList(n.data)
+    while n is not None:
+        if n.data not in unique_vals:
+            output_ll.append_to_tail(n.data)
         unique_vals.add(n.data)
         n = n.next
-    unique_vals.add(n.data)
-    return build_linked_list(list(unique_vals))
+    return output_ll
 
 
 def remove_dups_no_buffer(ll: LinkedList) -> LinkedList:
@@ -109,11 +113,10 @@ def remove_dups_no_buffer(ll: LinkedList) -> LinkedList:
                 # re-arrange pointers to omit
                 # the duplicate
                 prev.next = m.next
-                m = prev.next
             else:
                 # otherwise, advance m and prev pointers
                 prev = m
-                m = m.next
+            m = prev.next
         n = n.next
     return ll
 
@@ -150,6 +153,18 @@ class TestRemoveDups(unittest.TestCase):
                 build_linked_list([1, 1, 3, 4, 5, 5, 6, 7]),
                 build_linked_list([1, 3, 4, 5, 6, 7])
             ),
+            (
+                build_linked_list([7, 2, 7, 9, 20, 1, 0, 0, 0, 25]),
+                build_linked_list([7, 2, 9, 20, 1, 0, 25])
+            ),
+            (
+                build_linked_list([9, 8, 7, 6, 6, 1, 2, 3, 4, 4]),
+                build_linked_list([9, 8, 7, 6, 1, 2, 3, 4])
+            ),
+            (
+                build_linked_list([9, 9, 9, -10, -100, 45, 67, -100, 99]),
+                build_linked_list([9, -10, -100, 45, 67, 99])
+            )
         ]
 
     def test_remove_dups(self):
