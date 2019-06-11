@@ -17,12 +17,11 @@ class Node:
 
 
 class LinkedList:
-    def __init__(self, initial_value: int = None):
+    def __init__(self, *numbers: int):
         self.head = None
         self.tail = None
-        if initial_value is not None:
-            self.head = Node(initial_value)
-            self.tail = self.head
+        for num in numbers:
+            self.append_to_tail(num)
 
     def append_to_tail(self, d: int) -> None:
         if self.head is None:
@@ -52,7 +51,9 @@ class LinkedList:
         ll.append(str(n.data))
         return ''.join(ll)
 
-    def __eq__(self, other):
+    def __eq__(self, other: object):
+        if not isinstance(other, LinkedList):
+            return NotImplemented
         a = self.head
         b = other.head
         while a is not None and b is not None:
@@ -65,10 +66,7 @@ class LinkedList:
 
 
 def build_linked_list(numbers: List[int]) -> LinkedList:
-    ll = LinkedList()
-    for num in numbers:
-        ll.append_to_tail(num)
-    return ll
+    return LinkedList(*numbers)
 
 
 def remove_dups(ll: LinkedList) -> LinkedList:
