@@ -7,7 +7,6 @@ How would you solve this if a temporary
 buffer is not allowed?
 """
 import unittest
-from typing import List
 
 
 class Node:
