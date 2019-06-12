@@ -65,10 +65,6 @@ class LinkedList:
         return a is None and b is None
 
 
-def build_linked_list(numbers: List[int]) -> LinkedList:
-    return LinkedList(*numbers)
-
-
 def remove_dups(ll: LinkedList) -> LinkedList:
     """
     remove_dups will remove duplicates from the
@@ -125,44 +121,44 @@ class TestRemoveDups(unittest.TestCase):
     def setUp(self):
         self.test_cases = [
             (
-                build_linked_list([1, 2, 3, 3, 5]),
-                build_linked_list([1, 2, 3, 5])
+                LinkedList(*[1, 2, 3, 3, 5]),
+                LinkedList(*[1, 2, 3, 5])
             ),
             (
-                build_linked_list([1, 2, 3, 3]),
-                build_linked_list([1, 2, 3])
+                LinkedList(*[1, 2, 3, 3]),
+                LinkedList(*[1, 2, 3])
             ),
             (
-                build_linked_list([1, 2, 2]),
-                build_linked_list([1, 2])
+                LinkedList(*[1, 2, 2]),
+                LinkedList(*[1, 2])
             ),
             (
-                build_linked_list([1]),
-                build_linked_list([1])
+                LinkedList(*[1]),
+                LinkedList(*[1])
             ),
             (
-                build_linked_list([1, 1]),
-                build_linked_list([1])
+                LinkedList(*[1, 1]),
+                LinkedList(*[1])
             ),
             (
-                build_linked_list([2, 2, 2, 2, 2, 2]),
-                build_linked_list([2])
+                LinkedList(*[2, 2, 2, 2, 2, 2]),
+                LinkedList(*[2])
             ),
             (
-                build_linked_list([1, 1, 3, 4, 5, 5, 6, 7]),
-                build_linked_list([1, 3, 4, 5, 6, 7])
+                LinkedList(*[1, 1, 3, 4, 5, 5, 6, 7]),
+                LinkedList(*[1, 3, 4, 5, 6, 7])
             ),
             (
-                build_linked_list([7, 2, 7, 9, 20, 1, 0, 0, 0, 25]),
-                build_linked_list([7, 2, 9, 20, 1, 0, 25])
+                LinkedList(*[7, 2, 7, 9, 20, 1, 0, 0, 0, 25]),
+                LinkedList(*[7, 2, 9, 20, 1, 0, 25])
             ),
             (
-                build_linked_list([9, 8, 7, 6, 6, 1, 2, 3, 4, 4]),
-                build_linked_list([9, 8, 7, 6, 1, 2, 3, 4])
+                LinkedList(*[9, 8, 7, 6, 6, 1, 2, 3, 4, 4]),
+                LinkedList(*[9, 8, 7, 6, 1, 2, 3, 4])
             ),
             (
-                build_linked_list([9, 9, 9, -10, -100, 45, 67, -100, 99]),
-                build_linked_list([9, -10, -100, 45, 67, 99])
+                LinkedList(*[9, 9, 9, -10, -100, 45, 67, -100, 99]),
+                LinkedList(*[9, -10, -100, 45, 67, 99])
             )
         ]
 
