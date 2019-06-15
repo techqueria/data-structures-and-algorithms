@@ -61,11 +61,9 @@ class LinkedList:
         if index < 0 or index >= self.size:
             raise IndexError('list index out of range')
         n = self.head
-        i = 0
-        while n is not None:
+        for i in range(self.size):
             if i == index:
                 return n
-            i += 1
             n = n.next
 
     def __repr__(self):
@@ -96,7 +94,7 @@ class LinkedList:
         return a is None and b is None
 
 
-def delete_middle_node(ll: LinkedList, node: Node) -> LinkedList:
+def delete_middle_node(ll: LinkedList, node: Node) -> None:
     """
     delete_middle_node will delete a node from
     a singly linked list. The node can be any
@@ -117,8 +115,9 @@ def delete_middle_node(ll: LinkedList, node: Node) -> LinkedList:
     while n.next is not None:
         if n.next is node:
             n.next = n.next.next
+            return
         n = n.next
-    return ll
+    return
 
 
 class TestDeleteMiddleNode(unittest.TestCase):
@@ -144,8 +143,8 @@ class TestDeleteMiddleNode(unittest.TestCase):
 
     def test_delete_middle_node(self):
         for ll, node_index, expected in self.test_cases:
-            result = delete_middle_node(ll, ll.get_node_at(node_index))
-            self.assertEqual(result, expected, msg=(ll, node_index, expected))
+            delete_middle_node(ll, ll.get_node_at(node_index))
+            self.assertEqual(ll, expected, msg=(ll, node_index, expected))
 
     def test_delete_middle_node_value_error(self):
         ll = LinkedList(1, 2, 3, 4)
