@@ -57,7 +57,7 @@ class LinkedList:
         self.head = new_head
         self.size += 1
 
-    def get_node_at(self, index: int):
+    def get_node_at(self, index: int) -> Node:
         if index < 0 or index >= self.size:
             raise IndexError('list index out of range')
         n = self.head
