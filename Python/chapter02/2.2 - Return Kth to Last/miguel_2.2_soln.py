@@ -32,6 +32,7 @@ class LinkedList:
     def __init__(self, *numbers: int):
         self.head = None
         self.tail = None
+        self.size = 0
         for num in numbers:
             self.append_to_tail(num)
 
@@ -39,15 +40,17 @@ class LinkedList:
         if self.head is None:
             self.head = Node(d)
             self.tail = self.head
-            return
-        end = Node(d)
-        self.tail.next = end
-        self.tail = end
+        else:
+            end = Node(d)
+            self.tail.next = end
+            self.tail = end
+        self.size += 1
 
     def append_to_head(self, d: int) -> None:
         new_head = Node(d)
         new_head.next = self.head
         self.head = new_head
+        self.size += 1
 
     def __repr__(self):
         return self.__str__()
@@ -84,25 +87,20 @@ def kth_to_last(ll: LinkedList, k: int) -> Node:
     Going to reverse the linked list and then
     count k steps.
     Runtime: O(N)
-    Space Complexity: O(N)
+    Space Complexity: O(1)
     :param ll: a linked list
-    :param k: an integer where k >= 0
+    :param k:
+        an integer where k > 0 and k < ll size
     :return:
         kth to last Node from the linked list
         or None
     """
-    if k <= 0:
-        return None
-    # build reversed linked list
-    reversed_ll = LinkedList(ll.head.data)
-    n = ll.head.next
-    while n is not None:
-        reversed_ll.append_to_head(n.data)
-        n = n.next
-    # go k steps
+    if k <= 0 or k > ll.size:
+        raise IndexError('list index out of range')
+    # go size - k steps
+    n = ll.head
     i = 1
-    n = reversed_ll.head
-    while n is not None and i < k:
+    while n is not None and i <= ll.size - k:
         n = n.next
         i += 1
     return n
@@ -110,53 +108,18 @@ def kth_to_last(ll: LinkedList, k: int) -> Node:
 
 class TestKthToLast(unittest.TestCase):
 
-    def setUp(self):
-        self.test_cases = [
-            (
-                LinkedList(1, 2, 3, 4, 5, 6),
-                2,
-                Node(5)
-            ),
-            (
-                LinkedList(1, 2, 3, 4, 5, 6),
-                1,
-                Node(6)
-            ),
-            (
-                LinkedList(1, 2, 3, 4, 5, 6),
-                4,
-                Node(3)
-            ),
-            (
-                LinkedList(1, 2, 3, 4, 5, 6),
-                5,
-                Node(2)
-            ),
-            (
-                LinkedList(1, 2, 3, 4, 5, 6),
-                6,
-                Node(1)
-            ),
-            (
-                LinkedList(1, 2, 3, 4, 5, 6),
-                7,
-                None
-            ),
-            (
-                LinkedList(1),
-                1,
-                Node(1)
-            ),
-            (
-                LinkedList(5),
-                0,
-                None
-            ),
-        ]
-
     def test_kth_to_last(self):
-        for ll, k, expected in self.test_cases:
-            self.assertEqual(kth_to_last(ll, k), expected, msg=(ll, expected))
+        l = list(range(1, 6))
+        ll = LinkedList(*l)
+        for k in range(1, len(l)):
+            self.assertEqual(kth_to_last(ll, k), Node(l[-k]), msg=(ll, l[-k]))
+
+    def test_kth_to_last_index_error(self):
+        k_values = [-1, 7, 0]
+        ll = LinkedList(1, 2, 3)
+        for k in k_values:
+            with self.assertRaises(IndexError, msg=(ll, k)):
+                kth_to_last(ll, k)
 
 
 if __name__ == '__main__':
