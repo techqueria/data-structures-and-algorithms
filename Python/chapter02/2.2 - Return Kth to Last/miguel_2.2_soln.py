@@ -99,10 +99,8 @@ def kth_to_last(ll: LinkedList, k: int) -> Node:
         raise IndexError('list index out of range')
     # go size - k steps
     n = ll.head
-    i = 1
-    while n is not None and i <= ll.size - k:
+    for i in range(1, ll.size - k + 1):
         n = n.next
-        i += 1
     return n
 
 
