@@ -117,7 +117,6 @@ def delete_middle_node(ll: LinkedList, node: Node) -> None:
             n.next = n.next.next
             return
         n = n.next
-    return
 
 
 class TestDeleteMiddleNode(unittest.TestCase):
