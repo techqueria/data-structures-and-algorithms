@@ -111,8 +111,8 @@ def check_partitioned(ll: LinkedList, partition: int) -> bool:
     """
     if ll.size == 1:
         return True
-
-    # otherwise, the list starts with a value < partition
+    # counter for keeping track of how many times
+    # we change from < partition to >= partition
     partition_change_count = 0
     changed = False
     n = ll.head
@@ -192,6 +192,11 @@ class TestPartition(unittest.TestCase):
             ),
             (
                 LinkedList(3, 5, 8, 5, 10, 2, 1),
+                5,
+                False
+            ),
+            (
+                LinkedList(10, 9, 8, 3, 2, 200, 201),
                 5,
                 False
             ),
