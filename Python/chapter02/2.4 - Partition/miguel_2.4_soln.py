@@ -10,7 +10,7 @@ can appear anywhere in the 'right partition'; it does
 not need to appear between the left and right
 partitions.
 EXAMPLE
-Input:  3 -> 5 -> 8 -> 5 -> 10 -> 2 -> 1 [partition = 5]
+Input:  3 -> 5 -> 8 -> 5 -> 10 -> 2 -> 1 [pivot = 5]
 Result: 3 -> 1 -> 2 -> 10 -> 5 -> 5 -> 8
 """
 import unittest
@@ -94,7 +94,7 @@ class LinkedList:
         return a is None and b is None
 
 
-def check_partitioned(ll: LinkedList, partition: int) -> bool:
+def check_partitioned(ll: LinkedList, pivot: int) -> bool:
     """
     Will check if a linked list is partitioned
     around a value such that all values less
@@ -106,31 +106,30 @@ def check_partitioned(ll: LinkedList, partition: int) -> bool:
     Runtime: O(n)
     Space Complexity: O(1)
     :param ll: an input linked list
-    :param partition: a number to partition around
+    :param pivot: a number to partition around
     :return:
     """
-    if ll.size == 1:
-        return True
     # counter for keeping track of how many times
-    # we change from < partition to >= partition
-    partition_change_count = 0
-    changed = False
+    # we change from < pivot to >= pivot
+    pivot_change_count = 0
     n = ll.head
     while n is not None:
-        if n.data < partition and changed:
-            changed = False
-            partition_change_count += 1
-        elif n.data >= partition and not changed:
-            changed = True
-            partition_change_count += 1
+        if n.data >= pivot:
+            pivot_change_count += 1
+            break
         n = n.next
-    return partition_change_count <= 1
+    while n is not None:
+        if n.data < pivot:
+            pivot_change_count += 1
+            break
+        n = n.next
+    return pivot_change_count <= 1
 
 
-def partition_ll(ll: LinkedList, partition: int) -> LinkedList:
+def partition_ll(ll: LinkedList, pivot: int) -> LinkedList:
     """
     This function will take in a linked list, a
-    partition value, and will partition a linked
+    pivot value, and will partition a linked
     list around a value x such that all nodes
     less than x come before all nodes greater than
     or equal to x.  If x is in the list, then
@@ -140,15 +139,15 @@ def partition_ll(ll: LinkedList, partition: int) -> LinkedList:
     Runtime: O(n)
     Space Complexity: O(n)
     :param ll: an input linked list
-    :param partition: a number to partition around
+    :param pivot: a number to partition around
     :return: a linked list that is 'partitioned'
     """
-    left_partition = []  # will contain values < partition
-    right_partition = []  # will contain values >= partition
+    left_partition = []  # will contain values < pivot
+    right_partition = []  # will contain values >= pivot
 
     n = ll.head
     while n is not None:
-        if n.data < partition:
+        if n.data < pivot:
             left_partition.append(n.data)
         else:
             right_partition.append(n.data)
@@ -228,13 +227,13 @@ class TestPartition(unittest.TestCase):
         ]
 
     def test_check_partitioned(self):
-        for ll, partition, output in self.check_partitioned_test_cases:
-            self.assertEqual(check_partitioned(ll, partition), output, msg=(ll, partition))
+        for ll, pivot, output in self.check_partitioned_test_cases:
+            self.assertEqual(check_partitioned(ll, pivot), output, msg=(ll, pivot))
 
     def test_partition(self):
-        for ll, partition in self.test_cases:
-            partitioned_ll = partition_ll(ll, partition)
-            self.assertTrue(check_partitioned(partitioned_ll, partition), msg=(ll, partition))
+        for ll, pivot in self.test_cases:
+            partitioned_ll = partition_ll(ll, pivot)
+            self.assertTrue(check_partitioned(partitioned_ll, pivot), msg=(ll, pivot))
 
 
 if __name__ == '__main__':
