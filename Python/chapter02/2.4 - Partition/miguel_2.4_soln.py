@@ -223,7 +223,12 @@ class TestPartition(unittest.TestCase):
                 LinkedList(1, 2, 3, 4, 5, 6, 7, 8, 9),
                 5,
                 True
-            )
+            ),
+            (
+                LinkedList(5, 1),
+                5,
+                False
+            ),
         ]
 
     def test_check_partitioned(self):
