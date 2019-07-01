@@ -111,19 +111,16 @@ def check_partitioned(ll: LinkedList, pivot: int) -> bool:
     """
     # counter for keeping track of how many times
     # we change from < pivot to >= pivot
-    pivot_change_count = 0
     n = ll.head
     while n is not None:
         if n.data >= pivot:
-            pivot_change_count += 1
             break
         n = n.next
     while n is not None:
         if n.data < pivot:
-            pivot_change_count += 1
-            break
+            return False
         n = n.next
-    return pivot_change_count <= 1
+    return True
 
 
 def partition_ll(ll: LinkedList, pivot: int) -> LinkedList:
