@@ -14,6 +14,7 @@ Input:  3 -> 5 -> 8 -> 5 -> 10 -> 2 -> 1 [pivot = 5]
 Result: 3 -> 1 -> 2 -> 10 -> 5 -> 5 -> 8
 """
 import unittest
+from typing import Optional
 
 
 class Node:
@@ -41,12 +42,28 @@ class LinkedList:
         for num in numbers:
             self.append_to_tail(num)
 
-    def append_to_tail(self, d: int) -> None:
+    def append_to_tail(self, e) -> None:
+        if isinstance(e, int):
+            self._append_num(e)
+        elif isinstance(e, Node) or e is None:
+            self._append_node(e)
+
+    def _append_num(self, d: int) -> None:
         if self.head is None:
             self.head = Node(d)
             self.tail = self.head
         else:
             end = Node(d)
+            self.tail.next = end
+            self.tail = end
+        self.size += 1
+
+    def _append_node(self, n: Optional[Node] = None) -> None:
+        if self.head is None:
+            self.head = n
+            self.tail = self.head
+        else:
+            end = n
             self.tail.next = end
             self.tail = end
         self.size += 1
@@ -134,23 +151,28 @@ def partition_ll(ll: LinkedList, pivot: int) -> LinkedList:
     elements less than x. They do not need to appear
     in between the left and right partitions.
     Runtime: O(n)
-    Space Complexity: O(n)
+    Space Complexity: O(1)
     :param ll: an input linked list
     :param pivot: a number to partition around
     :return: a linked list that is 'partitioned'
     """
-    left_partition = []  # will contain values < pivot
-    right_partition = []  # will contain values >= pivot
+    left_partition = LinkedList()  # will contain values < pivot
+    right_partition = LinkedList()  # will contain values >= pivot
 
     n = ll.head
     while n is not None:
         if n.data < pivot:
-            left_partition.append(n.data)
+            left_partition.append_to_tail(n)
         else:
-            right_partition.append(n.data)
+            right_partition.append_to_tail(n)
         n = n.next
+    # last element may still be pointing
+    # to earlier elements that are less than
+    # pivot so we need to cut that link
+    right_partition.append_to_tail(None)
     # then, merge left and right partition lists into one linked list
-    return LinkedList(*left_partition, *right_partition)
+    left_partition.tail.next = right_partition.head
+    return left_partition
 
 
 class TestPartition(unittest.TestCase):
