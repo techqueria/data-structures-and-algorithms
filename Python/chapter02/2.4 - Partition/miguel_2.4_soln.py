@@ -44,7 +44,7 @@ class LinkedList:
     def append_to_tail(self, e) -> None:
         if isinstance(e, int):
             self._append_num(e)
-        elif isinstance(e, Node) or e is None:
+        elif isinstance(e, Node):
             self._append_node(e)
 
     def _append_num(self, d: int) -> None:
