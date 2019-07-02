@@ -85,15 +85,18 @@ class LinkedList:
 
     def pop_head(self) -> Optional[Node]:
         if self.head is None:
-            return self.head
+            raise IndexError('no head to pop')
         h = self.head
+        h.next = None
         self.head = self.head.next
+        self.size -= 1
         return h
 
     def append(self, ll: object):
         if not isinstance(ll, LinkedList):
             raise TypeError('not a linked list')
         self.tail.next = ll.head
+        self.size += ll.size
 
     def __repr__(self):
         return self.__str__()
@@ -178,10 +181,6 @@ def partition_ll(ll: LinkedList, pivot: int) -> LinkedList:
         else:
             right_partition.append_to_tail(ll.pop_head())
         n = n.next
-    # last element may still be pointing
-    # to earlier elements that are less than
-    # pivot so we need to cut that link
-    right_partition.append_to_tail(ll.pop_head())
     # then, merge left and right partition lists into one linked list
     left_partition.append(right_partition)
     return left_partition
