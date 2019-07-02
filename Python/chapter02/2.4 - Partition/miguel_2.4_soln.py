@@ -92,7 +92,7 @@ class LinkedList:
 
     def append(self, ll: object):
         if not isinstance(ll, LinkedList):
-            return TypeError
+            raise TypeError(...)
         self.tail.next = ll.head
 
     def __repr__(self):
