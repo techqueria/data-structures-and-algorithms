@@ -11,6 +11,11 @@ EXAMPLE
 Input:  (7 -> 1 -> 6) + (5 -> 9 -> 2). That is, 617 + 295
 Result: 2 -> 1 -> 9. That is, 912
 FOLLOW UP
+Suppose the digits are stored in forward order.
+Repeat the above problem.
+EXAMPLE
+Input:  (6 -> 1 -> 7) + (2 -> 9 -> 5). That is, 617 + 295
+Result: 9 -> 1 -> 2. That is, 912
 """
 import unittest
 
