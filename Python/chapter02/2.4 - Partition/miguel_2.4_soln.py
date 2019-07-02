@@ -92,9 +92,7 @@ class LinkedList:
         self.size -= 1
         return h
 
-    def append(self, ll: object):
-        if not isinstance(ll, LinkedList):
-            raise TypeError('not a linked list')
+    def append(self, ll: 'LinkedList') -> None:
         self.tail.next = ll.head
         self.size += ll.size
 
