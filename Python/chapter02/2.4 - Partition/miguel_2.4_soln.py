@@ -95,6 +95,8 @@ class LinkedList:
     def append(self, ll: 'LinkedList') -> None:
         self.tail.next = ll.head
         self.size += ll.size
+        ll.head = None
+        ll.size = 0
 
     def __repr__(self):
         return self.__str__()
