@@ -83,7 +83,7 @@ class LinkedList:
                 return n
             n = n.next
 
-    def pop_head(self) -> Optional[Node]:
+    def pop_head(self) -> Node:
         if self.head is None:
             raise IndexError('no head to pop')
         h = self.head
