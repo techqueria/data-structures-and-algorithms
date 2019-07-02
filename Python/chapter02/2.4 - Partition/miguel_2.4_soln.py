@@ -14,7 +14,6 @@ Input:  3 -> 5 -> 8 -> 5 -> 10 -> 2 -> 1 [pivot = 5]
 Result: 3 -> 1 -> 2 -> 10 -> 5 -> 5 -> 8
 """
 import unittest
-from typing import Optional
 
 
 class Node:
@@ -58,7 +57,7 @@ class LinkedList:
             self.tail = end
         self.size += 1
 
-    def _append_node(self, n: Optional[Node] = None) -> None:
+    def _append_node(self, n: Node) -> None:
         if self.head is None:
             self.head = n
             self.tail = self.head
