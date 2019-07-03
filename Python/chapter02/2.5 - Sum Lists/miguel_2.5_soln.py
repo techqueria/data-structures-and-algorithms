@@ -181,7 +181,6 @@ def sum_lists(ll1: LinkedList, ll2: LinkedList) -> LinkedList:
     """
     Will add ll1 and ll2 where each element in the linked lists
     represent digits.
-    Precondition: ll1 and ll2 must be the same length.
     Digits are in backward order, for example:
     Input:  (7 -> 1 -> 6) + (5 -> 9 -> 2). That is, 617 + 295
     Result: 2 -> 1 -> 9. That is, 912
@@ -191,9 +190,9 @@ def sum_lists(ll1: LinkedList, ll2: LinkedList) -> LinkedList:
     :param ll2: second input linked list
     :return: a linked list containing the result of the addition
     """
-    assert(ll1.size == ll2.size)
-    n1 = ll1.head
-    n2 = ll2.head
+    shorter_ll, longer_ll = (ll1, ll2) if ll1.size < ll2.size else (ll2, ll1)
+    n1 = shorter_ll.head
+    n2 = longer_ll.head
     output_ll = LinkedList()
     carry = 0
     while n1 is not None:
@@ -207,6 +206,17 @@ def sum_lists(ll1: LinkedList, ll2: LinkedList) -> LinkedList:
             carry = 0
         output_ll.append_to_tail(result)
         n1 = n1.next
+        n2 = n2.next
+    # loop through remaining longer list
+    while n2 is not None:
+        value = n2.data
+        result = value + carry
+        if result >= 10:
+            carry = 1
+            result -= 10
+        else:
+            carry = 0
+        output_ll.append_to_tail(result)
         n2 = n2.next
     if carry > 0:
         output_ll.append_to_tail(carry)
@@ -246,6 +256,21 @@ class TestSumLists(unittest.TestCase):
                 LinkedList(9, 9, 9, 9),
                 LinkedList(9, 9, 9, 9),
                 LinkedList(8, 9, 9, 9, 1)
+            ),
+            (
+                LinkedList(9, 9, 9, 9),
+                LinkedList(9, 9),
+                LinkedList(8, 9, 0, 0, 1)
+            ),
+            (
+                LinkedList(1, 2),
+                LinkedList(1),
+                LinkedList(2, 2)
+            ),
+            (
+                LinkedList(5),
+                LinkedList(2, 1),
+                LinkedList(7, 1)
             )
         ]
 
