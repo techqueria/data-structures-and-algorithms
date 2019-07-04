@@ -426,6 +426,11 @@ class TestSumLists(unittest.TestCase):
                 LinkedList(),
                 LinkedList(),
                 LinkedList()
+            ),
+            (
+                LinkedList(1, 2, 3),
+                LinkedList(),
+                LinkedList(1, 2, 3)
             )
         ]
 
