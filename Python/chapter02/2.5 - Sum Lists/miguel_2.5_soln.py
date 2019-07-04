@@ -138,7 +138,8 @@ def sum_lists_forward(ll1: LinkedList, ll2: LinkedList) -> LinkedList:
     """
     Will add ll1 and ll2 where each element in the linked lists
     represent digits.
-    Precondition: ll1 and ll2 must be the same length.
+    Note: Each element in the input linked lists MUST be values
+    between 0-9
     Digits are in forward order, for example:
     Input: (6 -> 1 -> 7) + (2 -> 9 -> 5). That is, 617 + 295
     Output: 9 -> 1 -> 2. That is, 912
@@ -245,6 +246,8 @@ def sum_lists(ll1: LinkedList, ll2: LinkedList) -> LinkedList:
     """
     Will add ll1 and ll2 where each element in the linked lists
     represent digits.
+    Note: Each element in the input linked lists MUST be values
+    between 0-9
     Digits are in backward order, for example:
     Input:  (7 -> 1 -> 6) + (5 -> 9 -> 2). That is, 617 + 295
     Result: 2 -> 1 -> 9. That is, 912
