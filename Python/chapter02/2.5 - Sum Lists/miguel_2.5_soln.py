@@ -149,96 +149,25 @@ def sum_lists_forward(ll1: LinkedList, ll2: LinkedList) -> LinkedList:
     :param ll2: second input linked list
     :return: a linked list containing the result of the addition
     """
-    shorter_ll, longer_ll = (ll1, ll2) if ll1.size < ll2.size else (ll2, ll1)
-    n_shorter = shorter_ll.head
-    n_longer = longer_ll.head
-    length_diff = abs(shorter_ll.size - longer_ll.size)
-    # first, advance longer list to line up with
-    # digit of shorter list
-    # for example, if we have:
-    # longer_ll = 9 -> 9 -> 9 -> 9
-    # shorter_ll = 9 -> 9
-    # we will line up the current pointer
-    # of longer_ll to correspond to the
-    # '10s' digit place because we must add
-    # digits that are in the same place value.
-    # n_longer will point to the following parenthesis
-    # 9 -> 9 -> (9) -> 9
-    # n_shorter will point to the beginning of shorter_ll
-    # (9) -> 9
-    for i in range(length_diff):
-        n_longer = n_longer.next
+    n1 = ll1.head
+    n2 = ll2.head
+    # reverse both lists
+    reversed_ll1 = LinkedList()
+    reversed_ll2 = LinkedList()
+    while n1 is not None:
+        reversed_ll1.append_to_head(n1.data)
+        n1 = n1.next
+    while n2 is not None:
+        reversed_ll2.append_to_head(n2.data)
+        n2 = n2.next
+    # then, call sum_lists
+    reversed_result = sum_lists(reversed_ll1, reversed_ll2)
+    # reverse a final time
     output_ll = LinkedList()
-    # perform addition, taking into account a
-    # 'backwards' carry value since we
-    # are looping forward digits down to
-    # 'ones' digit place
-    prev_node = None
-    leading_bw_carry = False
-    while n_shorter is not None:
-        first = n_shorter.data
-        second = n_longer.data
-        result = first + second
-        if result >= 10:
-            backwards_carry = 1
-            result -= 10  # extract digit in one's place
-            if prev_node is None:
-                # for when the first addition yields a carry
-                # and the output linked list is empty
-                leading_bw_carry = True
-            else:
-                # add carry to previous digit
-                prev_node.data += backwards_carry
-        output_ll.append_to_tail(result)
-        n_shorter = n_shorter.next
-        n_longer = n_longer.next
-        prev_node = output_ll.tail
-
-    # first case after adding same digit places,
-    # both input lists same size
-    if length_diff == 0:
-        if leading_bw_carry:
-            backwards_carry = 1
-            output_ll.append_to_head(backwards_carry)
-        return output_ll
-    # otherwise, we have non-equal lengths
-    # with or without a leading backward carry
-    # leading bw carry means the the size diff
-    # decreased.
-    # no leading bw carry means size diff stayed the same
-    if leading_bw_carry:
-        backwards_carry = 1
-    else:
-        backwards_carry = 0
-    # otherwise, as long as the diff is >= 0
-    # we want to take care of the leading digits.
-    # start by decrementing the diff
-    length_diff -= 1
-    while length_diff >= 0:
-        # advance the n_longer pointer from longer_ll head
-        # up to where the current diff is.
-        n_longer = longer_ll.head
-        for i in range(length_diff):
-            n_longer = n_longer.next
-
-        if backwards_carry == 1:
-            output_ll.append_to_head(backwards_carry)
-            # output data will have the backwards_carry
-            # appended from before
-            result = output_ll.head.data + n_longer.data
-            if result >= 10:
-                result -= 10
-            else:
-                backwards_carry = 0
-            output_ll.head.data = result
-        else:
-            # if backwards carry is 0, bring corresponding digit down
-            result = n_longer.data
-            output_ll.append_to_head(result)
-        length_diff -= 1
-    # last backwards carry
-    if backwards_carry == 1:
-        output_ll.append_to_head(backwards_carry)
+    n = reversed_result.head
+    while n is not None:
+        output_ll.append_to_head(n.data)
+        n = n.next
     return output_ll
 
 
