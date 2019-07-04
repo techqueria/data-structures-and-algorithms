@@ -106,6 +106,24 @@ class LinkedList:
         ll.head = None
         ll.size = 0
 
+    def reverse(self) -> None:
+        """
+        Reverses this linked list in place
+        :return:
+        """
+        if self.head is None:
+            return
+        prev = self.head
+        self.tail = prev
+        curr = prev.next
+        self.tail.next = None
+        while curr is not None:
+            old_next = curr.next
+            curr.next = prev
+            prev = curr
+            curr = old_next
+        self.head = prev
+
     def __repr__(self):
         return self.__str__()
 
@@ -134,6 +152,20 @@ class LinkedList:
         return a is None and b is None
 
 
+def reverse_linked_list(ll: LinkedList) -> LinkedList:
+    """
+    Takes in a linked list and returns a reversed copy
+    :param ll: input linked list
+    :return: reversed linked list
+    """
+    output_ll = LinkedList()
+    n = ll.head
+    while n is not None:
+        output_ll.append_to_head(n.data)
+        n = n.next
+    return output_ll
+
+
 def sum_lists_forward(ll1: LinkedList, ll2: LinkedList) -> LinkedList:
     """
     Will add ll1 and ll2 where each element in the linked lists
@@ -149,26 +181,14 @@ def sum_lists_forward(ll1: LinkedList, ll2: LinkedList) -> LinkedList:
     :param ll2: second input linked list
     :return: a linked list containing the result of the addition
     """
-    n1 = ll1.head
-    n2 = ll2.head
     # reverse both lists
-    reversed_ll1 = LinkedList()
-    reversed_ll2 = LinkedList()
-    while n1 is not None:
-        reversed_ll1.append_to_head(n1.data)
-        n1 = n1.next
-    while n2 is not None:
-        reversed_ll2.append_to_head(n2.data)
-        n2 = n2.next
+    reversed_ll1 = reverse_linked_list(ll1)
+    reversed_ll2 = reverse_linked_list(ll2)
     # then, call sum_lists
     reversed_result = sum_lists(reversed_ll1, reversed_ll2)
     # reverse a final time
-    output_ll = LinkedList()
-    n = reversed_result.head
-    while n is not None:
-        output_ll.append_to_head(n.data)
-        n = n.next
-    return output_ll
+    reversed_result.reverse()
+    return reversed_result
 
 
 def sum_lists(ll1: LinkedList, ll2: LinkedList) -> LinkedList:
