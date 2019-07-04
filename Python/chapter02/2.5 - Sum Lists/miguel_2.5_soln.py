@@ -148,32 +148,96 @@ def sum_lists_forward(ll1: LinkedList, ll2: LinkedList) -> LinkedList:
     :param ll2: second input linked list
     :return: a linked list containing the result of the addition
     """
-    assert(ll1.size == ll2.size)
-    n1 = ll1.head
-    n2 = ll2.head
+    shorter_ll, longer_ll = (ll1, ll2) if ll1.size < ll2.size else (ll2, ll1)
+    n_shorter = shorter_ll.head
+    n_longer = longer_ll.head
+    length_diff = abs(shorter_ll.size - longer_ll.size)
+    # first, advance longer list to line up with
+    # digit of shorter list
+    # for example, if we have:
+    # longer_ll = 9 -> 9 -> 9 -> 9
+    # shorter_ll = 9 -> 9
+    # we will line up the current pointer
+    # of longer_ll to correspond to the
+    # '10s' digit place because we must add
+    # digits that are in the same place value.
+    # n_longer will point to the following parenthesis
+    # 9 -> 9 -> (9) -> 9
+    # n_shorter will point to the beginning of shorter_ll
+    # (9) -> 9
+    for i in range(length_diff):
+        n_longer = n_longer.next
     output_ll = LinkedList()
+    # perform addition, taking into account a
+    # 'backwards' carry value since we
+    # are looping forward digits down to
+    # 'ones' digit place
     prev_node = None
-    while n1 is not None:
-        first = n1.data
-        second = n2.data
+    leading_bw_carry = False
+    while n_shorter is not None:
+        first = n_shorter.data
+        second = n_longer.data
         result = first + second
         if result >= 10:
-            carry = 1
+            backwards_carry = 1
             result -= 10  # extract digit in one's place
             if prev_node is None:
                 # for when the first addition yields a carry
                 # and the output linked list is empty
-                output_ll.append_to_head(carry)
+                leading_bw_carry = True
             else:
                 # add carry to previous digit
-                prev_node.data += carry
+                prev_node.data += backwards_carry
         output_ll.append_to_tail(result)
-        n1 = n1.next
-        n2 = n2.next
+        n_shorter = n_shorter.next
+        n_longer = n_longer.next
         prev_node = output_ll.tail
 
-    # if carry > 0:
-    #     output_ll.append_to_tail(carry)
+    # first case after adding same digit places,
+    # both input lists same size
+    if length_diff == 0:
+        if leading_bw_carry:
+            backwards_carry = 1
+            output_ll.append_to_head(backwards_carry)
+        return output_ll
+    # otherwise, we have non-equal lengths
+    # with or without a leading backward carry
+    # leading bw carry means the the size diff
+    # decreased.
+    # no leading bw carry means size diff stayed the same
+    if leading_bw_carry:
+        backwards_carry = 1
+    else:
+        backwards_carry = 0
+    # otherwise, as long as the diff is >= 0
+    # we want to take care of the leading digits.
+    # start by decrementing the diff
+    length_diff -= 1
+    while length_diff >= 0:
+        # advance the n_longer pointer from longer_ll head
+        # up to where the current diff is.
+        n_longer = longer_ll.head
+        for i in range(length_diff):
+            n_longer = n_longer.next
+
+        if backwards_carry == 1:
+            output_ll.append_to_head(backwards_carry)
+            # output data will have the backwards_carry
+            # appended from before
+            result = output_ll.head.data + n_longer.data
+            if result >= 10:
+                result -= 10
+            else:
+                backwards_carry = 0
+            output_ll.head.data = result
+        else:
+            # if backwards carry is 0, bring corresponding digit down
+            result = n_longer.data
+            output_ll.append_to_head(result)
+        length_diff -= 1
+    # last backwards carry
+    if backwards_carry == 1:
+        output_ll.append_to_head(backwards_carry)
     return output_ll
 
 
@@ -271,6 +335,16 @@ class TestSumLists(unittest.TestCase):
                 LinkedList(5),
                 LinkedList(2, 1),
                 LinkedList(7, 1)
+            ),
+            (
+                LinkedList(),
+                LinkedList(1),
+                LinkedList(1)
+            ),
+            (
+                LinkedList(),
+                LinkedList(),
+                LinkedList()
             )
         ]
 
@@ -299,6 +373,56 @@ class TestSumLists(unittest.TestCase):
                 LinkedList(9, 9, 9, 9),
                 LinkedList(9, 9, 9, 9),
                 LinkedList(1, 9, 9, 9, 8)
+            ),
+            (
+                LinkedList(9, 9, 9, 9),
+                LinkedList(9, 9),
+                LinkedList(1, 0, 0, 9, 8)
+            ),
+            (
+                LinkedList(1, 2),
+                LinkedList(4),
+                LinkedList(1, 6)
+            ),
+            (
+                LinkedList(4, 2),
+                LinkedList(5),
+                LinkedList(4, 7)
+            ),
+            (
+                LinkedList(4, 2),
+                LinkedList(9),
+                LinkedList(5, 1)
+            ),
+            (
+                LinkedList(8, 2),
+                LinkedList(4),
+                LinkedList(8, 6)
+            ),
+            (
+                LinkedList(9, 1, 0, 2),
+                LinkedList(1, 0),
+                LinkedList(9, 1, 1, 2)
+            ),
+            (
+                LinkedList(9, 1, 9, 2),
+                LinkedList(1, 0),
+                LinkedList(9, 2, 0, 2)
+            ),
+            (
+                LinkedList(9, 9, 1, 9),
+                LinkedList(2, 0),
+                LinkedList(9, 9, 3, 9)
+            ),
+            (
+                LinkedList(),
+                LinkedList(1),
+                LinkedList(1)
+            ),
+            (
+                LinkedList(),
+                LinkedList(),
+                LinkedList()
             )
         ]
 
