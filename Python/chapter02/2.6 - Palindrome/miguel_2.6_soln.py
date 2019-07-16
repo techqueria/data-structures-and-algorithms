@@ -155,7 +155,7 @@ def reverse_linked_list(ll: LinkedList) -> LinkedList:
     return output_ll
 
 
-def palindrome_constant_space(ll: LinkedList) -> bool:
+def is_palindrome_constant_space(ll: LinkedList) -> bool:
     """
     Same as the palindrome function below, but
     with constant space
@@ -178,7 +178,7 @@ def palindrome_constant_space(ll: LinkedList) -> bool:
     return True
 
 
-def palindrome(ll: LinkedList) -> bool:
+def is_palindrome(ll: LinkedList) -> bool:
     """
     Given a linked list, this function will check if the
     linked list is a palindrome.
@@ -195,7 +195,7 @@ def palindrome(ll: LinkedList) -> bool:
     return ll == reverse_linked_list(ll)
 
 
-class TestPalindrome(unittest.TestCase):
+class TestIsPalindrome(unittest.TestCase):
 
     def setUp(self):
         self.test_cases = [
@@ -233,13 +233,13 @@ class TestPalindrome(unittest.TestCase):
             )
         ]
 
-    def test_palindrome(self):
+    def test_is_palindrome(self):
         for ll, expected in self.test_cases:
-            self.assertEqual(palindrome(ll), expected, msg=ll)
+            self.assertEqual(is_palindrome(ll), expected, msg=ll)
 
-    def test_palindrome_constant_space(self):
+    def test_is_palindrome_constant_space(self):
         for ll, expected in self.test_cases:
-            self.assertEqual(palindrome_constant_space(ll), expected, msg=ll)
+            self.assertEqual(is_palindrome_constant_space(ll), expected, msg=ll)
 
 
 if __name__ == '__main__':
