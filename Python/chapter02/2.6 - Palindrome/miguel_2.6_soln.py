@@ -173,8 +173,9 @@ def is_palindrome_constant_space(ll: LinkedList) -> bool:
     while n is not None:
         temp_ll2.append_to_tail(n)  # second half
         n = n.next
+    # reverse second half
     temp_ll2.reverse()
-    # compare temp_ll and ll
+    # compare temp_ll1 and temp_ll2
     n1 = temp_ll1.head
     n2 = temp_ll2.head
     for _ in range(temp_ll2.size):
