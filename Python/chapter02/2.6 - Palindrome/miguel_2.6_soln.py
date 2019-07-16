@@ -56,7 +56,6 @@ class LinkedList:
             self.tail = self.head
         else:
             end = n
-            self.tail.next = end
             self.tail = end
         self.size += 1
 
@@ -159,22 +158,30 @@ def is_palindrome_constant_space(ll: LinkedList) -> bool:
     """
     Same as the palindrome function below, but
     with constant space
-    Runtime:  O(n^2)
+    Runtime:  O(n)
     Space Complexity:  O(1)
     :param ll: an input linked list
     :return: true if ll is a palindrome, false otherwise
     """
-    n1 = ll.head
-    for i in range(math.ceil(ll.size/2)):
-        curr_data = n1.data
-        n2 = n1
-        # advance n2 pointer to desired complement index
-        for j in range(i, ll.size - i - 1):
-            n2 = n2.next
-        # if not the same, then not a palindrome
-        if n2.data != curr_data:
+    # reverse half of the linked list
+    temp_ll1 = LinkedList()
+    temp_ll2 = LinkedList()
+    n = ll.head
+    for _ in range(math.ceil(ll.size/2)):
+        temp_ll1.append_to_tail(n)  # first half
+        n = n.next
+    while n is not None:
+        temp_ll2.append_to_tail(n)  # second half
+        n = n.next
+    temp_ll2.reverse()
+    # compare temp_ll and ll
+    n1 = temp_ll1.head
+    n2 = temp_ll2.head
+    for _ in range(temp_ll2.size):
+        if n1.data != n2.data:
             return False
         n1 = n1.next
+        n2 = n2.next
     return True
 
 
