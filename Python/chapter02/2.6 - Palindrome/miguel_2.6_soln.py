@@ -6,6 +6,7 @@ is a palindrome.
 
 """
 import unittest
+import math
 
 
 class Node:
@@ -154,6 +155,29 @@ def reverse_linked_list(ll: LinkedList) -> LinkedList:
     return output_ll
 
 
+def palindrome_constant_space(ll: LinkedList) -> bool:
+    """
+    Same as the palindrome function below, but
+    with constant space
+    Runtime:  O(n^2)
+    Space Complexity:  O(1)
+    :param ll: an input linked list
+    :return: true if ll is a palindrome, false otherwise
+    """
+    n1 = ll.head
+    for i in range(math.ceil(ll.size/2)):
+        curr_data = n1.data
+        n2 = n1
+        # advance n2 pointer to desired complement index
+        for j in range(i, ll.size - i - 1):
+            n2 = n2.next
+        # if not the same, then not a palindrome
+        if n2.data != curr_data:
+            return False
+        n1 = n1.next
+    return True
+
+
 def palindrome(ll: LinkedList) -> bool:
     """
     Given a linked list, this function will check if the
@@ -212,6 +236,10 @@ class TestPalindrome(unittest.TestCase):
     def test_palindrome(self):
         for ll, expected in self.test_cases:
             self.assertEqual(palindrome(ll), expected, msg=ll)
+
+    def test_palindrome_constant_space(self):
+        for ll, expected in self.test_cases:
+            self.assertEqual(palindrome_constant_space(ll), expected, msg=ll)
 
 
 if __name__ == '__main__':
