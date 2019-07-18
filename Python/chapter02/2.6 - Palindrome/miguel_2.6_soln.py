@@ -180,9 +180,11 @@ def is_palindrome_constant_space(ll: LinkedList) -> bool:
     n2 = temp_ll2.head
     for _ in range(temp_ll2.size):
         if n1.data != n2.data:
+            temp_ll2.reverse()
             return False
         n1 = n1.next
         n2 = n2.next
+    temp_ll2.reverse()
     return True
 
 
