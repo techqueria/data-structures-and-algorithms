@@ -78,6 +78,15 @@ class LinkedList:
                 return n
             n = n.next
 
+    def get_value_at(self, index: int) -> int:
+        if index < 0 or index >= self.size:
+            raise IndexError('list index out of range')
+        n = self.head
+        for i in range(self.size):
+            if i == index:
+                return n.data
+            n = n.next
+
     def pop_head(self) -> Node:
         if self.head is None:
             raise IndexError('no head to pop')
@@ -248,7 +257,7 @@ class TestIsPalindrome(unittest.TestCase):
 
     def test_is_palindrome_constant_space(self):
         for ll, expected in self.test_cases:
-            ll_temp = LinkedList(*[ll.get_node_at(i) for i in range(ll.size)])
+            ll_temp = LinkedList(*[ll.get_value_at(i) for i in range(ll.size)])
             self.assertEqual(is_palindrome_constant_space(ll), expected, msg=ll)
             self.assertEqual(ll_temp, ll)
 
