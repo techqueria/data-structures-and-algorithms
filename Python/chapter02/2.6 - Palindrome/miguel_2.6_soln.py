@@ -6,7 +6,6 @@ is a palindrome.
 
 """
 import unittest
-import math
 
 
 class Node:
