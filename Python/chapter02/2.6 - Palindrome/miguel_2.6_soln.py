@@ -249,7 +249,9 @@ class TestIsPalindrome(unittest.TestCase):
 
     def test_is_palindrome_constant_space(self):
         for ll, expected in self.test_cases:
+            ll_temp = LinkedList(*[ll.get_node_at(i) for i in range(ll.size)])
             self.assertEqual(is_palindrome_constant_space(ll), expected, msg=ll)
+            self.assertEqual(ll_temp, ll)
 
 
 if __name__ == '__main__':
