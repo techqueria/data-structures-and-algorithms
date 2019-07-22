@@ -28,6 +28,13 @@ class Node:
             return NotImplemented
         return self.data == other.data
 
+    def __hash__(self):
+        """
+        Hash based on node's memory address.
+        :return:
+        """
+        return id(self)
+
 
 class LinkedList:
     def __init__(self, *numbers: int):
@@ -153,6 +160,29 @@ class LinkedList:
         return a is None and b is None
 
 
+def intersection_linear_runtime(ll1: LinkedList, ll2: LinkedList) -> Optional[Node]:
+    """
+    This function will determine if ll1 and ll2 intersect.
+    The intersection is defined based on reference, not value.
+    Runtime:  O(n)
+    Space Complexity:  O(n)
+    :param ll1: first input linked list
+    :param ll2: second input linked list
+    :return: The intersecting node or None
+    """
+    n1 = ll1.head
+    refs = set()
+    while n1 is not None:
+        refs.add(n1)
+        n1 = n1.next
+    n2 = ll2.head
+    while n2 is not None:
+        if n2 in refs:
+            return n2
+        n2 = n2.next
+    return None
+
+
 def intersection(ll1: LinkedList, ll2: LinkedList) -> Optional[Node]:
     """
     This function will determine if ll1 and ll2 intersect.
@@ -239,6 +269,14 @@ class TestIntersection(unittest.TestCase):
 
         for ll1, ll2 in self.no_intersection_test_cases:
             self.assertIsNone(intersection(ll1, ll2), msg=(ll1, ll2))
+
+    def test_intersection_linear_runtime(self):
+        for ll1, ll2, shared_node in self.intersection_test_cases:
+            result_node = intersection_linear_runtime(ll1, ll2)
+            self.assertTrue(result_node is shared_node, msg=(ll1, ll2, shared_node))
+
+        for ll1, ll2 in self.no_intersection_test_cases:
+            self.assertIsNone(intersection_linear_runtime(ll1, ll2), msg=(ll1, ll2))
 
 
 if __name__ == '__main__':
