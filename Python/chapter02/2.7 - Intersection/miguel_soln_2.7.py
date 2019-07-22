@@ -225,6 +225,10 @@ class TestIntersection(unittest.TestCase):
             (
                 LinkedList(),
                 LinkedList(1, 2, 3, 4)
+            ),
+            (
+                LinkedList(1, 2, 3, 4),
+                LinkedList(1, 2, 3, 4)
             )
         ]
 
