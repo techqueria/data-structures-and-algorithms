@@ -9,7 +9,7 @@ list is the exact same node (by reference) as the jth
 node of the second linked list, then they are intersecting.
 """
 import unittest
-from typing import Optional
+from typing import Optional, NamedTuple
 
 
 class Node:
@@ -174,23 +174,30 @@ def intersection(ll1: LinkedList, ll2: LinkedList) -> Optional[Node]:
     return None
 
 
+class SharedLLStructure(NamedTuple):
+    first_segment: LinkedList
+    second_segment: LinkedList
+    shared_node: Node
+    other_list: LinkedList
+
+
 class TestIntersection(unittest.TestCase):
 
     def setUp(self):
         shared_structures = [
-            (
+            SharedLLStructure(
                 LinkedList(1, 2, 3),
                 LinkedList(5, 10, 11),
                 Node(4),
-                LinkedList(6, 7, 8, 9),
+                LinkedList(6, 7, 8, 9)
             ),
-            (
+            SharedLLStructure(
                 LinkedList(1, 2, 3, 4, 5),
                 LinkedList(7),
                 Node(6),
                 LinkedList(9, 8, 7),
             ),
-            (
+            SharedLLStructure(
                 LinkedList(1, 2),
                 LinkedList(4, 5),
                 Node(3),
