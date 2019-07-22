@@ -207,11 +207,11 @@ class TestIntersection(unittest.TestCase):
 
         self.intersection_test_cases = []
 
-        for ll1_seg1, ll1_seg2, shared_node, ll2 in shared_structures:
-            ll1_seg1.append_to_tail(shared_node)
-            ll1_seg1.append(ll1_seg2)
-            ll2.append_to_tail(shared_node)
-            self.intersection_test_cases.append((ll1_seg1, ll2, shared_node))
+        for s in shared_structures:
+            s.first_segment.append_to_tail(s.shared_node)
+            s.first_segment.append(s.second_segment)
+            s.other_list.append_to_tail(s.shared_node)
+            self.intersection_test_cases.append((s.first_segment, s.other_list, s.shared_node))
 
         self.no_intersection_test_cases = [
             (
