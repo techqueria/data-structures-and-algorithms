@@ -55,6 +55,7 @@ class LinkedList:
             self.tail = self.head
         else:
             end = n
+            self.tail.next = end
             self.tail = end
         self.size += 1
 
