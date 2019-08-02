@@ -10,3 +10,9 @@ fi
 programmingLanguage="$1"
 rsync --archive --include='*/' --exclude='*' "${DIRECTORY}/Python/" \
       "${DIRECTORY}/${programmingLanguage}/"
+
+
+find "${DIRECTORY}/${programmingLanguage}/" -mindepth 2 -maxdepth 2 \
+  -exec touch -- "{}/empty.txt" \;
+
+git add "${DIRECTORY}/${programmingLanguage}/"
