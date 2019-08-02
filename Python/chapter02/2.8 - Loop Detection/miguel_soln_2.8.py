@@ -171,20 +171,18 @@ def loop_detection(ll: LinkedList) -> Optional[Node]:
     A linked list is 'circular' when a node's
     next pointer points to an earlier node, so
     as to make a loop in the linked list.
-    Runtime:  O(n^2)
-    Space Complexity:  O(1)
+    Runtime:  O(n)
+    Space Complexity:  O(n)
     :param ll: an input linked list
     :return: the corrupt node or None
     """
-    n1 = ll.head
-    for i in range(ll.size+1):
-        n2 = ll.head
-        for j in range(i):
-            if n1 is n2:
-                return n1
-            n2 = n2.next
-        if n1 is not None:
-            n1 = n1.next
+    nodes_seen = set()
+    n = ll.head
+    while n is not None:
+        if n in nodes_seen:
+            return n
+        nodes_seen.add(n)
+        n = n.next
     return None
 
 
