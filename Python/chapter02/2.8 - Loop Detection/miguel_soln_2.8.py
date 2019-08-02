@@ -164,6 +164,31 @@ class LinkedList:
         return a is None and b is None
 
 
+def loop_detection_const_space(ll: LinkedList) -> Optional[Node]:
+    """
+    This function will determine if there is a
+    cycle in the input linked list.
+    A linked list is 'circular' when a node's
+    next pointer points to an earlier node, so
+    as to make a loop in the linked list.
+    Runtime:  O(n^2)
+    Space Complexity:  O(1)
+    :param ll: an input linked list
+    :return: the corrupt node or None
+    """
+    if ll.head and ll.head.next is ll.head:
+        return ll.head
+    n1 = ll.head
+    while n1 is not None:
+        n2 = ll.head
+        while n2 is not n1:
+            if n1.next is n2:
+                return n2
+            n2 = n2.next
+        n1 = n1.next
+    return None
+
+
 def loop_detection(ll: LinkedList) -> Optional[Node]:
     """
     This function will determine if there is a
@@ -217,6 +242,7 @@ class TestLoopDetection(unittest.TestCase):
     def test_loop_detection(self):
         for ll, corrupt_node in self.loop_detection_test_cases:
             self.assertEqual(loop_detection(ll), corrupt_node)
+            self.assertEqual(loop_detection_const_space(ll), corrupt_node)
 
     def test_loop_detection_single_node_ll(self):
         ll = LinkedList()
@@ -224,6 +250,12 @@ class TestLoopDetection(unittest.TestCase):
         corrupt_node = ll.head
         ll.head.next = corrupt_node
         self.assertEqual(loop_detection(ll), corrupt_node)
+        self.assertEqual(loop_detection_const_space(ll), corrupt_node)
+
+    def test_loop_detection_empty_ll(self):
+        ll = LinkedList()
+        self.assertIsNone(loop_detection(ll))
+        self.assertIsNone(loop_detection_const_space(ll))
 
     def test_loop_detection_non_corrupt_ll(self):
         for ll in [
@@ -232,6 +264,7 @@ class TestLoopDetection(unittest.TestCase):
             LinkedList()
         ]:
             self.assertIsNone(loop_detection(ll))
+            self.assertIsNone(loop_detection_const_space(ll))
 
 
 if __name__ == '__main__':
