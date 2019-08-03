@@ -176,16 +176,26 @@ def loop_detection_const_space(ll: LinkedList) -> Optional[Node]:
     :param ll: an input linked list
     :return: the corrupt node or None
     """
+    # for the case of a single-node corrupt linked list
     if ll.head and ll.head.next is ll.head:
         return ll.head
-    n1 = ll.head
-    while n1 is not None:
-        n2 = ll.head
-        while n2 is not n1:
-            if n1.next is n2:
-                return n2
-            n2 = n2.next
-        n1 = n1.next
+    # this algorithm will traverse through the
+    # linked list, and at each element, we will loop from
+    # the start up to the current node, comparing
+    # the next pointer of the current node with
+    # each node leading up to the current node
+    curr_node = ll.head
+    while curr_node is not None:
+        n = ll.head  # n is a node
+        # we will be traversing 'n' up to the current node
+        # to see if a previous node happens to be the
+        # 'next' of the current node.
+        while n is not curr_node:
+            if curr_node.next is n:
+                # cycle found
+                return n
+            n = n.next
+        curr_node = curr_node.next
     return None
 
 
