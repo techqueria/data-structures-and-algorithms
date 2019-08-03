@@ -164,6 +164,26 @@ class LinkedList:
         return a is None and b is None
 
 
+def loop_detection_linear_time_const_space(ll: LinkedList):
+    """
+    This function will determine if there is a
+    cycle in the input linked list.
+    A linked list is 'circular' when a node's
+    next pointer points to an earlier node, so
+    as to make a loop in the linked list.
+    Runtime:  O(n)
+    Space Complexity:  O(1)
+    :param ll: an input linked list
+    :return: the corrupt node or None
+    """
+    curr_node = ll.head
+    while curr_node is not None:
+        if curr_node is ll.tail.next:
+            return curr_node
+        curr_node = curr_node.next
+    return None
+
+
 def loop_detection_const_space(ll: LinkedList) -> Optional[Node]:
     """
     This function will determine if there is a
@@ -258,6 +278,7 @@ class TestLoopDetection(unittest.TestCase):
         for ll, corrupt_node in self.loop_detection_test_cases:
             self.assertEqual(loop_detection(ll), corrupt_node)
             self.assertEqual(loop_detection_const_space(ll), corrupt_node)
+            self.assertEqual(loop_detection_linear_time_const_space(ll), corrupt_node)
 
     def test_loop_detection_single_node_ll(self):
         ll = LinkedList()
@@ -266,11 +287,13 @@ class TestLoopDetection(unittest.TestCase):
         ll.head.next = corrupt_node
         self.assertEqual(loop_detection(ll), corrupt_node)
         self.assertEqual(loop_detection_const_space(ll), corrupt_node)
+        self.assertEqual(loop_detection_linear_time_const_space(ll), corrupt_node)
 
     def test_loop_detection_empty_ll(self):
         ll = LinkedList()
         self.assertIsNone(loop_detection(ll))
         self.assertIsNone(loop_detection_const_space(ll))
+        self.assertIsNone(loop_detection_linear_time_const_space(ll))
 
     def test_loop_detection_non_corrupt_ll(self):
         for ll in [
@@ -280,6 +303,7 @@ class TestLoopDetection(unittest.TestCase):
         ]:
             self.assertIsNone(loop_detection(ll))
             self.assertIsNone(loop_detection_const_space(ll))
+            self.assertIsNone(loop_detection_linear_time_const_space(ll))
 
 
 if __name__ == '__main__':
