@@ -230,6 +230,11 @@ class TestLoopDetection(unittest.TestCase):
                 LinkedList(1),
                 LinkedList(3),
                 Node(2)
+            ),
+            CorruptLLStructure(
+                LinkedList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11),
+                LinkedList(13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23),
+                Node(12)
             )
         ]
         self.loop_detection_test_cases = []
