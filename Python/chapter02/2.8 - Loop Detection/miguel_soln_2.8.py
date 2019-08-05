@@ -171,16 +171,20 @@ def loop_detection_linear_time_const_space(ll: LinkedList):
     A linked list is 'circular' when a node's
     next pointer points to an earlier node, so
     as to make a loop in the linked list.
+    Floyd cycle-finding algorithm:
+        https://www.geeksforgeeks.org/detect-loop-in-a-linked-list/
     Runtime:  O(n)
     Space Complexity:  O(1)
     :param ll: an input linked list
     :return: the corrupt node or None
     """
-    curr_node = ll.head
-    while curr_node is not None:
-        if curr_node is ll.tail.next:
-            return curr_node
-        curr_node = curr_node.next
+    slow_ptr = ll.head
+    fast_ptr = ll.head
+    while slow_ptr and fast_ptr and fast_ptr.next:
+        slow_ptr = slow_ptr.next
+        fast_ptr = fast_ptr.next.next
+        if slow_ptr is fast_ptr or slow_ptr is fast_ptr.next:
+            return slow_ptr
     return None
 
 
