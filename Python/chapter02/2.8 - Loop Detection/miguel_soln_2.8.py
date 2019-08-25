@@ -183,8 +183,20 @@ def loop_detection_linear_time_const_space(ll: LinkedList):
     while slow_ptr and fast_ptr and fast_ptr.next:
         slow_ptr = slow_ptr.next
         fast_ptr = fast_ptr.next.next
-        if slow_ptr is fast_ptr or slow_ptr is fast_ptr.next:
-            return slow_ptr
+        if slow_ptr is not fast_ptr:
+            continue
+        # if we get here, then there is a cycle.
+        # advance one of fast or slow pointers
+        # and a pointer that starts in the
+        # beginning, by one until they match.
+        # they will end at the beginning of
+        # the cycle.
+        p = ll.head
+        while p and slow_ptr:
+            if p is slow_ptr:
+                return p
+            p = p.next
+            slow_ptr = slow_ptr.next
     return None
 
 
@@ -274,6 +286,16 @@ class TestLoopDetection(unittest.TestCase):
                 LinkedList(1, 2, 3, 4, 5),
                 LinkedList(7, 8, 9),
                 Node(6)
+            ),
+            CorruptLLStructure(
+                LinkedList(),
+                LinkedList(2, 3, 4, 5, 6, 7, 8, 9),
+                Node(1)
+            ),
+            CorruptLLStructure(
+                LinkedList(1),
+                LinkedList(3, 4, 5, 6, 7, 8, 9),
+                Node(2)
             )
         ]
         self.loop_detection_test_cases = []
