@@ -178,26 +178,31 @@ def loop_detection_linear_time_const_space(ll: LinkedList):
     :param ll: an input linked list
     :return: the corrupt node or None
     """
+    # for the case of a linked list with
+    # a single node, non-corrupt
+    if ll.head and ll.head.next is None:
+        return None
     slow_ptr = ll.head
     fast_ptr = ll.head
     while slow_ptr and fast_ptr and fast_ptr.next:
         slow_ptr = slow_ptr.next
         fast_ptr = fast_ptr.next.next
-        if slow_ptr is not fast_ptr:
-            continue
-        # if we get here, then there is a cycle.
-        # advance one of fast or slow pointers
-        # and a pointer that starts in the
-        # beginning, by one until they match.
-        # they will end at the beginning of
-        # the cycle.
-        p = ll.head
-        while p and slow_ptr:
-            if p is slow_ptr:
-                return p
-            p = p.next
-            slow_ptr = slow_ptr.next
-    return None
+        if fast_ptr.next is None:
+            return None
+        if slow_ptr is fast_ptr:
+            # we have a cycle
+            break
+    # if we get here, then there is a cycle.
+    # advance one of fast or slow pointers
+    # and a pointer that starts in the
+    # beginning, by one until they match.
+    # they will end at the beginning of
+    # the cycle.
+    p = ll.head
+    while p is not slow_ptr:
+        p = p.next
+        slow_ptr = slow_ptr.next
+    return p
 
 
 def loop_detection_const_space(ll: LinkedList) -> Optional[Node]:
