@@ -1,87 +1,71 @@
-class node{
-	
-	constructor(data){
-		
-		this.data=data;
-		this.next=null;
-
-	}
+class Node {
+  constructor(data) {
+    this.data = data;
+    this.next = null;
+  }
 }
 
+class LinkedList {
+  constructor() {
+    this.head = null;
+  }
 
-class LinkedList{
-	
-	constructor(){
-		this.head=null;
-	}
+  //Function to insert a node in the singlely linkedlist.
+  insert(data) {
+    var newNode = new Node(data);
+    if (this.head == null) {
+      this.head = newNode;
+    } else {
+      var currentNode = this.head;
+      while (currentNode.next) {
+        currentNode = currentNode.next;
+      }
 
-//Function to insert a node in the singlely linkedlist.
-	insert(data){
-		
-		var newnode=new node(data);
-		if(this.head==null){
-			this.head=newnode;
-		}
+      currentNode.next = newNode;
+    }
+  }
 
-		else{
-			
-			var temp=this.head;
-			while(temp.next){
-				temp=temp.next;			
-			}		
-				
-			temp.next=newnode;
-		}	
-	}
+  //Function to print the singlely linkedlist.
+  printList() {
+    let currentNode = this.head;
+    let list = "";
+    while (currentNode) {
+      list += currentNode.data + "->";
+      currentNode = currentNode.next;
+    }
+    list += "null";
+    console.log(list);
+  }
 
-//Function to print the singlely linkedlist.
-	printList(){
-		var temp=this.head;
-		var list="";
-		while(temp){
-			list+=temp.data+"->";
-			temp=temp.next;		
-		}
-		list+="null";
-		console.log(list);
-	}
-
-	
-
-//Function to remove dupliicate nodes from the singlely linkedlist.
-	removeDuplicates(){
-	
-		var temp1,temp2;
-	
-		temp1=this.head;
-		while(temp1 && temp1.next){
-			temp2=temp1;
-			while(temp2.next){
-				if(temp1.data==temp2.next.data){
-					temp2.next=temp2.next.next;
-				}
-				else{
-					temp2=temp2.next;				
-				}			
-			}
-			temp1=temp1.next;
-		}
-	
-	}
-
+  //Function to remove dupliicate nodes from the singlely linkedlist.
+  removeDuplicates() {
+    let currentNode1;
+    currentNode1 = this.head;
+    while (currentNode1 && currentNode1.next) {
+      let currentNode2 = currentNode1;
+      while (currentNode2.next) {
+        if (currentNode1.data == currentNode2.next.data) {
+          currentNode2.next = currentNode2.next.next;
+        } else {
+          currentNode2 = currentNode2.next;
+        }
+      }
+      currentNode1 = currentNode1.next;
+    }
+  }
 }
 //main function.
-/*var list_1=new LinkedList();
-list_1.insert(0);
-list_1.insert(1);
-list_1.insert(2);
-list_1.insert(3);
-list_1.insert(1);
-list_1.insert(4);
-list_1.insert(4);
+var list1 = new LinkedList();
+list1.insert(0);
+list1.insert(1);
+list1.insert(2);
+list1.insert(3);
+list1.insert(1);
+list1.insert(4);
+list1.insert(4);
 console.log("Original List with Duplicates:");
-list_1.printList();
-list_1.removeDuplicates();
-console.log("New List free of duplicates:");
-list_1.printList();
-*/
+list1.printList();
+list1.removeDuplicates();
+console.log("********************************");
+console.log("New List free from Duplicates:");
+list1.printList();
