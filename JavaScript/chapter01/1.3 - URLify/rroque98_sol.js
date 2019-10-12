@@ -3,6 +3,12 @@
 const encodeSpaces = (string) => string.replace(/ /g, '%20');
 
 // Tests:
-console.log(encodeSpaces('Hello World') === 'Hello%20World');
-console.log(encodeSpaces('') === '');
-console.log(encodeSpaces('This is an example') === 'This%20is%20an%20example');
+const assert = require('assert');
+
+describe(module.filename, () => {
+  it('should replace spaces with %20', () => {
+    assert.equal(encodeSpaces('Hello World'), 'Hello%20World');
+    assert.equal(encodeSpaces(''), '');
+    assert.equal(encodeSpaces('This is an example'), 'This%20is%20an%20example');
+  });
+});
