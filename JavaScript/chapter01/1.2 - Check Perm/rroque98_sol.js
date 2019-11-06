@@ -25,10 +25,19 @@ const isPermutation = (str1, str2) => {
 };
 
 // Tests:
-console.log(isPermutation('abc', 'abb') === false);
-console.log(isPermutation('abb', 'abc') === false);
-console.log(isPermutation('aaa', 'abc') === false);
-console.log(isPermutation('abc', 'abcd') === false);
-console.log(isPermutation('abc', 'bac') === true);
-console.log(isPermutation('', '') === true);
-console.log(isPermutation('12', '21') === true);
+const assert = require('assert');
+
+describe(module.filename, () => {
+  it('should handle positive cases', () => {
+    assert.equal(isPermutation('abc', 'bac'), true);
+    assert.equal(isPermutation('', ''), true);
+    assert.equal(isPermutation('12', '21'), true);
+  });
+
+  it('should handle negative cases', () => {
+    assert.equal(isPermutation('abc', 'abb'), false);
+    assert.equal(isPermutation('abb', 'abc'), false);
+    assert.equal(isPermutation('aaa', 'abc'), false);
+    assert.equal(isPermutation('abc', 'abcd'), false);
+  });
+});

@@ -19,7 +19,16 @@ const isPalindromePermutation = (str) => {
   return true;
 }
 
-console.log(isPalindromePermutation('tact coa') === true);
-console.log(isPalindromePermutation('tact cooa') === true);
-console.log(isPalindromePermutation('tacr coa') === false);
-console.log(isPalindromePermutation('tactr coa') === false);
+const assert = require('assert');
+
+describe(module.filename, () => {
+  it('should handle positive cases', () => {
+    assert.equal(isPalindromePermutation('tact coa'), true);
+    assert.equal(isPalindromePermutation('tact cooa'), true);
+  });
+
+  it('should handle negative cases', () => {
+    assert.equal(isPalindromePermutation('tacr coa'), false);
+    assert.equal(isPalindromePermutation('tactr coa'), false);
+  });
+});

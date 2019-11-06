@@ -35,38 +35,44 @@ const isOneAway = (str1, str2) => {
   return true;
 };
 
-// ****** TESTS ******
+const assert = require('assert');
+
 function runTests(cases, expected) {
   for (const [str1, str2] of cases) {
-    console.log(
-      isOneAway(str1, str2) === expected && isOneAway(str2, str1) === expected
-    );
+    assert.equal(isOneAway(str1, str2), expected);
+    assert.equal(isOneAway(str2, str1), expected);
   }
 }
 
-runTests(
-  [
-    ['pale', 'ple'], // deletion
-    ['pale', 'opale'], // insertion in beginning
-    ['pale', 'palse'], // insertion in middle
-    ['pale', 'pales'], // insertion at end
-    ['pale', 'bale'], // replacement
-    ['p', 'b'],
-    ['p', 'p'],
-    ['p', ''],
-    ['', '']
-  ],
-  true
-);
+describe(module.filename, () => {
+  it('should handle positive cases', () => {
+    runTests(
+      [
+        ['pale', 'ple'], // deletion
+        ['pale', 'opale'], // insertion in beginning
+        ['pale', 'palse'], // insertion in middle
+        ['pale', 'pales'], // insertion at end
+        ['pale', 'bale'], // replacement
+        ['p', 'b'],
+        ['p', 'p'],
+        ['p', ''],
+        ['', '']
+      ],
+      true
+    );
+  });
 
-runTests(
-  [
-    ['pale', 'ae'], // greater than 1 deletions
-    ['pale', 'ppalpe'], // greater than 1 insertions
-    ['pale', 'bake'], // greater than 1 replacements
-    ['pale', 'balpe'], // 1 insertion, 1 replacement
-    ['pale', 'plo'], // 1 deletion, 1 replacement
-    ['pale', 'ales'] // 1 deletion, 1 insertion
-  ],
-  false
-);
+  it('should handle negative cases', () => {
+    runTests(
+      [
+        ['pale', 'ae'], // greater than 1 deletions
+        ['pale', 'ppalpe'], // greater than 1 insertions
+        ['pale', 'bake'], // greater than 1 replacements
+        ['pale', 'balpe'], // 1 insertion, 1 replacement
+        ['pale', 'plo'], // 1 deletion, 1 replacement
+        ['pale', 'ales'] // 1 deletion, 1 insertion
+      ],
+      false
+    );
+  });
+});

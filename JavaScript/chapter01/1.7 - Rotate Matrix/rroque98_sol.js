@@ -20,10 +20,16 @@ const rotateImage = nestedArr => {
 };
 
 // TESTS:
-console.log(
-  JSON.stringify(rotateImage([[1, 2, 3], [4, 5, 6], [7, 8, 9]])) ===
-    JSON.stringify([[7, 4, 1], [8, 5, 2], [9, 6, 3]])
-);
-console.log(JSON.stringify(rotateImage([[1]])) === JSON.stringify([[1]]));
-console.log(JSON.stringify(rotateImage([[]])) === JSON.stringify([[]]));
-console.log(JSON.stringify(rotateImage([])) === JSON.stringify([]));
+const assert = require('assert');
+
+describe(module.filename, () => {
+  it('should rotate matrices', () => {
+    assert.deepEqual(
+      rotateImage([[1, 2, 3], [4, 5, 6], [7, 8, 9]]),
+      [[7, 4, 1], [8, 5, 2], [9, 6, 3]]
+    );
+    assert.deepEqual(rotateImage([[1]]), [[1]]);
+    assert.deepEqual(rotateImage([[]]), [[]]);
+    assert.deepEqual(rotateImage([]), []);
+  });
+});
