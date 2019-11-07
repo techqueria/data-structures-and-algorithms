@@ -11,6 +11,10 @@ Input: 3 -> 5 -> 8 -> 5 -> 10 -> 2 -> 1[partition=5] Output: 3 -> 1 -> 2 ->
 Hints: #3, #24
 """
 
+import logging
+import unittest
+
+
 class Node:
     #Singly link list
     def __init__(self,data = None):
@@ -41,24 +45,24 @@ class linklist:
         current.next = node #point self.head to a new node
         self.size+=1
 
-    def lenght(self):
+    def length(self):
         #note the count doesn't start at zero
         cur = self.head
         counter = 0
         while cur is not None:
             counter+=1
             cur = cur.next
-        print('Linklist len: '+str(counter))
         return counter
 
-    def printList(self):
+    def toList(self):
         curr = self.head
         elem = []
 
         while(curr != None):
             elem.append(curr.data)
             curr = curr.next
-        print(elem)
+        return(elem)
+
     #1->2->3
     def remove_node(self,data):
         #1->2->3
@@ -94,8 +98,8 @@ class linklist:
             elif curr.data > num:
                 list_B.push(curr.data)
             curr = curr.next
-        list_A.printList()
-        list_B.printList()
+        logging.debug('%r', list_A.toList())
+        logging.debug('%r', list_B.toList())
 
         #Go through all of A the point the end of A to the begining of B
 
@@ -106,30 +110,20 @@ class linklist:
         head_A.next = list_B.head
 
 
+class Test(unittest.TestCase):
+    def test_partition(self):
+        llist = linklist()
+        llist.push(3)
+        llist.push(5)
+        llist.push(8)
+        llist.push(5)
+        llist.push(10)
+        llist.push(2)
+        llist.push(1)
+        self.assertEqual(llist.toList(), [3, 5, 8, 5, 10, 2, 1])
+        llist.partition(5)
+        self.assertEqual(llist.toList(), [3, 5, 5, 2, 1, 8, 10])
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-llist = linklist()
-llist.push(3)
-llist.push(5)
-llist.push(8)
-llist.push(5)
-llist.push(10)
-llist.push(2)
-llist.push(1)
-llist.printList()
-llist.lenght()
-llist.partition(5)
-llist.printList()
+if __name__ == '__main__':
+    unittest.main()

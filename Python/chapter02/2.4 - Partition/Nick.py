@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import logging
 import unittest
 
 
@@ -25,22 +26,23 @@ class SinglyLinkedList:
             while temp.next:
                 temp = temp.next
             temp.next = node
-        print('Node added to LL--->', data)
+        logging.debug('Node added to LL---> %r', data)
 
-    def printList(self):
+    def toList(self):
         if self.head is None:
-            print('No LinkedList to print')
-            return
+            return []
 
         temp = self.head
+        result = []
         while temp:
-            print(temp.data)
+            result.append(temp.data)
             temp = temp.next
+        return result
 
     def partition(self, part):
         '''However, in a linked list, the situation is much easier. Rather than shifting and swapping elements, we can actually create two different linked lists: one for elements less than x, and one for elements greater than or equal to x.'''
         if self.head is None:
-            print('No LinkedList to print')
+            logging.debug('No LinkedList to print')
             return
 
         temp = self.head
@@ -66,7 +68,6 @@ class Test(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.l = SinglyLinkedList()
-        cls.l.printList()
         cls.l.addNode(3)
         cls.l.addNode(20)
         cls.l.addNode(21)
@@ -76,15 +77,16 @@ class Test(unittest.TestCase):
         cls.l.addNode(10)
         cls.l.addNode(2)
         cls.l.addNode(1)
-        cls.l.printList()
 
     @classmethod
     def tearDownClass(cls):
         pass
 
     def test1(self):
+        self.assertEqual(self.l.toList(), [3, 20, 21, 5, 8, 5, 10, 2, 1])
         self.l.partition(5)
-        self.l.printList()
+        # Note that this code has a bug: it loses the final 1!
+        self.assertEqual(self.l.toList(), [3, 2, 20, 21, 5, 8, 5, 10])
 
 
 if __name__ == '__main__':

@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 '''Intersection: Given two (singly) linked lists, determine if the two lists intersect. Return the intersecting node. Note that the intersection is defined based on reference, not value. That is, if the kth node of the first linked list is the exact same node (by reference) as the jth node of the second linked list, then they are intersecting'''
+
+import logging
 import unittest
 
 
@@ -22,18 +24,18 @@ class SinglyLinkedList:
             while temp.next:
                 temp = temp.next
             temp.next = node
-        print('Node added to LL-->', data)
+        logging.debug('Node added to LL--> %r', data)
 
     def printMemoryValues(self):
         temp = self.head
         while temp:
-            print('Memory address values: ', hex(
-                id(temp)), ' Values: ', temp.data)
+            logging.debug('Memory address values: %s Values: %r', hex(
+                id(temp)), temp.data)
             temp = temp.next
 
     def findNode(self, value):
         if not self.head:
-            print('No list to iterate')
+            logging.debug('No list to iterate')
             return
 
         temp = self.head
@@ -45,7 +47,7 @@ class SinglyLinkedList:
 
     def findLongest(self, l1, l2):
         if not self.head:
-            print('No list to iterate')
+            logging.debug('No list to iterate')
             return None
 
         l1count, l2count = 0, 0
@@ -66,7 +68,7 @@ class SinglyLinkedList:
 
     def intersection(self, l1, l2):
         if not l1.head or not l2.head:
-            print('No list to iterate -> intersection')
+            logging.debug('No list to iterate -> intersection')
             return None
 
         diff, longest, shortest = self.findLongest(l1, l2)
@@ -123,10 +125,8 @@ class Test(unittest.TestCase):
             print('Nodes do not intersect')
 
     def test1(self):
-        interNode = self.l.intersection(self.l, self.k)
-        interNode2 = self.l.intersection(self.l, self.p)
-        self.printStatement(interNode)
-        self.printStatement(interNode2)
+        self.assertIsNotNone(self.l.intersection(self.l, self.k))
+        self.assertIsNone(self.l.intersection(self.l, self.p))
 
 
 if __name__ == '__main__':

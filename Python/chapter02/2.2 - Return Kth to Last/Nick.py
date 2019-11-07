@@ -3,6 +3,8 @@
 Return Kth to Last: Implement an algorithm to
 find the kth to last element of a singly linked list.
 '''
+
+import logging
 import unittest
 
 
@@ -22,7 +24,7 @@ class SinglyLinkedList:
         self.size = 0
 
     def insertHead(self, data):
-        print('Inserting head!----->', data)
+        logging.debug('Inserting head!-----> %r', data)
         n = Node(data)
         temp = self.head
         self.head = n
@@ -31,21 +33,21 @@ class SinglyLinkedList:
     def addNode(self, data):
         if not self.head:
             n = Node(data)
-            print('New Head added ---->', data)
+            logging.debug('New Head added ----> %r', data)
             self.head = n
         else:
             n = self.head
             while (n.next):
                 n = n.next
 
-            print('New Node added ---->', data)
+            logging.debug('New Node added ----> %r', data)
             new_node = Node(data)
             n.next = new_node
 
     def kthToLastElement(self, num):
         if num < 1:
-            print('Must be a positive number')
-            return
+            logging.debug('Must be a positive number')
+            return None
 
         length = 0
         temp = self.head
@@ -54,21 +56,23 @@ class SinglyLinkedList:
             temp = temp.next
 
         if num > length:
-            print('Input number cannot be larger than number of nodes')
+            logging.debug('Input number cannot be larger than number of nodes')
+            return None
         else:
             temp = self.head
             for x in range(length - num):
                 temp = temp.next
 
-            print("{}th to last element --->".format(num), temp.data)
+            return temp.data
 
-    def printList(self):
+    def toList(self):
         n = self.head
 
-        print('Printing Singly Linked List')
+        result = []
         while(n):
-            print(n)
+            result.append(n.data)
             n = n.next
+        return result
 
 
 class Test(unittest.TestCase):
@@ -87,18 +91,28 @@ class Test(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        print('---Teardown successful---')
+        logging.debug('---Teardown successful---')
 
     def test1(self):
-        self.link.printList()
+        self.assertEqual(self.link.toList(), [
+            -1,
+            -1,
+            4,
+            3,
+            4,
+            1,
+            20,
+            4,
+            4,
+        ])
 
     def test2(self):
-        self.link.kthToLastElement(0)
-        self.link.kthToLastElement(1)
-        self.link.kthToLastElement(2)
-        self.link.kthToLastElement(3)
-        self.link.kthToLastElement(9)
-        self.link.kthToLastElement(10)
+        self.assertEqual(self.link.kthToLastElement(0), None)
+        self.assertEqual(self.link.kthToLastElement(1), 4)
+        self.assertEqual(self.link.kthToLastElement(2), 4)
+        self.assertEqual(self.link.kthToLastElement(3), 20)
+        self.assertEqual(self.link.kthToLastElement(9), -1)
+        self.assertEqual(self.link.kthToLastElement(10), None)
 
 
 if __name__ == "__main__":

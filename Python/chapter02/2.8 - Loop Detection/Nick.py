@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+
+import logging
 import unittest
 
 
@@ -21,11 +23,11 @@ class SinglyLinkedList:
             while temp.next:
                 temp = temp.next
             temp.next = node
-        print('Node added to LL-->', data)
+        logging.debug('Node added to LL-->%r', data)
 
     def findNode(self, value):
         if not self.head:
-            print('No list to iterate')
+            logging.debug('No list to iterate')
             return
 
         temp = self.head
@@ -35,15 +37,17 @@ class SinglyLinkedList:
             temp = temp.next
         return None
 
-    def printList(self):
+    def toList(self):
         temp = self.head
+        result = []
         while temp:
-            print('->', temp.data)
+            result.append(temp.data)
             temp = temp.next
+        return result
 
     def loopDetection(self):
         if not self.head:
-            print('No list to iterate for loop detection')
+            logging.debug('No list to iterate for loop detection')
             return
 
         slow = self.head
@@ -77,7 +81,6 @@ class Test(unittest.TestCase):
         cls.l.addNode(7)
         cls.l.addNode(2)
         cls.l.addNode(10)
-        cls.l.printList()
 
         cls.k = SinglyLinkedList()
         cls.k.addNode(1)
@@ -85,7 +88,6 @@ class Test(unittest.TestCase):
         cls.k.addNode(15)
         cls.k.addNode(16)
         cls.k.addNode(1)
-        cls.k.printList()
 
     @classmethod
     def tearDownClass(cls):
@@ -102,12 +104,10 @@ class Test(unittest.TestCase):
         node.next = self.l.findNode(5)
         # if uncomment below, will print in infinite
         # self.l.printList()
-        start = self.l.loopDetection()
-        self.printStatement(start)
+        self.assertEqual(self.l.loopDetection().data, 5)
 
     def test2(self):
-        start = self.k.loopDetection()
-        self.printStatement(start)
+        self.assertIsNone(self.k.loopDetection())
 
 
 if __name__ == '__main__':

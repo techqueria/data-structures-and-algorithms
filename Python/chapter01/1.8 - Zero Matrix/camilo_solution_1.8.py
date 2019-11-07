@@ -11,6 +11,7 @@ https://www.youtube.com/watch?v=ZzpJgRvqSJQ&t=113s
 https://www.youtube.com/watch?v=qWeNXOCff3o&t=408s
 """
 
+import unittest
 
 
 def zeroMatrix(matrix):
@@ -51,18 +52,17 @@ def zeroMatrix(matrix):
             matrix[i][0] = 0
 
 
+class Test(unittest.TestCase):
+    def test_rotate_matrix(self):
+        matrix = [[0,1,1],
+                  [1,1,1],
+                  [1,1,1]]
+        zeroMatrix(matrix)
+        self.assertEqual(matrix,
+                         [[0,0,0],
+                          [0,1,1],
+                          [0,1,1]])
 
 
-
-
-
-
-
-matrix = [[0,1,1],
-          [1,1,1],
-          [1,1,1]]
-
-zeroMatrix(matrix)
-
-
-print(matrix)
+if __name__ =='__main__':
+    unittest.main()

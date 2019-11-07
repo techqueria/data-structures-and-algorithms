@@ -5,6 +5,9 @@ a rotation of sl using only one call to isSubstring (e.g.,"waterbottle" is a
 rotation of"erbottlewat").
 """
 
+import unittest
+
+
 def isSubstring(s1,s2):
     if s2 in s1: #check to see if the seqence of s2 is found in s1
         return True
@@ -21,7 +24,14 @@ def Rotation(s1,s2):
         s1+=s1 #waterbottlewaterbottle Anyroataion can be found here
         return isSubstring(s1,s2)
 
-s1 = "waterbottle"
-s2 = "erbottlewat"
 
-print(Rotation(s1,s2))
+class Test(unittest.TestCase):
+    def test_string_rotation(self):
+        s1 = "waterbottle"
+        s2 = "erbottlewat"
+
+        self.assertTrue(Rotation(s1,s2))
+
+
+if __name__ =='__main__':
+    unittest.main()

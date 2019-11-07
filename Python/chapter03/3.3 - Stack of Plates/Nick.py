@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
+import logging
 import unittest
-from random import randint
 
 
 class SetofStacks:
@@ -37,7 +37,7 @@ class SetofStacks:
 
     def addNewStack(self, value):
         if not value:
-            print('No value to add to stack')
+            logging.debug('No value to add to stack')
             return
         s = Stack()
         s.push(value)
@@ -45,7 +45,7 @@ class SetofStacks:
 
     def popLastStack(self):
         if self.length() == 0:
-            print('No set of stacks to pop')
+            logging.debug('No set of stacks to pop')
             return
         s = self.stack[self.pointer]
         s.pop()
@@ -57,12 +57,8 @@ class SetofStacks:
                 del self.stack[self.pointer]
                 self.pointer -= 1
 
-    def printAllStacks(self):
-        print('pointer', self.pointer)
-        print('length', self.length())
-        for x in range(len(self.stack)):
-            print('Set number {} and values -> {}'.format(x,
-                                                          self.stack[x].stack))
+    def getAllStacks(self):
+        return [stack.stack for stack in self.stack]
 
 
 class Stack:
@@ -75,11 +71,11 @@ class Stack:
 
     def pop(self):
         if not self.length:
-            print('No stack to pop')
+            logging.debug('No stack to pop')
             return
 
         item = self.stack.pop()
-        print('Item popped', item)
+        logging.debug('Item popped %r', item)
 
         if item == self.min:
             if self.length() > 0:
@@ -104,23 +100,23 @@ class Stack:
             self.min = value
 
         self.stack.append(value)
-        print('Item added to stack', value)
+        logging.debug('Item added to stack %r', value)
 
     def peek(self):
         if not self.length:
-            print('No stack to peek')
+            logging.debug('No stack to peek')
             return
-        print('Peeking into stack', self.stack[-1])
+        logging.debug('Peeking into stack %r', self.stack[-1])
 
     def printStack(self):
         if not self.length:
-            print('No stack to peeek')
+            logging.debug('No stack to peeek')
             return
 
-        print("Top of stack\n _ ")
+        logging.debug("Top of stack\n _ ")
         for x in self.stack[::-1]:
-            print('|', x, '|')
-            print('|', '_', '|')
+            logging.debug('|%r|', x)
+            logging.debug('|_|')
 
 
 class Test(unittest.TestCase):
@@ -132,19 +128,21 @@ class Test(unittest.TestCase):
     def tearDownClass(cls):
         pass
 
-    def generateRand(self, size=15):
-        return [randint(0, 100) for x in range(size)]
-
     def test1(self):
-        arr = self.generateRand()
+        arr = [100, 80, 70, 65, 33, 35, 31, 45, 48, 35, 33, 94, 72, 65, 9]
         setStack1 = SetofStacks()
         for x in arr:
             setStack1.push(x)
-        setStack1.printAllStacks()
-
-        for x in range(randint(7, len(arr))):
+        self.assertEqual(setStack1.getAllStacks(), [
+            [100, 80, 70, 65, 33],
+            [35, 31, 45, 48, 35],
+            [33, 94, 72, 65, 9],
+        ])
+        for _ in range(14):
             setStack1.popLastStack()
-        setStack1.printAllStacks()
+        self.assertEqual(setStack1.getAllStacks(), [
+            [100],
+        ])
 
 
 if __name__ == '__main__':

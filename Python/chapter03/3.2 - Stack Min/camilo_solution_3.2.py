@@ -3,9 +3,11 @@ Stack Min: How would you design a stack which, in addition to push and pop, has
 a function min which returns the minimum element? Push, pop and min should all
 operate in 0(1) time.
 Hints:#27, #59, #78
-
-
 """
+
+import unittest
+
+
 class stack:
     def __init__(self):
         self.items = []
@@ -51,16 +53,19 @@ class stack:
         return min
 
 
+class Test(unittest.TestCase):
+    def test_stack_min(self):
+        st1 = stack()
+        st1.push(7)
+        st1.push(4)
+        st1.push(5)
+        st1.push(9)
+        st1.push(0)
+        st1.push(6)
+        st1.push(1)
+        st1.push(5)
+        st1.push(7)
+        self.assertEqual(st1.stackMin(), 0)
 
-st1 = stack()
-st1.push(7)
-st1.push(4)
-st1.push(5)
-st1.push(9)
-st1.push(0)
-st1.push(6)
-st1.push(1)
-st1.push(5)
-st1.push(7)
-st1.print_stack()
-print(st1.stackMin())
+if __name__ == '__main__':
+    unittest.main()

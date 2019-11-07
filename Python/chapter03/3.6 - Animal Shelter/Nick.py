@@ -56,32 +56,22 @@ class ShelterQueue:
 
 
 class Test(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
+    def test1(self):
         q = ShelterQueue()
         animals = ['D1', 'D2', 'C1', 'D3', 'C2', 'C3', 'C4']
         for x in animals:
             q.enqueue(x)
 
-        q.printQueue()
-        print('{}  got adopted!'.format(q.dequeueDog()))  # D1
-        print('{}  got adopted!'.format(q.dequeueCat()))  # C1
-        q.printQueue()
+        self.assertEqual(q.dequeueDog(), 'D1')
+        self.assertEqual(q.dequeueCat(), 'C1')
 
-        print('{}  got adopted!'.format(q.dequeueAny()))  # D2
-        print('{}  got adopted!'.format(q.dequeueCat()))  # C2
-        print('{}  got adopted!'.format(q.dequeueAny()))  # D3
-        print('{}  got adopted!'.format(q.dequeueDog()))  # No Dogs
-        print('{}  got adopted!'.format(q.dequeueAny()))  # C3
-        print('{}  got adopted!'.format(q.dequeueCat()))  # C4
-        print('{}  got adopted!'.format(q.dequeueCat()))  # No Cats
-
-    @classmethod
-    def tearDownClass(cls):
-        pass
-
-    def test1(self):
-        pass
+        self.assertEqual(q.dequeueAny(), 'D2')
+        self.assertEqual(q.dequeueCat(), 'C2')
+        self.assertEqual(q.dequeueAny(), 'D3')
+        self.assertEqual(q.dequeueDog(), None)
+        self.assertEqual(q.dequeueAny(), 'C3')
+        self.assertEqual(q.dequeueCat(), 'C4')
+        self.assertEqual(q.dequeueCat(), None)
 
 
 if __name__ == '__main__':

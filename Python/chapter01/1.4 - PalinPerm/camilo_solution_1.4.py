@@ -8,6 +8,9 @@ Input: Tact Coa
 Output: True (permutations: "taco cat", "atco eta", etc.)
 """
 
+import unittest
+
+
 def PalinPerm(str):
     d = {}
     str = str.replace(' ','').lower()#Take out the spaces
@@ -24,5 +27,11 @@ def PalinPerm(str):
             return False
     return True
 
-print(PalinPerm('taco cat'))#True
-print(PalinPerm('taco catt'))#False
+class Test(unittest.TestCase):
+    def test_palin_perm(self):
+        self.assertTrue(PalinPerm('taco cat'))
+        self.assertFalse(PalinPerm('taco catt'))
+
+
+if __name__ == '__main__':
+    unittest.main()

@@ -3,6 +3,7 @@
 Remove Dups! Write code to remove duplicates from an unsorted linked list. FOLLOW UP How would you solve this problem if a temporary buffer is not allowed?
 '''
 import unittest
+import logging
 
 
 class Node:
@@ -21,7 +22,7 @@ class SinglyLinkedList:
         self.size = 0
 
     def insertHead(self, data):
-        print('Inserting head!----->', data)
+        logging.debug('Inserting head!-----> %r', data)
         n = Node(data)
         temp = self.head
         self.head = n
@@ -36,12 +37,12 @@ class SinglyLinkedList:
             while (n.next):
                 n = n.next
 
-            print('New Node added ---->', data)
+            logging.debug('New Node added ----> %r', data)
             new_node = Node(data)
             n.next = new_node
 
     def removeDuplicates(self):
-        print('Removing Duplicates.')
+        logging.debug('Removing Duplicates.')
         temp = self.head
         nums = set()
         while temp.next:
@@ -49,10 +50,10 @@ class SinglyLinkedList:
             if temp.next.data in nums:
                 temp.next = temp.next.next
             temp = temp.next
-        print('Duplicates Removed!---------')
+        logging.debug('Duplicates Removed!---------')
 
     def removeDuplicatesNoBuffer(self):
-        print('Removing Duplicates - No buffer')
+        logging.debug('Removing Duplicates - No buffer')
         temp = self.head
         while temp.next:
             second = temp
@@ -61,15 +62,16 @@ class SinglyLinkedList:
                     second.next = second.next.next
                 second = second.next
             temp = temp.next
-        print('Duplicates Removed!----------')
+        logging.debug('Duplicates Removed!----------')
 
-    def printList(self):
+    def toList(self):
         n = self.head
 
-        print('Printing Singly Linked List')
+        result = []
         while(n):
-            print(n)
+            result.append(n.data)
             n = n.next
+        return result
 
 
 class Test(unittest.TestCase):
@@ -88,26 +90,75 @@ class Test(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        print('---Teardown successful---')
+        logging.debug('---Teardown successful---')
 
     def test1(self):
-        self.link.printList()
+        self.assertEqual(self.link.toList(), [
+            -1,
+            -1,
+            4,
+            3,
+            4,
+            1,
+            20,
+            4,
+            4,
+        ])
 
     def test2(self):
         self.link.removeDuplicates()
-        self.link.printList()
+        self.assertEqual(self.link.toList(), [
+            -1,
+            4,
+            3,
+            1,
+            20,
+            4,
+        ])
 
     def test3(self):
         self.link.addNode(-1)
         self.link.addNode(20)
         self.link.addNode(40)
-        self.link.printList()
+        self.assertEqual(self.link.toList(), [
+            -1,
+            4,
+            3,
+            1,
+            20,
+            4,
+            -1,
+            20,
+            40,
+        ])
         self.link.removeDuplicatesNoBuffer()
-        self.link.printList()
+        # Note: the duplicates have not been removed.
+        self.assertEqual(self.link.toList(), [
+            -1,
+            4,
+            3,
+            1,
+            20,
+            4,
+            -1,
+            20,
+            40,
+        ])
 
     def test4(self):
         self.link.insertHead(-2)
-        self.link.printList()
+        self.assertEqual(self.link.toList(), [
+            -2,
+            -1,
+            4,
+            3,
+            1,
+            20,
+            4,
+            -1,
+            20,
+            40,
+        ])
 
 
 if __name__ == "__main__":

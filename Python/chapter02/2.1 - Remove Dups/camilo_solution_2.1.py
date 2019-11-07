@@ -4,6 +4,9 @@ How would you solve this problem if a temporary
 buffer is not allowed? Hints: #9, #40
 """
 
+import unittest
+
+
 class Node:
     #Singly link list
     def __init__(self,data):
@@ -30,26 +33,24 @@ class linklist:
 
         current.next = node #point self.head to a new node
 
-
-
-
-    def lenght(self):
+    def length(self):
         #note the count doesn't start at zero
         cur = self.head
         counter = 0
         while cur is not None:
             counter+=1
             cur = cur.next
-        print('Linklist len: '+str(counter))
+        return counter
 
-    def printList(self):
+    def toList(self):
         curr = self.head
         elem = []
 
         while(curr != None):
             elem.append(curr.data)
             curr = curr.next
-        print(elem)
+        return elem
+
     #1->2->3
     def remove_node(self,data):
         #1->2->3
@@ -88,16 +89,21 @@ class linklist:
 
 
 
-#Testing to see if my class works
-llist = linklist()
-llist.push(2)
-llist.push(2)
-llist.push(2)
-llist.push(2)
-llist.push(2)
-llist.printList()
-llist.lenght()
-#Testing 1->2->1->3->1 result should only be 1->2->3
-llist.remove_dups()
-llist.printList()
-llist.lenght()
+class Test(unittest.TestCase):
+    def test_remove_dups(self):
+        llist = linklist()
+        llist.push(2)
+        llist.push(2)
+        llist.push(2)
+        llist.push(2)
+        llist.push(2)
+        self.assertEqual(llist.toList(), [2, 2, 2, 2, 2])
+        self.assertEqual(llist.length(), 5)
+        #Testing 1->2->1->3->1 result should only be 1->2->3
+        llist.remove_dups()
+        self.assertEqual(llist.toList(), [2])
+        self.assertEqual(llist.length(), 1)
+
+
+if __name__ =='__main__':
+    unittest.main()

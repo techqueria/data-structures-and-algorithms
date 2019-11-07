@@ -18,6 +18,7 @@ https://www.youtube.com/watch?v=dm9drjU-DuM
 
 """
 
+import unittest
 
 
 class Node:
@@ -57,17 +58,17 @@ class linklist:
         while cur is not None:
             counter+=1
             cur = cur.next
-        print('Linklist len: '+str(counter))
         return counter
 
-    def printList(self):
+    def toList(self):
         curr = self.head
         elem = []
 
         while(curr != None):
             elem.append(curr.data)
             curr = curr.next
-        print(elem)
+        return elem
+
     #1->2->3
     def remove_node(self,data):
         #1->2->3
@@ -124,17 +125,20 @@ class linklist:
         self.head = sum_list.head
 
 
+class Test(unittest.TestCase):
+    def test_sum_lists(self):
+        link_A = linklist()
+        link_B = linklist()
+        link_A.push(7)
+        link_A.push(1)
+        link_A.push(6)
+
+        link_B.push(5)
+        link_B.push(9)
+        link_B.push(2)
+        link_A.sum_forward_backwards(link_B)
+        self.assertEqual(link_A.toList(), [2, 1, 9])
 
 
-
-link_A = linklist()
-link_B = linklist()
-link_A.push(7)
-link_A.push(1)
-link_A.push(6)
-
-link_B.push(5)
-link_B.push(9)
-link_B.push(2)
-link_A.sum_forward_backwards(link_B)
-link_A.printList()
+if __name__ == '__main__':
+    unittest.main()

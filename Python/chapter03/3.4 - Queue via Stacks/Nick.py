@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 '''Queue via Stacks: Implement a MyQueue class
 which implements a queue using two stacks.'''
+
+import logging
 import unittest
 
 
@@ -14,7 +16,7 @@ class Stack:
 
     def pop(self):
         if not self.length:
-            print('No stack to pop')
+            logging.debug('No stack to pop')
             return
 
         item = self.stack.pop()
@@ -45,19 +47,19 @@ class Stack:
 
     def peek(self):
         if not self.length:
-            print('No stack to peek')
+            logging.debug('No stack to peek')
             return
         return self.stack[-1]
 
     def printStack(self):
         if not self.length:
-            print('No stack to peeek')
+            logging.debug('No stack to peeek')
             return
 
-        print("Top of stack\n _ ")
+        logging.debug("Top of stack\n _ ")
         for x in self.stack[::-1]:
-            print('|', x, '|')
-            print('|', '_', '|')
+            logging.debug('|%r|', x)
+            logging.debug('|_|')
 
 
 class MyQueue:
@@ -71,14 +73,14 @@ class MyQueue:
     def pop(self):
         self.rotate()
         if self.oldStack.length() == 0:
-            print('Nothing to pop in this queue')
+            logging.debug('Nothing to pop in this queue')
             return
         return self.oldStack.pop()
 
     def peek(self):
         self.rotate()
         if self.oldStack.length() == 0:
-            print('Nothing to peek in this queue')
+            logging.debug('Nothing to peek in this queue')
             return
         return self.oldStack.peek()
 
@@ -107,16 +109,12 @@ class Test(unittest.TestCase):
 
     def test1(self):
         arr = [2, 5, 7, 10, 3, 10, -1, -100]
-        print(arr)
         q = MyQueue()
         for x in arr:
             q.push(x)
 
-        q.printQueue()
-        print('First in Queue --> Popped', q.pop())
-        print('Second in Queue --> Popped', q.pop())
-        q.printQueue()
-        print('Let\'s take a peek -->', q.peek())
+        self.assertEqual(q.pop(), 2)
+        self.assertEqual(q.peek(), 5)
 
 
 if __name__ == '__main__':

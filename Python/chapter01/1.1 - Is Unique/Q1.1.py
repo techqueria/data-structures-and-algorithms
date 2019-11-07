@@ -1,3 +1,4 @@
+import unittest
 
 # Note that this solution assumes a unique string
 # implies a lowercase letter and the uppercase of
@@ -15,13 +16,18 @@ def uniqueChar(passedStr):
 
         # If the string had unique characters the string
         # length remains the same
-        # If the string has duplicates then size 
+        # If the string has duplicates then size
         if len(deleteDuplicateIfAny) == len(passedStr):
                 return "Unique"
         else:
                 return "Not Unique"
 
 
-example = "Helloh"
+class Test(unittest.TestCase):
+    def test_uniqueChar(self):
+        example = "Helloh"
+        self.assertEqual(uniqueChar(example), "Not Unique")
 
-print(uniqueChar(example))
+
+if __name__ == '__main__':
+    unittest.main()

@@ -1,6 +1,8 @@
 #!/usr/bin/python3
+
 import random
-from pprint import pprint
+import unittest
+
 
 def build_matrix(w, h, max=10):
     '''function that builds a matrix with random numbers including 0'''
@@ -38,8 +40,23 @@ def rotate_matrix(matrix):
             # top right becomes top left
             matrix[i][last] = top
 
+
+class Test(unittest.TestCase):
+    def test_rotate_matrix(self):
+        matrix = [[8, 0, 5, 6, 8],
+                  [3, 4, 6, 6, 8],
+                  [3, 2, 10, 3, 0],
+                  [4, 3, 9, 0, 2],
+                  [9, 5, 4, 2, 10]]
+        rotate_matrix(matrix)
+        self.assertEqual(
+                matrix,
+                [[9, 4, 3, 3, 8],
+                 [5, 3, 2, 4, 0],
+                 [4, 9, 10, 6, 5],
+                 [2, 0, 3, 6, 6],
+                 [10, 2, 0, 8, 8]])
+
+
 if __name__ =='__main__':
-    matrix = build_matrix(5, 5)
-    pprint(matrix)
-    rotate_matrix(matrix)
-    pprint(matrix)
+    unittest.main()

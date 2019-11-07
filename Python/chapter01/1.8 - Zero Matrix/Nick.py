@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import random
+import unittest
 
 
 def build_matrix(w, h, max=10):
@@ -28,8 +29,20 @@ column are set to 0.'''
                 if idx2 in column:
                     matrix[idx1][idx2] = 0
 
-if __name__ == '__main__':
-    matrix = build_matrix(4, 4)
-    print("Old Matrix => ", matrix)
-    zero_matrix(matrix)
-    print("New Matrix => ", matrix)
+class Test(unittest.TestCase):
+    def test_rotate_matrix(self):
+        matrix = [[9, 5, 7, 7],
+                  [10, 4, 0, 10],
+                  [1, 7, 3, 7],
+                  [6, 8, 4, 4]]
+        zero_matrix(matrix)
+        self.assertEqual(
+                matrix,
+                [[9, 5, 0, 7],
+                 [0, 0, 0, 0],
+                 [1, 7, 0, 7],
+                 [6, 8, 0, 4]])
+
+
+if __name__ =='__main__':
+    unittest.main()

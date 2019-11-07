@@ -4,6 +4,10 @@ a singly linked list.
 Hints:#8, #25, #41, #67, #126
 """
 
+import logging
+import unittest
+
+
 class Node:
     #Singly link list
     def __init__(self,data):
@@ -37,24 +41,25 @@ class linklist:
 
 
 
-    def lenght(self):
+    def length(self):
         #note the count doesn't start at zero
         cur = self.head
         counter = 0
         while cur is not None:
             counter+=1
             cur = cur.next
-        print('Linklist len: '+str(counter))
+        logging.debug('Linklist len: %d', counter)
         return counter
 
-    def printList(self):
-        curr = self.head
-        elem = []
+    def toList(self):
+        n = self.head
 
-        while(curr != None):
-            elem.append(curr.data)
-            curr = curr.next
-        print(elem)
+        result = []
+        while(n):
+            result.append(n.data)
+            n = n.next
+        return result
+
     #1->2->3
     def remove_node(self,data):
         #1->2->3
@@ -88,19 +93,23 @@ class linklist:
             curr = curr.next
 
 
+class Test(unittest.TestCase):
+    def test_kth_to_the_last(self):
+        llist = linklist()
+        llist.push(1)
+        llist.push(2)
+        llist.push(3)
+        llist.push(4)
+        llist.push(5)
+        self.assertEqual(llist.toList(), [1, 2, 3, 4, 5])
+
+        self.assertEqual(llist.length(), 5)
+        self.assertEqual(llist.Kth_to_Last(1), 4)
+        self.assertEqual(llist.Kth_to_Last(2), 3)
+        self.assertEqual(llist.Kth_to_Last(3), 2)
 
 
+if __name__ =='__main__':
+    unittest.main()
 
 
-llist = linklist()
-llist.push(1)
-llist.push(2)
-llist.push(3)
-llist.push(4)
-llist.push(5)
-llist.printList()
-
-llist.lenght()
-print(llist.Kth_to_Last(1))# should return 4
-print(llist.Kth_to_Last(2))# should return 4
-print(llist.Kth_to_Last(3))# should return 4

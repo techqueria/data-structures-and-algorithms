@@ -8,6 +8,9 @@ EXAMPLE
 Input: "Mr John Smith   ", 13 Output: "Mr%20John%20Smith"
 """
 
+import unittest
+
+
 def urlify(str):
     len_ = len(str) #gets the lenght of str
     new_str = ""#build a new string
@@ -22,4 +25,11 @@ def urlify(str):
 
     return new_str
 
-print(urlify("MY house is on fire "))
+class Test(unittest.TestCase):
+    def test_perm_check(self):
+        self.assertEqual(urlify("MY house is on fire "),
+                         "MY%20house%20is%20on%20fire")
+
+
+if __name__ == '__main__':
+    unittest.main()

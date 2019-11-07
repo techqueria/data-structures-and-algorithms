@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import logging
 import unittest
 
 
@@ -13,11 +14,11 @@ class Stack:
 
     def pop(self):
         if not self.length:
-            print('No stack to pop')
-            return
+            logging.debug('No stack to pop')
+            return None
 
         item = self.stack.pop()
-        print('Item popped', item)
+        logging.debug('Item popped %r', item)
 
         if item == self.min:
             if self.length() > 0:
@@ -42,23 +43,13 @@ class Stack:
             self.min = value
 
         self.stack.append(value)
-        print('Item added to stack', value)
+        logging.debug('Item added to stack %r', value)
 
     def peek(self):
         if not self.length:
-            print('No stack to peek')
+            logging.debug('No stack to peek')
             return
-        print('Peeking into stack', self.stack[-1])
-
-    def printStack(self):
-        if not self.length:
-            print('No stack to peeek')
-            return
-
-        print("Top of stack\n _ ")
-        for x in self.stack[::-1]:
-            print('|', x, '|')
-            print('|', '_', '|')
+        logging.debug('Peeking into stack %r', self.stack[-1])
 
 
 class Test(unittest.TestCase):
@@ -75,10 +66,9 @@ class Test(unittest.TestCase):
         s = Stack()
         for x in arr:
             s.push(x)
-        s.printStack()
-        print('Min value in stack -->', s.getMin())
-        s.pop()
-        print('Min value after pop -->', s.getMin())
+        self.assertEqual(s.getMin(), -1)
+        self.assertEqual(s.pop(), -1)
+        self.assertEqual(s.getMin(), 2)
 
 
 if __name__ == '__main__':

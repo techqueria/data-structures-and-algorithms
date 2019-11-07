@@ -12,7 +12,7 @@ https://www.youtube.com/watch?v=gMeDsyEXnbM
 
 """
 
-
+import unittest
 
 class Node:
     #Singly link list
@@ -40,7 +40,7 @@ class linklist:
 
         current = self.head
         while current.next is not None:#Check the current postion is empty
-        #Move to the next line if nothing is there
+            #Move to the next line if nothing is there
             current = current.next
 
 
@@ -161,19 +161,24 @@ def intersection(listA,ListB):
 
 # 1->2->3->4->5->6->7
 # 3->5->6->7
-class Test(TestCase):
-    def setUp():
-        llist_1 = linklist()
-        llist_2 = linklist()
-        llist_1.push(1)
-        llist_1.push(3)
-        llist_1.push(5)
-        llist_1.push(7)
-        llist_1.push(9)
-        llist_1.push(11)
-        llist_2.push(2)
-        llist_2.push(4)
-        llist_2.push(9)
-        llist_2.push(11)
+class Test(unittest.TestCase):
+    def setUp(self):
+        self.llist_1 = linklist()
+        self.llist_2 = linklist()
+        self.llist_1.push(1)
+        self.llist_1.push(3)
+        self.llist_1.push(5)
+        self.llist_1.push(7)
+        self.llist_1.push(9)
+        self.llist_1.push(11)
+        self.llist_2.push(2)
+        self.llist_2.push(4)
+        self.llist_2.push(9)
+        self.llist_2.push(11)
 
-print(intersection(llist_1,llist_2))
+    def test_intersection(self):
+        self.assertEqual(intersection(self.llist_1, self.llist_2), 9)
+
+
+if __name__ == '__main__':
+    unittest.main()

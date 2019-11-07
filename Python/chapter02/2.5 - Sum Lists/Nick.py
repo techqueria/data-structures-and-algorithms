@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import logging
 import unittest
 
 
@@ -22,17 +23,11 @@ class SinglyLinkedList:
             while temp.next:
                 temp = temp.next
             temp.next = node
-        print("Node added -->", data)
-
-    def printList(self):
-        temp = self.head
-        while temp:
-            print(temp.data)
-            temp = temp.next
+        logging.debug("Node added --> %r", data)
 
     def findLength(self, ll):
         if not ll.head:
-            print('No list to traverse')
+            logging.debug('No list to traverse')
             return
         temp = ll.head
         count = 0
@@ -46,7 +41,7 @@ class SinglyLinkedList:
             if direction = false, then reverse the ll to sum'''
 
         if not ll.head:
-            print('No list to traverse')
+            logging.debug('No list to traverse')
             return
         num = 0
         length = self.findLength(ll)
@@ -62,7 +57,7 @@ class SinglyLinkedList:
                 num += temp.data * (10 ** n)
             temp = temp.next
             n += 1
-        print("Number to sum", num)
+        logging.debug("Number to sum: %r", num)
         return num
 
     def addTwoLinkedLists(self, l1, l2, direction=True):
@@ -71,7 +66,7 @@ class SinglyLinkedList:
         if num1 and num2:
             return num1 + num2
         else:
-            print('No numbers to return')
+            logging.debug('No numbers to return')
             return
 
 
@@ -94,9 +89,9 @@ class Test(unittest.TestCase):
 
     def test1(self):
         sumReverse = self.l.addTwoLinkedLists(self.l, self.k, False)
-        print('Sum ->', sumReverse)
+        self.assertEqual(sumReverse, 912)
         sumLL = self.l.addTwoLinkedLists(self.l, self.k)
-        print('Sum ->', sumLL)
+        self.assertEqual(sumLL, 1308)
 
 
 if __name__ == '__main__':

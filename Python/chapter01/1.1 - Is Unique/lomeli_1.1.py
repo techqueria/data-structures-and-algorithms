@@ -5,6 +5,7 @@
 # are 128 unique values.
 
 import array
+import unittest
 
 def isUnique(str):
 
@@ -26,5 +27,11 @@ def isUnique(str):
     return True
 
 
-print("%s" % (isUnique("test")))
-print("%s" % (isUnique("abc123")))
+class Test(unittest.TestCase):
+    def test_is_unique(self):
+        self.assertFalse(isUnique("test"))
+        self.assertTrue(isUnique("abc123"))
+
+
+if __name__ == '__main__':
+    unittest.main()

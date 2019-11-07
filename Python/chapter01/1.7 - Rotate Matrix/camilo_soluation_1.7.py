@@ -6,6 +6,8 @@ Hints:#51, #100
 
 """
 
+import unittest
+
 
 def rotate_matrix(matrix):
     matrix.reverse()# we frist reverse the matrix then we take its transpose
@@ -19,9 +21,12 @@ def rotate_matrix(matrix):
             matrix[j][i] = temp
 
 
-matrix = [[1,2,3],[4,5,6],[7,8,9]]
-rotate_matrix(matrix)
-#[[7, 4, 1], [8, 5, 2], [9, 6, 3]]
+class Test(unittest.TestCase):
+    def test_rotate_matrix(self):
+        matrix = [[1,2,3],[4,5,6],[7,8,9]]
+        rotate_matrix(matrix)
+        self.assertEqual(matrix, [[7, 4, 1], [8, 5, 2], [9, 6, 3]])
 
 
-print(matrix)
+if __name__ =='__main__':
+    unittest.main()

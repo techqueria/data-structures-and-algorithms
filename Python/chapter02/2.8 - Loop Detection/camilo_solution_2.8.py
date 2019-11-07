@@ -1,5 +1,3 @@
-from unittest import TestCase
-
 """
 Loop Detection: Given a circular linked list, implement an algorithm that returns the node at the
 beginning of the loop.
@@ -10,6 +8,9 @@ Input: A -> B -> C -> D -> E -> C [thesameCasearlier]
 Output: C
 Hints: #50, #69, #83, #90
 """
+
+import logging
+import unittest
 
 class Node:
     #Singly link list
@@ -51,17 +52,9 @@ class linklist:
         while cur is not None:
             counter+=1
             cur = cur.next
-        print('Linklist len: '+str(counter))
+        self.logging('Linklist len: %d', counter)
         return counter
 
-    def printList(self):
-        curr = self.head
-        elem = []
-
-        while(curr != None):
-            elem.append(curr.data)
-            curr = curr.next
-        print(elem)
     #1->2->3
     def remove_node(self,data):
         #1->2->3
@@ -96,13 +89,15 @@ class linklist:
                 return False
 
 
+class Test(unittest.TestCase):
+    def test_loop_detection(self):
+        llist = linklist()
+        llist.push(1)
+        llist.push(2)
+        llist.push(3)
+        llist.head.next.next = llist.head.next # make my loop
+        self.assertTrue(llist.loopDetection())
 
 
-
-
-llist = linklist()
-llist.push(1)
-llist.push(2)
-llist.push(3)
-llist.head.next.next = llist.head.next # make my loop
-print(llist.loopDetection())
+if __name__ == '__main__':
+    unittest.main()

@@ -1,14 +1,15 @@
 #!/usr/bin/python3
 
+import logging
 import unittest
 
 
 def breakIntoThrees(arr):
     if len(arr) <= 2:
-        print('Cannot break into 3 pieces')
+        logging.debug('Cannot break into 3 pieces')
         return
 
-    print('Breaking array into three pieces', arr)
+    logging.debug('Breaking array into three pieces %r', arr)
     breakpoint = len(arr) // 3
     s1, s2, s3 = Stack(), Stack(), Stack()
     inputIntoThrees(s1, arr[:breakpoint])
@@ -18,10 +19,10 @@ def breakIntoThrees(arr):
 
 
 def inputIntoThrees(dastack, arr):
-    print('Creating a new stack')
+    logging.debug('Creating a new stack')
     for x in arr:
         dastack.push(x)
-    print()
+    logging.debug('')
 
 
 class Stack:
@@ -30,11 +31,11 @@ class Stack:
 
     def pop(self):
         if not self.length:
-            print('No stack to pop')
+            logging.debug('No stack to pop')
             return
 
         item = self.stack.pop()
-        print('Item popped', item)
+        logging.debug('Item popped', item)
         return item
 
     def length(self):
@@ -42,23 +43,20 @@ class Stack:
 
     def push(self, value):
         self.stack.append(value)
-        print('Item added to stack', value)
+        logging.debug('Item added to stack', value)
 
     def peek(self):
         if not self.length:
-            print('No stack to peek')
+            logging.debug('No stack to peek')
             return
-        print('Peeking into stack', self.stack[-1])
+        logging.debug('Peeking into stack', self.stack[-1])
 
-    def printStack(self):
+    def toList(self):
         if not self.length:
-            print('No stack to peeek')
-            return
+            logging.debug('No stack to peeek')
+            return []
 
-        print("Top of stack\n _ ")
-        for x in self.stack[::-1]:
-            print('|', x, '|')
-            print('|', '_', '|')
+        return self.stack[::-1]
 
 
 class Test(unittest.TestCase):
@@ -73,13 +71,13 @@ class Test(unittest.TestCase):
     def test1(self):
         arr = [2, 5, 7, 10, 3, -1]
         s1, s2, s3 = breakIntoThrees(arr)
-        s1.printStack()
-        s2.printStack()
-        s3.printStack()
+        self.assertEqual(s1.toList(), [5, 2])
+        self.assertEqual(s2.toList(), [10, 7])
+        self.assertEqual(s3.toList(), [-1, 3])
 
         arr1 = [2, 1, 4, 4, 6, 6, 6]
         s3, s4, s5 = breakIntoThrees(arr1)
-        s5.printStack()
+        self.assertEqual(s5.toList(), [6, 6, 6])
 
 if __name__ == '__main__':
     unittest.main()

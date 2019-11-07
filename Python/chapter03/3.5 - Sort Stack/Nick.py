@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 '''Queue via Stacks: Implement a MyQueue class
 which implements a queue using two stacks.'''
+
+import logging
 import unittest
 
 
@@ -10,7 +12,7 @@ class Stack:
 
     def pop(self):
         if self.isEmpty():
-            print('No stack to pop')
+            logging.debug('No stack to pop')
             return
 
         return self.stack.pop()
@@ -23,30 +25,27 @@ class Stack:
 
     def peek(self):
         if self.isEmpty():
-            print('No stack to peek')
+            logging.debug('No stack to peek')
             return
         return self.stack[-1]
 
-    def printStack(self):
+    def getStack(self):
         if self.isEmpty():
-            print('No stack to peeek')
-            return
+            logging.debug('No stack to peeek')
+            return []
 
-        print("Top of stack\n _ ")
-        for x in self.stack[::-1]:
-            print('|', x, '|')
-            print('|', '_', '|')
+        return self.stack[::-1]
 
     def sort(self):
         r = Stack()
         while not self.isEmpty():
             temp = self.pop()
-            print('Temp ->', temp)
+            logging.debug('Temp -> %r', temp)
             while not r.isEmpty() and r.peek() > temp:
                 self.push(r.pop())
             r.push(temp)
-            print('self stack', self.stack)
-            print(r.stack, end='\n\n')
+            logging.debug('self stack %r', self.stack)
+            logging.debug('%r', r.stack)
 
         while not r.isEmpty():
             self.push(r.pop())
@@ -63,14 +62,13 @@ class Test(unittest.TestCase):
 
     def test1(self):
         arr = [2, 5, 7, 10, 3, 10, -1, -100]
-        print(arr)
         q = Stack()
         for x in arr:
             q.push(x)
 
-        q.printStack()
+        self.assertEqual(q.getStack(), [-100, -1, 10, 3, 10, 7, 5, 2])
         q.sort()
-        q.printStack()
+        self.assertEqual(q.getStack(), [-100, -1, 2, 3, 5, 7, 10, 10])
 
 
 if __name__ == '__main__':

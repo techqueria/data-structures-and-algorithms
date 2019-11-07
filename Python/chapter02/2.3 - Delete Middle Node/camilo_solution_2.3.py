@@ -7,6 +7,10 @@ lnput:the node c from the linked list a->b->c->d->e->f
 Result: nothing is returned, but the new linked list looks like a->b->d->e- >f
 Hints:#72
 """
+
+import unittest
+
+
 class Node:
     #Singly link list
     def __init__(self,data):
@@ -37,27 +41,24 @@ class linklist:
         current.next = node #point self.head to a new node
         self.size+=1
 
-
-
-
-    def lenght(self):
+    def length(self):
         #note the count doesn't start at zero
         cur = self.head
         counter = 0
         while cur is not None:
             counter+=1
             cur = cur.next
-        print('Linklist len: '+str(counter))
         return counter
 
-    def printList(self):
+    def toList(self):
         curr = self.head
         elem = []
 
         while(curr != None):
             elem.append(curr.data)
             curr = curr.next
-        print(elem)
+        return elem
+
     #1->2->3
     def remove_node(self,data):
         #1->2->3
@@ -92,20 +93,22 @@ class linklist:
             curr = curr.next
 
 
+class Test(unittest.TestCase):
+    def test_delete_middle_node(self):
+        llist = linklist()
+        llist.push(1)
+        llist.push(2)
+        llist.push(3)
+        llist.push(4)
+        llist.push(5)
+        llist.push(6)
+        self.assertEqual(llist.toList(), [1, 2, 3, 4, 5, 6])
+        self.assertEqual(llist.length(), 6)
+
+        llist.Delete_Middle_Node()
+        self.assertEqual(llist.toList(), [1, 2, 4, 5, 6])
+        self.assertEqual(llist.length(), 5)
 
 
-
-
-llist = linklist()
-llist.push(1)
-llist.push(2)
-llist.push(3)
-llist.push(4)
-llist.push(5)
-llist.push(6)
-llist.printList()
-llist.lenght()
-
-llist.Delete_Middle_Node()# 3 should be removed
-llist.printList()
-llist.lenght()
+if __name__ == '__main__':
+    unittest.main()

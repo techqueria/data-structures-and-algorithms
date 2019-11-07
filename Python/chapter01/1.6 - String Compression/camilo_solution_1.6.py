@@ -7,6 +7,7 @@ the original string. You can assume the string has only uppercase and lowercase
 letters (a - z).
 """
 
+import unittest
 
 
 def string_compression(str1):
@@ -27,10 +28,9 @@ def string_compression(str1):
         return str1
 
 
+class Test(unittest.TestCase):
+    def test1(self):
+        self.assertEqual(string_compression('aabcccccaaa'), 'a2b1c5a3')
 
-
-
-
-
-
-print(string_compression('aabcccccaaa'))
+if __name__ == '__main__':
+    unittest.main()

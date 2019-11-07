@@ -10,6 +10,9 @@ pale, bake -> false
 Hints:#23, #97, #130
 """
 
+import unittest
+
+
 def oneAway(str1,str2):
     str1 = str1.lower()
     str2 = str2.lower()
@@ -47,7 +50,7 @@ def oneAway(str1,str2):
     replacing two letter will make v's count more onces
 
     You'll see this when you print k and v
-    
+
     """
     for k,v in d.items():
         #print(k,v)
@@ -61,15 +64,15 @@ def oneAway(str1,str2):
         return False
 
 
+class Test(unittest.TestCase):
+    def test_positive(self):
+        self.assertTrue(oneAway('pale', 'ple'))
+        self.assertTrue(oneAway('pales', 'pale'))
+        self.assertTrue(oneAway('pale', 'bale'))
+
+    def test_negative(self):
+        self.assertFalse(oneAway('pale', 'bake'))
 
 
-
-
-
-
-
-print(oneAway('pale', 'ple'))#True
-print(oneAway('pales', 'pale'))#True
-print(oneAway('pale', 'bale'))#True
-
-print(oneAway('pale', 'bake'))#False
+if __name__ == '__main__':
+    unittest.main()

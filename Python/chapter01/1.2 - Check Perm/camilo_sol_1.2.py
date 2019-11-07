@@ -3,9 +3,10 @@ Check Permutation: Given two strings,write a method to decide if
 one is a permutation of the other.
 """
 
+import unittest
 
 
-
+#O(n) sol?
 def perm_check(str_1,str_2):
     if len(str_1) != len(str_2):#If both str are diiferent lenghts return false
         return False
@@ -29,9 +30,12 @@ def perm_check(str_1,str_2):
     return True
 
 
-#O(n) sol?
-print(perm_check("camilo","pop")) #False
+class Test(unittest.TestCase):
+    def test_perm_check(self):
+        self.assertFalse(perm_check("camilo","pop"))
+        self.assertFalse(perm_check("camilo","camplo"))
+        self.assertTrue(perm_check("camilo","olimac"))
 
-print(perm_check("camilo","camplo")) #false
 
-print(perm_check("camilo","olimac")) #True
+if __name__ == '__main__':
+    unittest.main()

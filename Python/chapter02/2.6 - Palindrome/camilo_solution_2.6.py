@@ -2,6 +2,10 @@
 Palindrome: Implement a function to check if a linked list is a
 palindrome. Hints:#5, #13, #29, #61, #101
 """
+
+import unittest
+
+
 class Node:
     #Singly link list
     def __init__(self,data = None):
@@ -90,11 +94,15 @@ class linklist:
             return False
 
 
+class Test(unittest.TestCase):
+    def test_palindrome(self):
+        llist = linklist()
+        llist.push('a')
+        llist.push('n')
+        llist.push('n')
+        llist.push('a')
+        self.assertTrue(llist.palindromeCheck())
 
-#anna
-llist = linklist()
-llist.push('a')
-llist.push('n')
-llist.push('n')
-llist.push('a')
-print(llist.palindromeCheck())
+
+if __name__ == '__main__':
+    unittest.main()

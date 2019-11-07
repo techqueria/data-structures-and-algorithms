@@ -1,3 +1,4 @@
+import unittest
 
 
 def replaceSpace(stringPas, totalLen):
@@ -13,4 +14,10 @@ def replaceSpace(stringPas, totalLen):
     else:
         return newString
 
-print(replaceSpace("Hi, how is your  ",18))
+class Test(unittest.TestCase):
+    def test_perm_check(self):
+        self.assertEqual(replaceSpace("Hi, how is your  ",18), "Fail")
+
+
+if __name__ == '__main__':
+    unittest.main()

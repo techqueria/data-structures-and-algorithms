@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import logging
 import unittest
 
 
@@ -22,11 +23,11 @@ class SinglyLinkedList:
             while temp.next:
                 temp = temp.next
             temp.next = node
-        print('Node added to LL-->', data)
+        logging.debug('Node added to LL--> %r', data)
 
     def isPalindrome(self):
         if not self.head:
-            print('No LL to traverse')
+            logging.debug('No LL to traverse')
             return
 
         pali = []

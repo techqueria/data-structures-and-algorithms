@@ -38,15 +38,16 @@ class SinglyLinkedList:
                 temp = temp.next
             temp.next = node
 
-    def printList(self):
+    def toList(self):
         if self.head is None:
-            print('Nothing to print')
-            return
+            return []
 
         temp = self.head
+        result = []
         while temp:
-            print(temp.data)
+            result.append(temp.data)
             temp = temp.next
+        return result
 
     def findSize(self):
         if self.head is None:
@@ -98,7 +99,6 @@ class Test(unittest.TestCase):
         cls.l.addNode('hello')
         cls.l.addNode(100)
         cls.l.addNode(5)
-        cls.l.printList()
 
     @classmethod
     def tearDownClass(self):
@@ -106,14 +106,17 @@ class Test(unittest.TestCase):
 
     def test1(self):
         numNodes = self.l.findSize()
-        print('Number of nodes {}'.format(numNodes))
+        self.assertEqual(numNodes, 5)
 
     def test2(self):
         node = self.l.findMiddleNode()
-        print('Middle node -->', node.data)
-        print('Deleting middle node')
+        self.assertIn(node.data, [100, 'hello', 3])
         self.l.deleteMiddleNode(node)
-        self.l.printList()
+        self.assertIn(self.l.toList(), [
+            [-1, 3, 100, 5],
+            [-1, 3, 'hello', 5],
+            [-1, 'hello', 100, 5],
+        ])
 
 
 if __name__ == '__main__':
