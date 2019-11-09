@@ -1,4 +1,5 @@
-# data-and-algorithms
+# data-and-algorithms ![Travis build status](https://travis-ci.org/techqueria/data-structures-and-algorithms.svg?branch=master)
+
 Let's go over data structures and algorithms together! 
 
 We will use [Cracking the Coding Interview Book](http://www.crackingthecodinginterview.com/) as reference.
