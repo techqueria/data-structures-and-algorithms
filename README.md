@@ -10,7 +10,9 @@ Feel free to add your solutions in your programming language of your choice 😃
 Run the following script to create the directory structure for your programming language 
 if one is not already created
 
-    `bash createDirectories.sh  <Programming Language>`
+```shell
+bash createDirectories.sh  <Programming Language>
+```
 
 ## Contributing
 ---
