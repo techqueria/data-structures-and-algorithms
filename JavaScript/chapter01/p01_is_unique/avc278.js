@@ -18,7 +18,7 @@ const assert = require("assert");
 // with additional data structures
 const isUnique1 = (str) => {
   const strSet = new Set();
-  for (s of str) {
+  for (const s of str) {
     if (strSet.has(s)) return false;
     strSet.add(s);
   }
