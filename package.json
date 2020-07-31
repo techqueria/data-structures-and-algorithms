@@ -5,5 +5,5 @@
   },
   "scripts": {
     "test": "mocha --recursive 'JavaScript/**/*.js'"
- }
+  }
 }
