@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  pull_request: {}
+  push:
+    branches:
+      - master
+
+jobs:
+  javascript-test:
+    name: JavaScript Tests
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Install JavaScript dependencies
+        run: yarn install
+
+      - name: Run JavaScript tests
+        run: yarn test
+
+  python-test:
+    name: Python Tests
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Install Python dependencies
+        run: python3 -m pip install pytest
+
+      - name: Run Python tests
+        run: python3 -m pytest
