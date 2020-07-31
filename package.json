@@ -1,7 +1,7 @@
 {
   "homepage": "https://github.com/techqueria/data-structures-and-algorithms/",
   "devDependencies": {
-    "mocha": "^6.2.1"
+    "mocha": "^8.1"
   },
   "scripts": {
     "test": "mocha --recursive 'JavaScript/**/*.js'"
