@@ -1,6 +1,7 @@
 // Check Permutation: Given two strings, write a method to decide if one is a permutation of the other.
 
 const assert = require("assert");
+const { DH_CHECK_P_NOT_PRIME } = require("constants");
 
 /**
  * Checks if a string is a permutation of another
@@ -70,29 +71,28 @@ const checkPermutation2 = (A, B) => {
   return A === B;
 };
 
-describe(module.filename, () => {
-  it("should return false on input strings not of the same size", () => {
-    const A = "hello";
-    const B = "hi";
-    assert.equal(checkPermutation1(A, B), false);
-    assert.equal(checkPermutation2(A, B), false);
-  });
-  it("should return false on input strings whose key lengths do not match", () => {
-    const A = "abcd";
-    const B = "abcc";
-    assert.equal(checkPermutation1(A, B), false);
-    assert.equal(checkPermutation2(A, B), false);
-  });
-  it("should return false on input strings whose key frequencies do not match", () => {
-    const A = "abccd";
-    const B = "abcce";
-    assert.equal(checkPermutation1(A, B), false);
-    assert.equal(checkPermutation2(A, B), false);
-  });
-  it("should return true on input strings whose letter frequencies match", () => {
-    const A = "racecar";
-    const B = "aaccerr";
-    assert.equal(checkPermutation1(A, B), true);
-    assert.equal(checkPermutation2(A, B), true);
-  });
-});
+const checkPermutations = [checkPermutation1, checkPermutation2];
+checkPermutations.forEach((checkPerm) => {
+  describe(checkPerm.name, () => {
+    it("should return false on input strings not of the same size", () => {
+      const A = "hello";
+      const B = "hi";
+      assert.ok(!checkPerm(A, B));
+    });
+    it("should return false on input strings whose key lengths do not match", () => {
+      const A = "abcd";
+      const B = "abcc";
+      assert.ok(!checkPerm(A, B));
+    });
+    it("should return false on input strings whose key frequencies do not match", () => {
+      const A = "abccd";
+      const B = "abcce";
+      assert.ok(!checkPerm(A, B));
+    });
+    it("should return true on input strings whose letter frequencies match", () => {
+      const A = "racecar";
+      const B = "aaccerr";
+      assert.ok(checkPerm(A, B));
+    });
+  })
+})
