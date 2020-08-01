@@ -73,7 +73,7 @@ describe(module.filename, () => {
     assert.ok(oneAway("tech", "stech"));
     assert.ok(oneAway("tech", "ech"));
   });
-  it("should return false when the input string cannot be rearranged in the form of a palindrome.", () => {
+  it("should return false when the input strings are not zero/one edits away.", () => {
     assert.ok(!oneAway("tech", "stack"));
     assert.ok(!oneAway("tech", "techqueria"));
   });
