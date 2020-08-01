@@ -23,21 +23,21 @@ const assert = require("assert");
  *
  */
 const urlify = (str, trueLength) => {
-  str = str.split("");
+  const strArr = str.split("");
   let idx = str.length - 1;
 
   for (let i = trueLength - 1; i >= 0; i--) {
-    if (str[i] === " ") {
-      str[idx] = "0";
-      str[idx - 1] = "2";
-      str[idx - 2] = "%";
+    if (strArr[i] === " ") {
+        strArr[idx] = "0";
+        strArr[idx - 1] = "2";
+        strArr[idx - 2] = "%";
       idx -= 3;
     } else {
-      str[idx] = str[i];
+        strArr[idx] = strArr[i];
       idx -= 1;
     }
   }
-  return str.join("");
+  return strArr.join("");
 };
 
 describe(module.filename, () => {
