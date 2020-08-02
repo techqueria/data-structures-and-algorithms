@@ -23,21 +23,22 @@ const palindromePerm = (str) => {
   const letterFreqs = {};
   let length = 0;
   for (const letter of str) {
-    if (letter !== " ") {
-      letterFreqs[letter.toLowerCase()] =
-        (letterFreqs[letter.toLowerCase()] || 0) + 1;
-      length += 1;
-    }
+    if (letter === " ") continue;
+
+    letterFreqs[letter.toLowerCase()] =
+      (letterFreqs[letter.toLowerCase()] || 0) + 1;
+    length += 1;
   }
 
   let slack = length % 2 == 1;
   for (const letterFreq of Object.values(letterFreqs)) {
     if (letterFreq % 2 === 0) continue;
 
-    if (slack) {
-      slack = !slack;
-    } else return false;
+    if (!slack) return false;
+
+    slack = !slack;
   }
+
   return true;
 };
 
