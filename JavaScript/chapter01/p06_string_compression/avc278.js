@@ -10,35 +10,39 @@ const assert = require("assert");
  * @param  {string}  str input string to compress
  * @return {string}      either the compressed string, or the string
  *
- * Storing the outputStr is at worst size 2N for an input string whose size is N, which is still O(N) additional space.
+ * Storing the outputStrArr is at worst size 2N for an input string whose size is N (still O(N) additional space).
  * Storing and updating the pointers `idx`, `next`, and `freq` take O(1) additional space and O(1) time.
  * As we iterate through the str in the outer while loop, in one extreme, assuming no repeating letters in a sequence,
  * idx increments by 1 each iteration, and so it's O(N) runtime. On the other extreme, assuming all repeating letters,
- * this would be O(N) on the outer loop, and O(N) in the inner while loop.
- * Runtime: O(N^2)
+ * this would be O(N) on the outer loop, and O(N) in the inner while loop. The trick to knowing this is still O(N)
+ * and not O(N^2) is the fact that we don't visit any one index pointer more than once in our two while loops.
+ * Both loops are still just part of the same loop, which results in O(N).
+ * 
+ * Runtime: O(N)
  * Space:   O(N)
  *
  */
 const compress = (str) => {
-  let outputStr = "";
+  let outputStrArr = [];
   let idx = 0;
   let next = 1;
+
   while (idx < str.length) {
     const currLetter = str[idx];
     let freq = 1;
-    while (true) {
-      if (currLetter === str[next]) {
-        next += 1;
-        freq += 1;
-      } else {
-        outputStr += `${currLetter}${freq}`;
-        idx += freq;
-        next = idx + 1;
-        break;
-      }
+
+    while (next < str.length && currLetter === str[next]) {
+      next += 1;
+      freq += 1;
     }
+
+    outputStrArr.push(currLetter);
+    outputStrArr.push(freq);
+    idx += freq;
+    next = idx + 1;
   }
-  return outputStr.length < str.length ? outputStr : str;
+
+  return outputStrArr.length < str.length ? outputStrArr.join("") : str;
 };
 
 describe(module.filename, () => {
