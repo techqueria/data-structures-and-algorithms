@@ -10,8 +10,13 @@ const assert = require("assert");
  * @param  {string}  str input string to compress
  * @return {string}      either the compressed string, or the string
  *
- * Runtime: O()
- * Space:   O()
+ * Storing the outputStr is at worst size 2N for an input string whose size is N, which is still O(N) additional space.
+ * Storing and updating the pointers `idx`, `next`, and `freq` take O(1) additional space and O(1) time.
+ * As we iterate through the str in the outer while loop, in one extreme, assuming no repeating letters in a sequence,
+ * idx increments by 1 each iteration, and so it's O(N) runtime. On the other extreme, assuming all repeating letters,
+ * this would be O(N) on the outer loop, and O(N) in the inner while loop.
+ * Runtime: O(N^2)
+ * Space:   O(N)
  *
  */
 const compress = (str) => {
