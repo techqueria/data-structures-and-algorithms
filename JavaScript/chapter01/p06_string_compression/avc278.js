@@ -17,7 +17,7 @@ const assert = require("assert");
  * this would be O(N) on the outer loop, and O(N) in the inner while loop. The trick to knowing this is still O(N)
  * and not O(N^2) is the fact that we don't visit any one index pointer more than once in our two while loops.
  * Both loops are still just part of the same loop, which results in O(N).
- * 
+ *
  * Runtime: O(N)
  * Space:   O(N)
  *
@@ -25,12 +25,12 @@ const assert = require("assert");
 const compress = (str) => {
   let outputStrArr = [];
   let idx = 0;
-  let next = 1;
 
   while (idx < str.length) {
     const currLetter = str[idx];
     let freq = 1;
 
+    let next = idx + 1;
     while (next < str.length && currLetter === str[next]) {
       next += 1;
       freq += 1;
@@ -38,8 +38,7 @@ const compress = (str) => {
 
     outputStrArr.push(currLetter);
     outputStrArr.push(freq);
-    idx += freq;
-    next = idx + 1;
+    idx = next;
   }
 
   return outputStrArr.length < str.length ? outputStrArr.join("") : str;
