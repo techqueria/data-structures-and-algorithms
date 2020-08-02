@@ -23,7 +23,7 @@ const assert = require("assert");
  *
  */
 const oneAway = (A, B) => {
-  if (Math.abs(A.length - B.lenght) > 1) return false;
+  if (Math.abs(A.length - B.length) > 1) return false;
 
   if (A.length === B.length) {
     let slack = true;
