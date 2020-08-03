@@ -68,6 +68,20 @@ describe(module.filename, () => {
       [1, 3],
     ]);
   });
+  it("should rotate a 3x3 matrix 90 degrees", () => {
+    const matrix = [
+      [1, 2, 3],
+      [4, 5, 6],
+      [7, 8, 9],
+    ];
+
+    rotateMatrix(matrix);
+    assert.deepEqual(matrix, [
+      [3, 6, 9],
+      [2, 5, 8],
+      [1, 4, 7],
+    ]);
+  });
   it("should rotate a 4x4 matrix 90 degrees", () => {
     const matrix = [
       [11, 12, 13, 14],
