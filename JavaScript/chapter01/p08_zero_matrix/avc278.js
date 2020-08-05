@@ -18,15 +18,8 @@ const assert = require("assert");
  */
 const zeroMatrix = (arr) => {
   if (arr.length === 0 || arr[0].length === 0) return;
-  const rows = [];
-  const cols = [];
-
-  for (let i = 0; i < arr.length; i++) {
-    rows.push(false);
-  }
-  for (let i = 0; i < arr[0].length; i++) {
-    cols.push(false);
-  }
+  const rows = new Array(arr.length).fill(false);
+  const cols = new Array(arr[0].length).fill(false);
 
   for (let i = 0; i < arr.length; i++) {
     for (let j = 0; j < arr[0].length; j++) {
