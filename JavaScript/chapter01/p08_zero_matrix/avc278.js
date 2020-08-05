@@ -7,37 +7,46 @@ const assert = require("assert");
  * @param  {Array.<number[]>} matrix input 2d array to mutate
  * @return {null}
  *
- * Okay, so I have a jank solution that assumes no element in the array is currently -999.
- * We iterate through the array, and when we find a 0, we flag its row and column by updating all elements in there to
- * -999. The outer two for loop iterations is O(M * N) time, and each inner for loop is O(M) and O(N), respectively,
- * resulting in a grand total of O((M * N) * (M + N)) time complexity, while updating takes O(1) additional space.
- * When we take a second pass at the matrix, we update all elements that have been flagged -999 to 0, which is O(N^2)
- * time and O(1) additional space.
+ * We start by initializing rows and cols arrays with false values. We iterate through the matrix, and when we find a 0,
+ * we flag its row and column by updating the corresponding indices in rows and cols for future use.
+ * When we take a second pass at the matrix, we update all rows that have been flagged to 0, and all columns that have
+ * been flagged to 0, which is O(M + N).
  *
- * Runtime: O((M * N) * (M + N))
- * Space:   O(1)
+ * Runtime: O(M * N)
+ * Space:   O(M + N)
  *
  */
 const zeroMatrix = (arr) => {
+  if (arr.length === 0 || arr[0].length === 0) return;
+  const rows = [];
+  const cols = [];
+
   for (let i = 0; i < arr.length; i++) {
-    for (let j = 0; j < arr[0].length; j++) {
-      if (arr[i][j] !== 0) continue;
-
-      for (let k = 0; k < arr.length; k++) {
-        if (arr[k][j] !== 0) arr[k][j] = -999;
-      }
-
-      for (let l = 0; l < arr[0].length; l++) {
-        if (arr[i][l] !== 0) arr[i][l] = -999;
-      }
-    }
+    rows.push(false);
+  }
+  for (let i = 0; i < arr[0].length; i++) {
+    cols.push(false);
   }
 
   for (let i = 0; i < arr.length; i++) {
     for (let j = 0; j < arr[0].length; j++) {
-      if (arr[i][j] === -999) {
-        arr[i][j] = 0;
-      }
+      if (arr[i][j] !== 0) continue;
+      rows[i] = true;
+      cols[j] = true;
+    }
+  }
+
+  for (let i = 0; i < arr.length; i++) {
+    if (!rows[i]) continue;
+    for (let j = 0; j < arr[0].length; j++) {
+      arr[i][j] = 0;
+    }
+  }
+
+  for (let j = 0; j < arr[0].length; j++) {
+    if (!cols[j]) continue;
+    for (let i = 0; i < arr.length; i++) {
+      arr[i][j] = 0;
     }
   }
 };
