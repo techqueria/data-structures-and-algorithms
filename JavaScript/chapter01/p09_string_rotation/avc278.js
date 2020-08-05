@@ -27,11 +27,6 @@ describe(module.filename, () => {
     const s2 = "hello";
     assert.ok(!isSubstring(s1, s2));
   });
-  it("should return false when s2 is a valid rotation of s1, but not of the same length, hence not a rotation", () => {
-    const s1 = "wat";
-    const s2 = "erbottlewat";
-    assert.ok(!isSubstring(s1, s2));
-  });
   it("should return true when s2 is a valid rotation of s1", () => {
     const s1 = "waterbottle";
     const s2 = "erbottlewat";
