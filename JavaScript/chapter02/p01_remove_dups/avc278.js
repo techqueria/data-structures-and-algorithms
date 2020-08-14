@@ -20,6 +20,8 @@ const arrayToLinkedList = (arr) => {
 
 const compareLinkedLists = (A, B) => {
   if (!A && !B) return true;
+  if (!A || !B) return false;
+
   while (A !== null && B !== null) {
     if (A.val !== B.val) return false;
     A = A.next;
@@ -105,6 +107,11 @@ removeDups.forEach((removeDup) => {
 
       removeDup(ll1);
       assert.ok(compareLinkedLists(ll1, expectedLL1));
+    });
+    it("should return an empty linked list", () => {
+      assert.ok(
+        !compareLinkedLists(arrayToLinkedList([]), arrayToLinkedList(["hi!"]))
+      );
     });
   });
 });
