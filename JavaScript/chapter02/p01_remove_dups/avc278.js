@@ -5,14 +5,32 @@ const assert = require("assert");
 
 class LinkedListNode {
   constructor(val, next) {
-    this.val = val === undefined ? 0 : val;
+    this.val = val === undefined ? null : val;
     this.next = next === undefined ? null : next;
   }
 }
 
+const arrayToLinkedList = (arr) => {
+  let tail = null;
+  for (let i = arr.length - 1; i >= 0; i--) {
+    tail = new LinkedListNode(arr[i], tail);
+  }
+  return tail;
+};
+
+const compareLinkedLists = (A, B) => {
+  if (!A && !B) return true;
+  while (A !== null && B !== null) {
+    if (A.val !== B.val) return false;
+    A = A.next;
+    B = B.next;
+  }
+  return true;
+};
+
 /**
  * Removes duplicates from a linked list
- * @param  {LinkedList} LL input linked list to mutate
+ * @param  {LinkedListNode} list input linked list to mutate
  * @return {null}
  *
  * Keep a temporary set for storing values we pass through, of maximum size N where N is the number of nodes in the
@@ -22,18 +40,17 @@ class LinkedListNode {
  * Space:   O(N)
  *
  */
-const removeDups1 = (LL) => {
+const removeDups1 = (list) => {
+  if (!list) return;
   const seen = new Set();
-  let currNode = LL;
-  let next = LL.next;
+  let currNode = list;
   seen.add(currNode.val);
-  while (next !== null) {
-    if (!seen.has(next.val)) {
-      seen.add(next.val);
-      currNode.next = next;
-      currNode = currNode.next;
-    }
-    next = next.next;
+  for (let nextNode = currNode.next; nextNode.next !== null; nextNode = nextNode.next) {
+    if (seen.has(nextNode.val)) continue;
+
+    seen.add(nextNode.val);
+    currNode.next = nextNode;
+    currNode = currNode.next;
   }
 
   currNode.next = null;
@@ -41,7 +58,7 @@ const removeDups1 = (LL) => {
 
 /**
  * Removes duplicates from a linked list
- * @param  {LinkedList} LL input linked list to mutate
+ * @param  {LinkedListNode} list input linked list to mutate
  * @return {null}
  *
  * Instead of keeping a temporary set, we need another way to remove all future dupes of the current node.
@@ -53,8 +70,9 @@ const removeDups1 = (LL) => {
  * Space:   O(1)
  *
  */
-const removeDups2 = (LL) => {
-  let currNode = LL;
+const removeDups2 = (list) => {
+  if (!list) return;
+  let currNode = list;
   while (currNode.next !== null) {
     let nextNode = currNode;
     while (nextNode.next !== null) {
@@ -67,35 +85,26 @@ const removeDups2 = (LL) => {
   }
 };
 
-describe(module.filename, () => {
-  it("should return the linked list without duplicates", () => {
-    const ll6 = new LinkedListNode(4);
-    const ll5 = new LinkedListNode(2, ll6);
-    const ll4 = new LinkedListNode(4, ll5);
-    const ll3 = new LinkedListNode(3, ll4);
-    const ll2 = new LinkedListNode(2, ll3);
-    let ll1 = new LinkedListNode(2, ll2);
-    const head = ll1;
+const removeDups = [removeDups1, removeDups2];
+removeDups.forEach((removeDup) => {
+  describe(removeDup.name, () => {
+    it("should return the linked list without duplicates", () => {
+      const arr = [2, 2, 3, 4, 2, 4];
+      let ll1 = arrayToLinkedList(arr);
+      const expectedArr = [2, 3, 4];
+      let expectedLL1 = arrayToLinkedList(expectedArr);
 
-    const expectedLL3 = new LinkedListNode(4);
-    const expectedLL2 = new LinkedListNode(3, expectedLL3);
-    let expectedLL1 = new LinkedListNode(2, expectedLL2);
-    const expectedHead = expectedLL1;
+      removeDup(ll1);
+      assert.ok(compareLinkedLists(ll1, expectedLL1));
+    });
+    it("should return an empty linked list", () => {
+      const arr = [];
+      let ll1 = arrayToLinkedList(arr);
+      const expectedArr = [];
+      let expectedLL1 = arrayToLinkedList(expectedArr);
 
-    removeDups1(ll1);
-    while (ll1 !== null && expectedLL1 !== null) {
-      assert.equal(ll1.val, expectedLL1.val);
-      ll1 = ll1.next;
-      expectedLL1 = expectedLL1.next;
-    }
-
-    ll1 = head;
-    expectedLL1 = expectedHead;
-    removeDups2(ll1);
-    while (ll1 !== null && expectedLL1 !== null) {
-      assert.equal(ll1.val, expectedLL1.val);
-      ll1 = ll1.next;
-      expectedLL1 = expectedLL1.next;
-    }
+      removeDup(ll1);
+      assert.ok(compareLinkedLists(ll1, expectedLL1));
+    });
   });
 });
