@@ -20,14 +20,14 @@ const arrayToLinkedList = (arr) => {
 
 const compareLinkedLists = (A, B) => {
   if (!A && !B) return true;
-  if (!A || !B) return false;
 
   while (A !== null && B !== null) {
     if (A.val !== B.val) return false;
     A = A.next;
     B = B.next;
   }
-  return true;
+
+  return !((A && !B) || (!A && B));
 };
 
 /**
@@ -75,13 +75,14 @@ const removeDups1 = (list) => {
 const removeDups2 = (list) => {
   if (!list) return;
   let currNode = list;
-  while (currNode.next !== null) {
+  while (currNode !== null) {
     let nextNode = currNode;
     while (nextNode.next !== null) {
-      if (nextNode.val === nextNode.next.val) {
+      if (currNode.val === nextNode.next.val) {
         nextNode.next = nextNode.next.next;
+      } else {
+        nextNode = nextNode.next;
       }
-      nextNode = nextNode.next;
     }
     currNode = currNode.next;
   }
@@ -108,9 +109,14 @@ removeDups.forEach((removeDup) => {
       removeDup(ll1);
       assert.ok(compareLinkedLists(ll1, expectedLL1));
     });
-    it("should return an empty linked list", () => {
+    it("should return false when comparing unequal linked lists", () => {
       assert.ok(
         !compareLinkedLists(arrayToLinkedList([]), arrayToLinkedList(["hi!"]))
+      );
+    });
+    it("should return false when comparing another pair of unequal linked lists", () => {
+      assert.ok(
+        !compareLinkedLists(arrayToLinkedList([1, 2]), arrayToLinkedList([1]))
       );
     });
   });
