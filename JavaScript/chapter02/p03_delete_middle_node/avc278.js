@@ -29,7 +29,6 @@ const compareLinkedLists = (A, B) => {
     A = A.next;
     B = B.next;
   }
-  console.log(A, B);
   return !((A && !B) || (!A && B));
 };
 /**
