@@ -20,7 +20,7 @@ const arrayToLinkedList = (arr) => {
 /**
  * Returns the kth to last node in a linked list
  * @param  {LinkedListNode} list input linked list
- * @param  {number}         K    element index from the right which we wish to return
+ * @param  {number}         k    element index from the right which we wish to return
  * @return {null}
  *
  * In this approach, we utilize two pointers, `fast` and `slow` to keep track of how far we've traveled through the
@@ -31,14 +31,14 @@ const arrayToLinkedList = (arr) => {
  * Space:   O(1)
  *
  */
-const returnKthToLast = (list, K) => {
+const returnKthToLast = (list, k) => {
   let fast = list;
   let slow = list;
 
-  while (K > 0) {
+  while (k > 0) {
     if (!fast) return null;
     fast = fast.next;
-    K -= 1;
+    k -= 1;
   }
   while (fast !== null) {
     fast = fast.next;
