@@ -3,7 +3,7 @@
 const assert = require("assert");
 const {
   arrayToLinkedList,
-} = require("../../lib/avc278/linkedlist");
+} = require("../../library/avc278/linkedlist");
 
 /**
  * Returns the kth to last node in a linked list

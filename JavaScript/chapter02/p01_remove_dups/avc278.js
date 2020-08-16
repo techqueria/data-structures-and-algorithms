@@ -5,7 +5,7 @@ const assert = require("assert");
 const {
   arrayToLinkedList,
   compareLinkedLists,
-} = require("../../lib/avc278/linkedlist");
+} = require("../../library/avc278/linkedlist");
 
 /**
  * Removes duplicates from a linked list

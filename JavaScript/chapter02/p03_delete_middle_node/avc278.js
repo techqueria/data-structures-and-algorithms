@@ -8,7 +8,7 @@ const assert = require("assert");
 const {
   arrayToLinkedList,
   compareLinkedLists,
-} = require("../../lib/avc278/linkedlist");
+} = require("../../library/avc278/linkedlist");
 
 /**
  * Deletes an inputted node somewhere in the middle of the linked list
