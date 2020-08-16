@@ -29,7 +29,7 @@ const compareLinkedLists = (A, B) => {
     A = A.next;
     B = B.next;
   }
-  return !((A && !B) || (!A && B));
+  return !A && !B;
 };
 /**
  * Deletes an inputted node somewhere in the middle of the linked list
