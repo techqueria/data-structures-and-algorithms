@@ -1,21 +1,9 @@
 // Return Kth to Last: Implement an algorithm to find the kth to last element of a singly linked list.
 
 const assert = require("assert");
-
-class LinkedListNode {
-  constructor(val, next) {
-    this.val = val === undefined ? null : val;
-    this.next = next === undefined ? null : next;
-  }
-}
-
-const arrayToLinkedList = (arr) => {
-  let tail = null;
-  for (let i = arr.length - 1; i >= 0; i--) {
-    tail = new LinkedListNode(arr[i], tail);
-  }
-  return tail;
-};
+const {
+  arrayToLinkedList,
+} = require("../../lib/avc278/linkedlist");
 
 /**
  * Returns the kth to last node in a linked list
