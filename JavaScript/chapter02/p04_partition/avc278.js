@@ -13,69 +13,98 @@ const {
 } = require("../../lib/avc278/linkedlist");
 
 /**
- * Partitions a linked list based on the input partition, with lesser values to the left and greater values to the right
+ * A destructive function, `partition`, splits a linked list based on the input `partitionValue`, with lesser values to
+ * the left and greater values to the right.
  * @param   {LinkedListNode} head input linked list to be partitioned
  * @return  {LinkedListNode}      partitioned linked list
  *
- * For this problem, we need to store two linked lists: one for values lesser than `partitionValue`, and one for values
- * greater than `partitionValue`. We also need to store pointers for the heads of these linked lists as we need to merge
- * them at the end. Iterating once through the original linked list makes it so the runtime is O(N). We connect nodes
- * together in the less and more lists until we exhaust the original list. At this point, we connect the end of less to
- * the head of more, set `more`'s next to null and return the head of less.
+ * For this problem, we need to store pointers to four linked list nodes:
+ * `lessHead` - pointing to the head of the linked list containing values less than the partition value
+ * `lessTail` - pointing to the tail of the linked list containing values less than the partition value
+ * `moreHead` - pointing to the head of the linked list containing values more than the partition value
+ * `moreTail` - pointing to the tail of the linked list containing values more than the partition value
+ * Iterating once through the original linked list makes it so the runtime is O(N), where N is the length of the input
+ * linked list. Since we only store four pointers to nodes at one time, our additional space required is O(1).
  * Runtime: O(N)
- * Space:   O(N)
+ * Space:   O(1)
  *
  */
 const partition = (head, partitionValue) => {
-  let less;
   let lessHead;
-  let more;
+  let lessTail;
   let moreHead;
+  let moreTail;
 
   while (head !== null) {
     if (head.val < partitionValue) {
-      if (!less) {
-        less = head;
+      if (!lessTail) {
+        lessTail = head;
         lessHead = head;
       } else {
-        less.next = head;
-        less = less.next;
+        lessTail.next = head;
+        lessTail = lessTail.next;
       }
     } else {
-      if (!more) {
-        more = head;
+      if (!moreTail) {
+        moreTail = head;
         moreHead = head;
       } else {
-        more.next = head;
-        more = more.next;
+        moreTail.next = head;
+        moreTail = moreTail.next;
       }
     }
     head = head.next;
   }
-  less.next = moreHead;
-  more.next = null;
-  return lessHead;
+
+  if (!lessHead && moreHead) {
+    head = moreHead;
+  } else if (lessHead && !moreHead) {
+    head = lessHead;
+  } else {
+    lessTail.next = moreHead;
+    moreTail.next = null;
+  }
 };
 
 describe(module.filename, () => {
   it("should return the partitioned linked list when the partition value exists in the linked list", () => {
     const arr = [3, 5, 8, 5, 10, 2, 1];
-    const ll1 = arrayToLinkedList(arr);
+    const ll = arrayToLinkedList(arr);
     const expectedArr = [3, 2, 1, 5, 8, 5, 10];
-    const expectedLL1 = arrayToLinkedList(expectedArr);
+    const expectedPartition = arrayToLinkedList(expectedArr);
 
-    partition(ll1, 5);
+    partition(ll, 5);
 
-    assert.ok(compareLinkedLists(ll1, expectedLL1));
+    assert.ok(compareLinkedLists(ll, expectedPartition));
   });
   it("should return the partitioned linked list when the partition value does not exist in the linked list", () => {
     const arr = [1, 9, 3, 8, 6, 7, 4, 2, 10];
-    const ll1 = arrayToLinkedList(arr);
+    const ll = arrayToLinkedList(arr);
     const expectedArr = [1, 3, 4, 2, 9, 8, 6, 7, 10];
-    const expectedLL1 = arrayToLinkedList(expectedArr);
+    const expectedPartition = arrayToLinkedList(expectedArr);
 
-    partition(ll1, 5);
+    partition(ll, 5);
 
-    assert.ok(compareLinkedLists(ll1, expectedLL1));
+    assert.ok(compareLinkedLists(ll, expectedPartition));
+  });
+  it("should return the partitioned linked list when the partition value is less than all values in the array", () => {
+    const arr = [10];
+    const ll = arrayToLinkedList(arr);
+    const expectedArr = [10];
+    const expectedPartition = arrayToLinkedList(expectedArr);
+
+    partition(ll, 5);
+
+    assert.ok(compareLinkedLists(ll, expectedPartition));
+  });
+  it("should return the partitioned linked list when the partition value is more than all values in the array", () => {
+    const arr = [1];
+    const ll = arrayToLinkedList(arr);
+    const expectedArr = [1];
+    const expectedPartition = arrayToLinkedList(expectedArr);
+
+    partition(ll, 5);
+
+    assert.ok(compareLinkedLists(ll, expectedPartition));
   });
 });
