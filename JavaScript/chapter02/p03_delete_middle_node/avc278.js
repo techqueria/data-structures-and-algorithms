@@ -5,32 +5,11 @@
 // Result: nothing is returned, but the new linked list looks like a => b => d => e => f
 
 const assert = require("assert");
+const {
+  arrayToLinkedList,
+  compareLinkedLists,
+} = require("../../lib/avc278/linkedlist");
 
-class LinkedListNode {
-  constructor(val, next) {
-    this.val = val === undefined ? null : val;
-    this.next = next === undefined ? null : next;
-  }
-}
-
-const arrayToLinkedList = (arr) => {
-  let tail = null;
-  for (let i = arr.length - 1; i >= 0; i--) {
-    tail = new LinkedListNode(arr[i], tail);
-  }
-  return tail;
-};
-
-const compareLinkedLists = (A, B) => {
-  if (!A && !B) return true;
-
-  while (A !== null && B !== null) {
-    if (A.val !== B.val) return false;
-    A = A.next;
-    B = B.next;
-  }
-  return !A && !B;
-};
 /**
  * Deletes an inputted node somewhere in the middle of the linked list
  * @param  {LinkedListNode} node input node to be removed
