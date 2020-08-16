@@ -27,10 +27,10 @@ the original string. You can assume the string has only uppercase and lowercase 
                 new_str += '1'
 
     for letter in new_str:
-        if letter is '1':
+        if letter == '1':
             new_count += 1
 
-    if len(string) // new_count is 1:
+    if len(string) // new_count == 1:
         return string
     return new_str
 

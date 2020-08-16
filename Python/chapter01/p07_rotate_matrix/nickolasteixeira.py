@@ -10,7 +10,7 @@ def build_matrix(w, h, max=10):
 
 def rotate_matrix(matrix):
     '''function that rotates a matrix clockwise'''
-    if (len(matrix) is 0 or len(matrix) is not len(matrix[0])): return False
+    if (len(matrix) == 0 or len(matrix) is not len(matrix[0])): return False
     matrix_length = len(matrix)
     for layer in range(matrix_length//2):
         first = layer

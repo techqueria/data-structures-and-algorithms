@@ -16,7 +16,7 @@ column are set to 0.'''
 
     for idx1 in range(len(matrix)):
         for idx2 in range(len(matrix[idx1])):
-            if matrix[idx1][idx2] is 0:
+            if matrix[idx1][idx2] == 0:
                 zero_present = True
                 row.append(idx1)
                 column.append(idx2)
