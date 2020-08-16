@@ -40,4 +40,4 @@ describe(module.filename, () => {
   });
 });
 
-module.exports = { arrayToLinkedList, compareLinkedLists };
+module.exports = { arrayToLinkedList, compareLinkedLists, LinkedListNode };
