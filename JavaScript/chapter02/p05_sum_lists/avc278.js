@@ -18,7 +18,7 @@ const {
 } = require("../../lib/avc278/linkedlist");
 
 /**
- * Partitions a linked list based on the input partition, with lesser values to the left and greater values to the right
+ * Sums two linked lists, where the linked lists are displayed in reverse order
  * @param   {LinkedListNode} listOne input linked list 1 to be added
  * @param   {LinkedListNode} listTwo input linked list 2 to be added
  * @return  {LinkedListNode}         ouput sum of input linked lists
@@ -40,7 +40,7 @@ const sumLists = (listOne, listTwo) => {
   let carry = 0;
   let sumHead;
   let prevNode;
-  let currNode;
+
   while (carry > 0 || listOne !== null || listTwo !== null) {
     let sum = carry;
     if (listOne !== null) {
@@ -56,7 +56,7 @@ const sumLists = (listOne, listTwo) => {
     if (sum >= 10) {
       carry = 1;
     }
-    currNode = new LinkedListNode(sum % 10);
+    const currNode = new LinkedListNode(sum % 10);
     if (!sumHead) {
       sumHead = currNode;
     }
@@ -64,6 +64,7 @@ const sumLists = (listOne, listTwo) => {
     if (prevNode) prevNode.next = currNode;
     prevNode = currNode;
   }
+
   return sumHead;
 };
 
