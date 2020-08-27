@@ -37,11 +37,9 @@ const isPalindrome = (list) => {
     fast = fast.next;
     counter += 1;
   }
-  counter /= 2;
 
-  while (counter > 0) {
+  for (let i = 0; i < counter / 2; i++) {
     slow = slow.next;
-    counter -= 1;
   }
 
   slow = reverse(slow);
