@@ -7,9 +7,9 @@ const { LinkedListNode } = require("../../lib/avc278/linkedlist");
 
 /**
  *
- * @param   {LinkedListNode} A input linked list to check against
- * @param   {LinkedListNode} B input linked list to check against
- * @return  {any}              whether the input linked list is a palindrome
+ * @param   {LinkedListNode} A    input linked list to check against
+ * @param   {LinkedListNode} B    input linked list to check against
+ * @return  {LinkedListNode|null} whether the input linked lists intersect
  *
  * For this problem, we need to figure out the length of the two linked lists in order to know where the possible
  * intersection occurs. This is because once the two linked lists intersect, the length from the intersection to the end
@@ -28,7 +28,7 @@ const { LinkedListNode } = require("../../lib/avc278/linkedlist");
  *
  */
 const intersection = (A, B) => {
-  if (!A || !B) return false;
+  if (!A || !B) return null;
 
   let aSize = 1;
   let currA = A;
@@ -44,7 +44,7 @@ const intersection = (A, B) => {
     currB = currB.next;
   }
 
-  if (currA !== currB) return false;
+  if (currA !== currB) return null;
 
   let smaller = aSize < bSize ? A : B;
   let longer = aSize < bSize ? B : A;
