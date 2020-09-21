@@ -25,15 +25,11 @@ const { LinkedListNode } = require("../../lib/avc278/linkedlist");
 const loopDetection = (list) => {
   let slow = list;
   let fast = list;
-  let intersect = false;
 
-  while (!intersect) {
+  do {
     slow = slow.next;
     fast = fast.next.next;
-
-    if (slow !== fast) continue;
-    intersect = true;
-  }
+  } while (slow !== fast);
   slow = list;
 
   while (slow !== fast) {
