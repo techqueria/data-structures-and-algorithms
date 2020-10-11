@@ -122,3 +122,5 @@ describe(`${module.filename} - Stack`, () => {
     assert.strictEqual(queue.peek(), 10);
   });
 });
+
+module.exports = { arrayToQueue, arrayToStack, Queue, Stack };
