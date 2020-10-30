@@ -14,3 +14,15 @@ describe(module.filename, () => {
     assert.deepEqual(isUnique([1,1,1,2,2,2,2,3,3,3,3]), [1,2,3]);
   });
 });
+
+//Solution using Object
+const isUnique2=(arr)=>{
+let obj = {}
+for (let elem of arr){
+  if(obj.hasOwnProperty(elem)) obj[elem]++
+  else obj[elem] = 1
+}
+
+return Object.keys(obj)
+}
+//isUnique2([1,1,1,2,2,2,2,3,3,3,3]) //returns[1,2,3]
