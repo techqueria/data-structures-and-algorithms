@@ -5,7 +5,7 @@ Input: takes an array of integers
 Output: returns a deduped array of integers
 */
 
- //Solution using Object
+ // using an Object
 const isUnique = (arr)=>{
  let obj = {}
  for (let elem of arr){
