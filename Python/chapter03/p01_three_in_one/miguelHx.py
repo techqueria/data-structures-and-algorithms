@@ -4,7 +4,7 @@ Python version 3.7.0
 Describe how you could use a single array to implement three stacks
 """
 
-
+import copy
 import unittest
 from typing import List
 
@@ -110,6 +110,73 @@ class MyStack(object):
         return '->'.join(values)
 
 
+class StackTrio(object):
+
+    def __init__(self, stack_capacity = 7):
+        self.num_stacks = 3
+        self.stack_capacity = stack_capacity
+        self.stack_info = {
+            1: {'start': 0, 'end': stack_capacity - 1, 'size': 0, 'top_index': 0},
+            2: {'start': stack_capacity, 'end': stack_capacity * 2 - 1, 'size': 0, 'top_index': stack_capacity},
+            3: {'start': stack_capacity * 2, 'end': stack_capacity * 3 - 1, 'size': 0, 'top_index': stack_capacity * 2}
+        }
+        self.values = [0] * (stack_capacity * self.num_stacks)
+
+    def is_empty(self, stack_id):
+        return self.stack_info[stack_id]['size'] <= 0
+    
+    def peek(self, stack_id):
+        # this method returns the value at the top index
+        if self.is_empty(stack_id):
+            raise IndexError('Stack is empty. Stack ID: {}'.format(stack_id))
+        return self.values[self.stack_info[stack_id]['top_index']]
+
+    def push(self, stack_id, value):
+        # first, check if stack of interest is full
+        if self.stack_info[stack_id]['size'] >= self.stack_capacity:
+            raise IndexError('Stack is full. Stack ID: {}'.format(stack_id))
+        # otherwise, add value to stack, and update size and top index
+        self.stack_info[stack_id]['size'] += 1
+        # set value for current stack
+        stack_top_index = self.stack_info[stack_id]['top_index']
+        self.values[stack_top_index] = value
+        # update new top index
+        self.stack_info[stack_id]['top_index'] = stack_top_index + 1
+    
+    def pop(self, stack_id):
+        # first, make sure we are not at an empty stack
+        if self.is_empty(stack_id):
+            raise IndexError('Stack is empty. Stack ID: {}'.format(stack_id))
+
+        # get stack top index, then set value to 0 as a way of clearing
+        stack_top_index = self.stack_info[stack_id]['top_index']
+        val_before_pop = self.peek(stack_id)
+
+        # clear value
+        self.values[stack_top_index] = 0
+
+        # decrement size
+        self.stack_info[stack_id]['size'] -= 1
+
+        return val_before_pop
+    
+    def get_size(self, stack_id):
+        return self.stack_info[stack_id]['size']
+    
+    def __str__(self):
+        """
+        We will print out the values
+        as well as the stack info for each stack
+        """
+        d = copy.deepcopy(self.stack_info)
+        d['values'] = str(self.values)
+        return str(d)
+        
+
+
+        
+
+
 class TestMyStack(unittest.TestCase):
     def test_stack_push(self):
         s = MyStack()
@@ -167,6 +234,16 @@ class TestThreeInOne(unittest.TestCase):
 
     def setUp(self):
         print('test')
+    
+    def test_stack_push(self):
+
+        s_trio = StackTrio()
+
+        print(s_trio)
+
+        s_trio.push(1, 99)
+
+        print(s_trio)
 
 
 if __name__ == '__main__':
