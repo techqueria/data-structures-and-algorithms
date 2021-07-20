@@ -135,13 +135,17 @@ class StackTrio(object):
         # first, check if stack of interest is full
         if self.stack_info[stack_id]['size'] >= self.stack_capacity:
             raise IndexError('Stack is full. Stack ID: {}'.format(stack_id))
+        # if empty, then top index stays the same.
         # otherwise, add value to stack, and update size and top index
-        self.stack_info[stack_id]['size'] += 1
         # set value for current stack
         stack_top_index = self.stack_info[stack_id]['top_index']
         self.values[stack_top_index] = value
-        # update new top index
-        self.stack_info[stack_id]['top_index'] = stack_top_index + 1
+        # if empty, then top index stays the same.
+        # otherwise, update top index
+        if not self.is_empty(stack_id):
+            self.stack_info[stack_id]['top_index'] = stack_top_index + 1
+        # update size after
+        self.stack_info[stack_id]['size'] += 1
     
     def pop(self, stack_id):
         # first, make sure we are not at an empty stack
@@ -200,6 +204,8 @@ class TestMyStack(unittest.TestCase):
     
     def test_stack_peek(self):
         s = MyStack()
+        with self.assertRaises(IndexError):
+            s.peek()
         s.push(1)
         s.push(2)
         s.push(99)
@@ -231,20 +237,96 @@ class TestMyStack(unittest.TestCase):
 
 
 class TestThreeInOne(unittest.TestCase):
-
-    def setUp(self):
-        print('test')
     
     def test_stack_push(self):
 
         s_trio = StackTrio()
 
-        print(s_trio)
+        self.assertEqual(s_trio.get_size(1), 0)
+        self.assertEqual(s_trio.get_size(2), 0)
+        self.assertEqual(s_trio.get_size(3), 0)
 
         s_trio.push(1, 99)
 
-        print(s_trio)
+        self.assertEqual(s_trio.get_size(1), 1)
+        self.assertEqual(s_trio.get_size(2), 0)
+        self.assertEqual(s_trio.get_size(3), 0)
 
+        s_trio.push(1, 100)
+        self.assertEqual(s_trio.get_size(1), 2)
+        self.assertEqual(s_trio.get_size(2), 0)
+        self.assertEqual(s_trio.get_size(3), 0)
+
+        s_trio.push(2, 101)
+
+        self.assertEqual(s_trio.get_size(1), 2)
+        self.assertEqual(s_trio.get_size(2), 1)
+        self.assertEqual(s_trio.get_size(3), 0)
+
+        s_trio.push(2, 102)
+        self.assertEqual(s_trio.get_size(1), 2)
+        self.assertEqual(s_trio.get_size(2), 2)
+        self.assertEqual(s_trio.get_size(3), 0)
+
+        s_trio.push(3, 103)
+
+        self.assertEqual(s_trio.get_size(1), 2)
+        self.assertEqual(s_trio.get_size(2), 2)
+        self.assertEqual(s_trio.get_size(3), 1)
+
+        s_trio.push(3, 104)
+        self.assertEqual(s_trio.get_size(1), 2)
+        self.assertEqual(s_trio.get_size(2), 2)
+        self.assertEqual(s_trio.get_size(3), 2)
+
+    
+    def test_stack_peek(self):
+
+
+        s_trio = StackTrio()
+
+        self.assertRaises(IndexError, lambda: s_trio.peek(1))
+        self.assertRaises(IndexError, lambda: s_trio.peek(2))
+        self.assertRaises(IndexError, lambda: s_trio.peek(3))
+
+        s_trio.push(1, 99)
+
+        print(s_trio.stack_info)
+
+        self.assertEqual(s_trio.peek(1), 99)
+
+        s_trio.push(1, 100)
+        self.assertEqual(s_trio.peek(1), 100)
+
+
+        s = MyStack()
+        s.push(1)
+        s.push(2)
+        s.push(99)
+        top_val = s.peek()
+        self.assertEqual(top_val, 99)
+    
+    def test_stack_is_empty(self):
+        s = MyStack()
+        self.assertTrue(s.is_empty())
+        s.push(7)
+        self.assertFalse(s.is_empty())
+    
+    def test_stack_pop(self):
+        # first case, attempt to pop an empty stack
+        s = MyStack()
+        with self.assertRaises(IndexError):
+            s.pop()
+        s.push(1)
+        s.push(2)
+        s.push(3)
+        # size is 3
+        self.assertEqual(s.as_list(), [3, 2, 1])
+        val = s.pop()
+        self.assertEqual(val, 3)
+        self.assertEqual(s.size, 2) # size should now be 2
+        self.assertEqual(s.as_list(), [2, 1])
+    
 
 if __name__ == '__main__':
     unittest.main()
