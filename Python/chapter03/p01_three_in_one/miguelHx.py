@@ -156,10 +156,9 @@ class StackTrio(object):
 
         
 
-        # if empty, then top index and next index stay the same.
         stack_top_index = self.stack_info[stack_id]['top_index']
         new_stack_top_index = stack_top_index + 1
-
+        # if empty, then top index and next index stay the same.
         if self.is_empty(stack_id):
             self.values[stack_top_index] = value
             # update stack size.
@@ -180,17 +179,44 @@ class StackTrio(object):
         # first, make sure we are not at an empty stack
         if self.is_empty(stack_id):
             raise IndexError('Stack is empty. Stack ID: {}'.format(stack_id))
+        # if there is one element, top index will be 0
+        # and next index will be -1
+        # if there are two elements, top index will be 1,
+        # and next index will be 0
+        # if there are three elements, top index will be 2,
+        # next will be 1
+        # basically, the next index will be one less than top index
+
+        # when we pop, top index will become next, and next will get
+        # decremented by one. (Or, each get decremented by 1)
 
         # get stack top index, then set value to 0 as a way of clearing
-        stack_top_index = self.stack_info[stack_id]['top_index']
+        original_stack_top_index = self.stack_info[stack_id]['top_index']
         val_before_pop = self.peek(stack_id)
 
-        # clear value
-        self.values[stack_top_index] = 0
+        # special case, when there is only one element in this stack,
+        # we will clear top index, and reset next to sentinel value (-1)
 
+        if self.get_size(stack_id) == 1:
+            self.values[original_stack_top_index] = 0
+            # top index should stay the same, but will reset next index to sentinel value (-1)
+            self.stack_info[stack_id]['top_index_next'] = -1
+            self.stack_info[stack_id]['size'] -= 1
+            return val_before_pop
+
+        
+        # otherwise, stack size is greater than 2, and we can decrement
+        # top index and next index by 1
+        self.stack_info[stack_id]['top_index'] -= 1
+        # if stack size is 2, then we want to prevent underflow of next index
+        if self.get_size(stack_id) == 2:
+            self.stack_info[stack_id]['top_index_next'] = -1
+        else:
+            self.stack_info[stack_id]['top_index_next'] -= 1
+        # clear value
+        self.values[original_stack_top_index] = 0
         # decrement size
         self.stack_info[stack_id]['size'] -= 1
-
         return val_before_pop
     
     def get_size(self, stack_id):
@@ -310,8 +336,6 @@ class TestThreeInOne(unittest.TestCase):
 
     
     def test_stack_peek(self):
-
-
         s_trio = StackTrio()
 
         self.assertRaises(IndexError, lambda: s_trio.peek(1))
@@ -319,24 +343,12 @@ class TestThreeInOne(unittest.TestCase):
         self.assertRaises(IndexError, lambda: s_trio.peek(3))
 
         s_trio.push(1, 99)
-
         self.assertEqual(s_trio.peek(1), 99)
-
-
         s_trio.push(1, 100)
-
-
         self.assertEqual(s_trio.peek(1), 100)
-
         s_trio.push(1, 101)
-
-        print(s_trio.stack_info)
-        print(s_trio.values)
-
         self.assertEqual(s_trio.peek(1), 101)
-
-        # test that peek still works after pop
-
+        # test that peek still works after popping
         return
     
     def test_stack_is_empty(self):
@@ -347,18 +359,57 @@ class TestThreeInOne(unittest.TestCase):
     
     def test_stack_pop(self):
         # first case, attempt to pop an empty stack
-        s = MyStack()
-        with self.assertRaises(IndexError):
-            s.pop()
-        s.push(1)
-        s.push(2)
-        s.push(3)
-        # size is 3
-        self.assertEqual(s.as_list(), [3, 2, 1])
-        val = s.pop()
-        self.assertEqual(val, 3)
-        self.assertEqual(s.size, 2) # size should now be 2
-        self.assertEqual(s.as_list(), [2, 1])
+        s_trio = StackTrio()
+        self.assertRaises(IndexError, lambda: s_trio.pop(1))
+        self.assertRaises(IndexError, lambda: s_trio.pop(2))
+        self.assertRaises(IndexError, lambda: s_trio.pop(3))
+
+        # next, test out pop for each stack
+        s_trio.push(1, 199)
+        s_trio.push(2, 299)
+        s_trio.push(3, 399)
+
+        self.assertEqual(s_trio.get_size(1), 1)
+        self.assertEqual(s_trio.get_size(2), 1)
+        self.assertEqual(s_trio.get_size(3), 1)
+
+        val = s_trio.pop(1)
+        self.assertEqual(val, 199)
+        self.assertEqual(s_trio.get_size(1), 0)
+        
+        s_trio.push(1, 199)
+        s_trio.push(1, 200)
+
+        val = s_trio.pop(1)
+        self.assertEqual(val, 200)
+        self.assertEqual(s_trio.get_size(1), 1)
+
+        val = s_trio.pop(2)
+        self.assertEqual(val, 299)
+        self.assertEqual(s_trio.get_size(2), 0)
+
+        s_trio.push(2, 299)
+        s_trio.push(2, 300)
+
+        val = s_trio.pop(2)
+
+        self.assertEqual(val, 300)
+        self.assertEqual(s_trio.get_size(2), 1)
+
+        val = s_trio.pop(3)
+
+        self.assertEqual(val, 399)
+        self.assertEqual(s_trio.get_size(3), 0)
+
+        s_trio.push(3, 399)
+        s_trio.push(3, 400)
+
+        self.assertEqual(s_trio.get_size(3), 2)
+
+        val = s_trio.pop(3)
+
+        self.assertEqual(val, 400)
+        self.assertEqual(s_trio.get_size(3), 1)
     
 
 if __name__ == '__main__':
