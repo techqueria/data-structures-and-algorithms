@@ -116,9 +116,27 @@ class StackTrio(object):
         self.num_stacks = 3
         self.stack_capacity = stack_capacity
         self.stack_info = {
-            1: {'start': 0, 'end': stack_capacity - 1, 'size': 0, 'top_index': 0},
-            2: {'start': stack_capacity, 'end': stack_capacity * 2 - 1, 'size': 0, 'top_index': stack_capacity},
-            3: {'start': stack_capacity * 2, 'end': stack_capacity * 3 - 1, 'size': 0, 'top_index': stack_capacity * 2}
+            1: {
+                'start': 0,
+                'end': stack_capacity - 1,
+                'size': 0,
+                'top_index': 0,
+                'top_index_next': -1, # index after top, initially starts at a sentinel value because the stack is empty, so there is no "next"
+            },
+            2: {
+                'start': stack_capacity,
+                'end': stack_capacity * 2 - 1,
+                'size': 0,
+                'top_index': stack_capacity,
+                'top_index_next': -1,
+            },
+            3: {
+                'start': stack_capacity * 2,
+                'end': stack_capacity * 3 - 1,
+                'size': 0,
+                'top_index': stack_capacity * 2,
+                'top_index_next': -1
+            }
         }
         self.values = [0] * (stack_capacity * self.num_stacks)
 
@@ -135,17 +153,28 @@ class StackTrio(object):
         # first, check if stack of interest is full
         if self.stack_info[stack_id]['size'] >= self.stack_capacity:
             raise IndexError('Stack is full. Stack ID: {}'.format(stack_id))
-        # if empty, then top index stays the same.
-        # otherwise, add value to stack, and update size and top index
-        # set value for current stack
+
+        
+
+        # if empty, then top index and next index stay the same.
         stack_top_index = self.stack_info[stack_id]['top_index']
-        self.values[stack_top_index] = value
-        # if empty, then top index stays the same.
-        # otherwise, update top index
-        if not self.is_empty(stack_id):
-            self.stack_info[stack_id]['top_index'] = stack_top_index + 1
-        # update size after
+        new_stack_top_index = stack_top_index + 1
+
+        if self.is_empty(stack_id):
+            self.values[stack_top_index] = value
+            # update stack size.
+            self.stack_info[stack_id]['size'] += 1
+            return
+
+        # otherwise, stack is not empty, and so we
+        # first need to update the next and top indices, then update
+        # the values accordingly.
+        self.stack_info[stack_id]['top_index_next'] = stack_top_index
+        self.stack_info[stack_id]['top_index'] = new_stack_top_index
+        self.values[new_stack_top_index] = value
         self.stack_info[stack_id]['size'] += 1
+        
+        
     
     def pop(self, stack_id):
         # first, make sure we are not at an empty stack
@@ -291,20 +320,24 @@ class TestThreeInOne(unittest.TestCase):
 
         s_trio.push(1, 99)
 
-        print(s_trio.stack_info)
-
         self.assertEqual(s_trio.peek(1), 99)
 
+
         s_trio.push(1, 100)
+
+
         self.assertEqual(s_trio.peek(1), 100)
 
+        s_trio.push(1, 101)
 
-        s = MyStack()
-        s.push(1)
-        s.push(2)
-        s.push(99)
-        top_val = s.peek()
-        self.assertEqual(top_val, 99)
+        print(s_trio.stack_info)
+        print(s_trio.values)
+
+        self.assertEqual(s_trio.peek(1), 101)
+
+        # test that peek still works after pop
+
+        return
     
     def test_stack_is_empty(self):
         s = MyStack()
