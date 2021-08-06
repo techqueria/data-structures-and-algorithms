@@ -348,7 +348,11 @@ class TestThreeInOne(unittest.TestCase):
         self.assertEqual(s_trio.peek(1), 100)
         s_trio.push(1, 101)
         self.assertEqual(s_trio.peek(1), 101)
+        
         # test that peek still works after popping
+        val = s_trio.pop(1)
+        self.assertEqual(val, 101)
+        self.assertEqual(s_trio.peek(1), 100)
         return
     
     def test_stack_is_empty(self):
