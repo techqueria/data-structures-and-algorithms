@@ -61,13 +61,13 @@ class MyStack(object):
             t.running_min = item
             self.top = t
             self.size += 1
-            print("Stack Node data = {}, local min = {}".format(item, t.running_min))
+            # print("Stack Node data = {}, local min = {}".format(item, t.running_min))
             return
         if item < self.top.data:
             t.running_min = item
         else:
             t.running_min = self.top.running_min
-        print("Stack Node data = {}, local min = {}".format(item, t.running_min))
+        # print("Stack Node data = {}, local min = {}".format(item, t.running_min))
         self.top = t
         self.size += 1
 
