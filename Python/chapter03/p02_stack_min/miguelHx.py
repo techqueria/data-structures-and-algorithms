@@ -30,7 +30,6 @@ class MyStack(object):
     def __init__(self):
         self.top = None # top is a pointer to StackNode object
         self.size = 0
-        self.min_value = sys.maxsize
         return
     
     def pop(self) -> int:
