@@ -8,6 +8,7 @@ Push, pop and min should all operate in O(1) time.
 
 import copy
 import unittest
+import sys
 from typing import List
 
 
@@ -16,6 +17,7 @@ class StackNode(object):
     def __init__(self, data):
         self.data = data
         self.next = None # next is a pointer to a StackNode object
+        self.running_min = sys.maxsize
 
 class MyStack(object):
     """
@@ -28,6 +30,7 @@ class MyStack(object):
     def __init__(self):
         self.top = None # top is a pointer to StackNode object
         self.size = 0
+        self.min_value = sys.maxsize
         return
     
     def pop(self) -> int:
@@ -55,8 +58,28 @@ class MyStack(object):
         """
         t = StackNode(item)
         t.next = self.top
+        if self.top is None:
+            t.running_min = item
+            self.top = t
+            self.size += 1
+            print("Stack Node data = {}, local min = {}".format(item, t.running_min))
+            return
+        if item < self.top.data:
+            t.running_min = item
+        else:
+            t.running_min = self.top.running_min
+        print("Stack Node data = {}, local min = {}".format(item, t.running_min))
         self.top = t
         self.size += 1
+
+    def min(self) -> int:
+        """
+        Returns the element with the lowest value in the stack
+
+        Returns:
+            int: min value in stack
+        """
+        return self.top.running_min
 
     def peek(self) -> int:
         """
@@ -164,6 +187,37 @@ class TestMyStack(unittest.TestCase):
         self.assertEqual(s.size, 2) # size should now be 2
         self.assertEqual(s.as_list(), [2, 1])
     
+    def test_stack_min(self):
+        s = MyStack()
+        s.push(9)
+        self.assertEqual(s.min(), 9)
+        s.push(7)
+        self.assertEqual(s.min(), 7)
+        s.push(-2)
+        self.assertEqual(s.min(), -2)
+        s.push(5)
+        self.assertEqual(s.min(), -2)
+        s.push(8)
+        self.assertEqual(s.min(), -2)
+        s.push(-99)
+        self.assertEqual(s.min(), -99)
+        s.push(2)
+        self.assertEqual(s.min(), -99)
+        s.pop()
+        self.assertEqual(s.min(), -99)
+        s.pop()
+        self.assertEqual(s.min(), -2)
+        s.pop()
+        self.assertEqual(s.min(), -2)
+        s.pop()
+        self.assertEqual(s.min(), -2)
+        s.pop()
+        self.assertEqual(s.min(), 7)
+        s.pop()
+        self.assertEqual(s.min(), 9)
+        s.pop()
+        self.assertTrue(s.is_empty())
+
 
 if __name__ == '__main__':
     unittest.main()
