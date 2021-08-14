@@ -1,5 +1,4 @@
-"""
-Python version 3.7.0
+"""Python version 3.7.0
 3.1 - Three in one
 Describe how you could use a single array to implement three stacks
 """
