@@ -8,7 +8,7 @@ import unittest
 
 from dataclasses import dataclass
 from typing import Generic, TypeVar
-from typing import List, Optional
+from typing import List, Optional, Iterator
 
 T = TypeVar('T')
 
@@ -29,6 +29,8 @@ class MyStack:
     def __init__(self):
         self.top: Optional[StackNode[T]] = None # top is a pointer to StackNode object
         self.size: int = 0
+        self.index: int = -1 # tracking current node for iterator use
+        self.current_node: Optional[StackNode[T]] = self.top
         return
     
     def pop(self) -> T:
@@ -45,6 +47,7 @@ class MyStack:
             raise IndexError('Stack is Empty.')
         item = self.top.data
         self.top = self.top.next
+        self.current_node = self.top
         self.size -= 1
         return item
     
@@ -57,6 +60,7 @@ class MyStack:
         t = StackNode(item, None)
         t.next = self.top
         self.top = t
+        self.current_node = self.top
         self.size += 1
 
     def peek(self) -> int:
@@ -73,7 +77,7 @@ class MyStack:
             raise IndexError('Stack is Empty')
         return self.top.data
     
-    def as_list(self) -> List[int]:
+    def __iter__(self) -> Iterator:
         """
         Builds a list of the current stack state.
         For example, given the following stack:
@@ -83,15 +87,17 @@ class MyStack:
         Returns:
             List[int]: list of integers
         """
-        values: List = []
-        n: Optional[StackNode] = self.top
-        if n is None:
-            return values
-        while n.next:
-            values.append(n.data)
-            n = n.next
-        values.append(n.data)
-        return values
+        return self
+    
+    def __next__(self) -> T:
+        self.index += 1
+        if self.index == self.size or self.current_node is None:
+            self.index = -1
+            self.current_node = self.top
+            raise StopIteration
+        n: T = self.current_node.data
+        self.current_node = self.current_node.next
+        return n
     
     def __bool__(self) -> bool:
         """
@@ -259,7 +265,7 @@ class TestMyStack(unittest.TestCase):
         self.assertEqual(s.top.data, 4)
         self.assertEqual(s.top.next.data, 3)
 
-        l = s.as_list()
+        l = list(s)
         self.assertEqual(l, [4, 3, 2])
     
     def test_stack_peek(self):
@@ -287,11 +293,11 @@ class TestMyStack(unittest.TestCase):
         s.push(2)
         s.push(3)
         # size is 3
-        self.assertEqual(s.as_list(), [3, 2, 1])
+        self.assertEqual(list(s), [3, 2, 1])
         val = s.pop()
         self.assertEqual(val, 3)
         self.assertEqual(s.size, 2) # size should now be 2
-        self.assertEqual(s.as_list(), [2, 1])
+        self.assertEqual(list(s), [2, 1])
 
 
 
