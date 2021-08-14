@@ -1,5 +1,4 @@
 """Python version 3.7.0
-
 3.1 - Three in one
 Describe how you could use a single array to implement three stacks
 """
@@ -9,7 +8,7 @@ import unittest
 
 from dataclasses import dataclass
 from typing import Generic, TypeVar
-from typing import List
+from typing import List, Optional
 
 T = TypeVar('T')
 
@@ -28,8 +27,8 @@ class MyStack(object):
     """
 
     def __init__(self):
-        self.top = None # top is a pointer to StackNode object
-        self.size = 0
+        self.top: Optional[StackNode[T]] = None # top is a pointer to StackNode object
+        self.size: int = 0
         return
     
     def pop(self) -> int:
