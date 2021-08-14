@@ -150,18 +150,31 @@ class StackTrio:
             }
         }
         self.values = [0] * (stack_capacity * self.num_stacks)
+    
+    def _validate_stack_id(self, stack_id: int):
+        """Helper method to make sure stack_id
+        doesn't go out of range.
 
-    def is_empty(self, stack_id):
+        Args:
+            stack_id (int): id used to refer to correct stack valid ids: 1-3
+        """
+        if stack_id < 1 or stack_id > 3:
+            raise IndexError(f'Stack Id out of range. Valid ranges: 1-3, input: {stack_id}')
+
+    def is_empty(self, stack_id: int):
+        self._validate_stack_id(stack_id)
         return self.stack_info[stack_id]['size'] <= 0
     
     def peek(self, stack_id):
         # this method returns the value at the top index
+        self._validate_stack_id(stack_id)
         if self.is_empty(stack_id):
             raise IndexError('Stack is empty. Stack ID: {}'.format(stack_id))
         return self.values[self.stack_info[stack_id]['top_index']]
 
     def push(self, stack_id, value):
-        # first, check if stack of interest is full
+        self._validate_stack_id(stack_id)
+        # then, check if stack of interest is full
         if self.stack_info[stack_id]['size'] >= self.stack_capacity:
             raise IndexError('Stack is full. Stack ID: {}'.format(stack_id))
 
@@ -187,7 +200,8 @@ class StackTrio:
         
     
     def pop(self, stack_id):
-        # first, make sure we are not at an empty stack
+        self._validate_stack_id(stack_id)
+        # then, make sure we are not at an empty stack
         if self.is_empty(stack_id):
             raise IndexError('Stack is empty. Stack ID: {}'.format(stack_id))
         # if there is one element, top index will be 0
@@ -231,6 +245,7 @@ class StackTrio:
         return val_before_pop
     
     def get_size(self, stack_id):
+        self._validate_stack_id(stack_id)
         return self.stack_info[stack_id]['size']
     
     def __str__(self):
@@ -419,6 +434,11 @@ class TestThreeInOne(unittest.TestCase):
 
         self.assertEqual(val, 400)
         self.assertEqual(s_trio.get_size(3), 1)
+    
+    def test_validate_stack_id(self):
+        s_trio = StackTrio()
+        self.assertRaises(IndexError, lambda: s_trio._validate_stack_id(4))
+        self.assertRaises(IndexError, lambda: s_trio._validate_stack_id(0))
     
 
 if __name__ == '__main__':
