@@ -15,7 +15,7 @@ T = TypeVar('T')
 @dataclass
 class StackNode(Generic[T]):
     data: T
-    next: 'StackNode[T]'
+    next: 'Optional[StackNode[T]]'
 
 
 class MyStack:
@@ -54,7 +54,7 @@ class MyStack:
         Args:
             item (int): data we want at the top of stack
         """
-        t = StackNode(item)
+        t = StackNode(item, None)
         t.next = self.top
         self.top = t
         self.size += 1
