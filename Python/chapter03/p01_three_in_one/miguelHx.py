@@ -83,9 +83,11 @@ class MyStack:
         Returns:
             List[int]: list of integers
         """
-        values = []
-        n = self.top
-        while n.next is not None:
+        values: List = []
+        n: Optional[StackNode] = self.top
+        if n is None:
+            return values
+        while n.next:
             values.append(n.data)
             n = n.next
         values.append(n.data)
