@@ -73,16 +73,6 @@ class MyStack:
             raise IndexError('Stack is Empty')
         return self.top.data
     
-    def is_empty(self) -> bool:
-        """
-        Returns True if and only if the
-        stack is empty, otherwise False.
-
-        Returns:
-            bool: True if empty, False otherwise
-        """
-        return self.size == 0
-    
     def as_list(self) -> List[int]:
         """
         Builds a list of the current stack state.
@@ -100,6 +90,16 @@ class MyStack:
             n = n.next
         values.append(n.data)
         return values
+    
+    def __bool__(self) -> bool:
+        """
+        Returns True if and only if the
+        stack is empty, otherwise False.
+
+        Returns:
+            bool: True if empty, False otherwise
+        """
+        return self.size == 0
     
     def __str__(self):
         if self.size == 0:
@@ -272,9 +272,9 @@ class TestMyStack(unittest.TestCase):
     
     def test_stack_is_empty(self):
         s = MyStack()
-        self.assertTrue(s.is_empty())
+        self.assertTrue(s)
         s.push(7)
-        self.assertFalse(s.is_empty())
+        self.assertFalse(s)
     
     def test_stack_pop(self):
         # first case, attempt to pop an empty stack
@@ -357,12 +357,6 @@ class TestThreeInOne(unittest.TestCase):
         self.assertEqual(val, 101)
         self.assertEqual(s_trio.peek(1), 100)
         return
-    
-    def test_stack_is_empty(self):
-        s = MyStack()
-        self.assertTrue(s.is_empty())
-        s.push(7)
-        self.assertFalse(s.is_empty())
     
     def test_stack_pop(self):
         # first case, attempt to pop an empty stack
