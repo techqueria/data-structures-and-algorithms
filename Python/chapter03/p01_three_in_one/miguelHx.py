@@ -1,4 +1,5 @@
 """Python version 3.7.0
+
 3.1 - Three in one
 Describe how you could use a single array to implement three stacks
 """
@@ -19,8 +20,8 @@ class StackNode(Generic[T]):
 
 
 class MyStack(object):
-    """
-    Stack data structure implementation.
+    """Stack data structure implementation.
+
     Uses LIFO (last-in first-out) ordering.
     The most recent item added to the stack is
     the first removed.  Traversal is top to bottom.
