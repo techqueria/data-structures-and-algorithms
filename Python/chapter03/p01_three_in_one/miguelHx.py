@@ -5,14 +5,18 @@ Describe how you could use a single array to implement three stacks
 
 import copy
 import unittest
+
+from dataclasses import dataclass
+from typing import Generic, TypeVar
 from typing import List
 
+T = TypeVar('T')
 
-class StackNode(object):
+@dataclass
+class StackNode(Generic[T]):
+    data: T
+    next: 'StackNode[T]'
 
-    def __init__(self, data):
-        self.data = data
-        self.next = None # next is a pointer to a StackNode object
 
 class MyStack(object):
     """
