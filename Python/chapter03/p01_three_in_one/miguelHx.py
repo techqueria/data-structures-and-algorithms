@@ -31,7 +31,7 @@ class MyStack:
         self.size: int = 0
         return
     
-    def pop(self) -> int:
+    def pop(self) -> T:
         """
         Removes the top item from the stack
 
