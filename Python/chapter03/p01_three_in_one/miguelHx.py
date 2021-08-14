@@ -18,7 +18,7 @@ class StackNode(Generic[T]):
     next: 'StackNode[T]'
 
 
-class MyStack(object):
+class MyStack:
     """Stack data structure implementation.
 
     Uses LIFO (last-in first-out) ordering.
@@ -113,7 +113,7 @@ class MyStack(object):
         return '->'.join(values)
 
 
-class StackTrio(object):
+class StackTrio:
 
     def __init__(self, stack_capacity = 7):
         self.num_stacks = 3
