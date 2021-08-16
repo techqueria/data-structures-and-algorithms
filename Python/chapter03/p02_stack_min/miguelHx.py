@@ -20,7 +20,7 @@ T = TypeVar('T')
 class StackNode(Generic[T]):
     data: T
     next: 'Optional[StackNode[T]]'
-    running_min: int = sys.maxsize
+    running_min: T
 
 class MyStack(object):
     """Stack data structure implementation.
@@ -60,16 +60,11 @@ class MyStack(object):
         Args:
             item (int): data we want at the top of stack
         """
-        t = StackNode(item, None)
+        t = StackNode(item, None, sys.maxsize)
         t.next = self.top
         if self.top is None:
             t.running_min = item
-            self.top = t
-            self.current_node = self.top
-            self.size += 1
-            # print("Stack Node data = {}, local min = {}".format(item, t.running_min))
-            return
-        if item < self.top.data:
+        elif item < self.top.data: # we will assume data implements __lt__
             t.running_min = item
         else:
             t.running_min = self.top.running_min
@@ -85,6 +80,8 @@ class MyStack(object):
         Returns:
             int: min value in stack
         """
+        if self.top is None:
+            raise ValueError('Min does not exist yet because there are no values in the stack.')
         return self.top.running_min
 
     def peek(self) -> T:
