@@ -17,34 +17,49 @@ class StackNode(Generic[T]):
     data: T
     next: 'Optional[StackNode[T]]'
 
+@dataclass
+class StackInfo:
+    id: int
+    start: int
+    end: int
+    size: int
+    top_index: int
+    top_index_next: int
+
 
 class StackTrio:
 
     def __init__(self, stack_capacity = 7):
         self.num_stacks = 3
         self.stack_capacity = stack_capacity
+        first_stack_info = StackInfo(
+            1, # id
+            0, # start index
+            stack_capacity - 1, # end index
+            0, # size
+            0, # top index
+            -1 # top index next
+        )
+        second_stack_info = StackInfo(
+            2, # id
+            stack_capacity, # start index
+            stack_capacity * 2 - 1, # end index
+            0, # size
+            stack_capacity, # top index
+            -1 # top index next
+        )
+        third_stack_info = StackInfo(
+            3, # id
+            stack_capacity * 2, # start index
+            stack_capacity * 3 - 1, # end index
+            0, # size
+            stack_capacity * 2, # top index
+            -1 # top index next
+        )
         self.stack_info = {
-            1: {
-                'start': 0,
-                'end': stack_capacity - 1,
-                'size': 0,
-                'top_index': 0,
-                'top_index_next': -1, # index after top, initially starts at a sentinel value because the stack is empty, so there is no "next"
-            },
-            2: {
-                'start': stack_capacity,
-                'end': stack_capacity * 2 - 1,
-                'size': 0,
-                'top_index': stack_capacity,
-                'top_index_next': -1,
-            },
-            3: {
-                'start': stack_capacity * 2,
-                'end': stack_capacity * 3 - 1,
-                'size': 0,
-                'top_index': stack_capacity * 2,
-                'top_index_next': -1
-            }
+            1: first_stack_info,
+            2: second_stack_info,
+            3: third_stack_info
         }
         self.values = [0] * (stack_capacity * self.num_stacks)
     
@@ -60,39 +75,36 @@ class StackTrio:
 
     def is_empty(self, stack_id: int):
         self._validate_stack_id(stack_id)
-        return self.stack_info[stack_id]['size'] <= 0
+        return self.stack_info[stack_id].size <= 0
     
     def peek(self, stack_id):
         # this method returns the value at the top index
         self._validate_stack_id(stack_id)
         if self.is_empty(stack_id):
             raise IndexError('Stack is empty. Stack ID: {}'.format(stack_id))
-        return self.values[self.stack_info[stack_id]['top_index']]
+        return self.values[self.stack_info[stack_id].top_index]
 
     def push(self, stack_id, value):
         self._validate_stack_id(stack_id)
         # then, check if stack of interest is full
-        if self.stack_info[stack_id]['size'] >= self.stack_capacity:
+        if self.stack_info[stack_id].size >= self.stack_capacity:
             raise IndexError('Stack is full. Stack ID: {}'.format(stack_id))
-
-        
-
-        stack_top_index = self.stack_info[stack_id]['top_index']
+        stack_top_index = self.stack_info[stack_id].top_index
         new_stack_top_index = stack_top_index + 1
         # if empty, then top index and next index stay the same.
         if self.is_empty(stack_id):
             self.values[stack_top_index] = value
             # update stack size.
-            self.stack_info[stack_id]['size'] += 1
+            self.stack_info[stack_id].size += 1
             return
 
         # otherwise, stack is not empty, and so we
         # first need to update the next and top indices, then update
         # the values accordingly.
-        self.stack_info[stack_id]['top_index_next'] = stack_top_index
-        self.stack_info[stack_id]['top_index'] = new_stack_top_index
+        self.stack_info[stack_id].top_index_next = stack_top_index
+        self.stack_info[stack_id].top_index = new_stack_top_index
         self.values[new_stack_top_index] = value
-        self.stack_info[stack_id]['size'] += 1
+        self.stack_info[stack_id].size += 1
         
         
     
@@ -103,19 +115,19 @@ class StackTrio:
             raise IndexError('Stack is empty. Stack ID: {}'.format(stack_id))
         # basically, the next index will be one less than top index.
         # when we pop, each top index will get decremented by 1
-        original_stack_top_index = self.stack_info[stack_id]['top_index']
+        original_stack_top_index = self.stack_info[stack_id].top_index
         val_before_pop = self.peek(stack_id)
-        self.stack_info[stack_id]['top_index'] -= 1
-        self.stack_info[stack_id]['top_index_next'] -= 1
+        self.stack_info[stack_id].top_index -= 1
+        self.stack_info[stack_id].top_index_next -= 1
         # clear value
         self.values[original_stack_top_index] = 0
         # decrement size
-        self.stack_info[stack_id]['size'] -= 1
+        self.stack_info[stack_id].size -= 1
         return val_before_pop
     
     def get_size(self, stack_id):
         self._validate_stack_id(stack_id)
-        return self.stack_info[stack_id]['size']
+        return self.stack_info[stack_id].size
     
     def __str__(self):
         """
