@@ -101,39 +101,12 @@ class StackTrio:
         # then, make sure we are not at an empty stack
         if self.is_empty(stack_id):
             raise IndexError('Stack is empty. Stack ID: {}'.format(stack_id))
-        # if there is one element, top index will be 0
-        # and next index will be -1
-        # if there are two elements, top index will be 1,
-        # and next index will be 0
-        # if there are three elements, top index will be 2,
-        # next will be 1
-        # basically, the next index will be one less than top index
-
-        # when we pop, top index will become next, and next will get
-        # decremented by one. (Or, each get decremented by 1)
-
-        # get stack top index, then set value to 0 as a way of clearing
+        # basically, the next index will be one less than top index.
+        # when we pop, each top index will get decremented by 1
         original_stack_top_index = self.stack_info[stack_id]['top_index']
         val_before_pop = self.peek(stack_id)
-
-        # special case, when there is only one element in this stack,
-        # we will clear top index, and reset next to sentinel value (-1)
-
-        if self.get_size(stack_id) == 1:
-            self.values[original_stack_top_index] = 0
-            # top index should stay the same, but will reset next index to sentinel value (-1)
-            self.stack_info[stack_id]['top_index_next'] = -1
-            self.stack_info[stack_id]['size'] -= 1
-            return val_before_pop
-
-        # otherwise, stack size is greater than 2, and we can decrement
-        # top index and next index by 1
         self.stack_info[stack_id]['top_index'] -= 1
-        # if stack size is 2, then we want to prevent underflow of next index
-        if self.get_size(stack_id) == 2:
-            self.stack_info[stack_id]['top_index_next'] = -1
-        else:
-            self.stack_info[stack_id]['top_index_next'] -= 1
+        self.stack_info[stack_id]['top_index_next'] -= 1
         # clear value
         self.values[original_stack_top_index] = 0
         # decrement size
