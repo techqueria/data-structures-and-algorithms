@@ -31,7 +31,7 @@ class MyStack(object):
 
     def __init__(self):
         self.top: Optional[StackNode[T]] = None # top is a pointer to StackNode object
-        self.size: int = 0
+        self._size: int = 0
         self.index: int = -1 # for iterator use
         self.current_node: Optional[StackNode[T]] = self.top # also for iterator use
         return
@@ -51,7 +51,7 @@ class MyStack(object):
         item = self.top.data
         self.top = self.top.next
         self.current_node = self.top
-        self.size -= 1
+        self._size -= 1
         return item
     
     def push(self, item: T) -> None:
@@ -71,7 +71,7 @@ class MyStack(object):
         # print("Stack Node data = {}, local min = {}".format(item, t.running_min))
         self.top = t
         self.current_node = self.top
-        self.size += 1
+        self._size += 1
 
     def min(self) -> T:
         """
@@ -112,7 +112,7 @@ class MyStack(object):
     
     def __next__(self) -> T:
         self.index += 1
-        if self.index == self.size or self.current_node is None:
+        if self.index == self._size or self.current_node is None:
             self.index = -1
             self.current_node = self.top
             raise StopIteration
@@ -131,10 +131,13 @@ class MyStack(object):
         Returns:
             bool: False when empty, True otherwise
         """
-        return self.size > 0
+        return self._size > 0
+    
+    def __len__(self) -> int:
+        return self._size
     
     def __str__(self):
-        if self.size == 0:
+        if self._size == 0:
             return '<Empty>'
         values = []
         n = self.top
@@ -148,18 +151,18 @@ class MyStack(object):
 class TestMyStack(unittest.TestCase):
     def test_stack_push(self):
         s = MyStack()
-        self.assertEqual(s.size, 0)
+        self.assertEqual(len(s), 0)
         self.assertEqual(s.top, None)
         s.push(2)
-        self.assertEqual(s.size, 1)
+        self.assertEqual(len(s), 1)
         self.assertEqual(s.top.data, 2)
         self.assertEqual(s.top.next, None)
         s.push(3)
-        self.assertEqual(s.size, 2)
+        self.assertEqual(len(s), 2)
         self.assertEqual(s.top.data, 3)
         self.assertEqual(s.top.next.data, 2)
         s.push(4)
-        self.assertEqual(s.size, 3)
+        self.assertEqual(len(s), 3)
         self.assertEqual(s.top.data, 4)
         self.assertEqual(s.top.next.data, 3)
         self.assertEqual(list(s), [4, 3, 2])
@@ -186,7 +189,7 @@ class TestMyStack(unittest.TestCase):
         self.assertEqual(list(s), [3, 2, 1])
         val = s.pop()
         self.assertEqual(val, 3)
-        self.assertEqual(s.size, 2) # size should now be 2
+        self.assertEqual(s._size, 2) # size should now be 2
         self.assertEqual(list(s), [2, 1])
     
     def test_stack_min(self):
