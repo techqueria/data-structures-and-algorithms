@@ -173,9 +173,10 @@ class TestMyStack(unittest.TestCase):
     
     def test__bool__(self):
         s = MyStack()
-        self.assertFalse(bool(s))
+        self.assertFalse(s)
         s.push(3)
-        self.assertTrue(bool(s))
+        self.assertTrue(s)
+
     
 
 if __name__ == '__main__':
