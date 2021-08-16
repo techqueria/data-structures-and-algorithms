@@ -10,16 +10,23 @@ import copy
 import unittest
 import sys
 
+from abc import abstractmethod
 from dataclasses import dataclass
 from typing import Generic, TypeVar
 from typing import List, Optional, Iterator
 
 T = TypeVar('T')
+C = TypeVar('C', bound='Comparable')
+
+class Comparable(Generic[T, C]):
+    @abstractmethod
+    def __lt__(self, other: T):
+        pass
 
 @dataclass
-class StackNode(Generic[T]):
+class StackNode(Generic[T, C]):
     data: T
-    next: 'Optional[StackNode[T]]'
+    next: 'Optional[StackNode[T, C]]'
     running_min: T
 
 class MyStack(object):
@@ -58,9 +65,9 @@ class MyStack(object):
         """
         Adds an item to the top of the stack
         Args:
-            item (int): data we want at the top of stack
+            item (T): data we want at the top of stack
         """
-        t = StackNode(item, None, sys.maxsize)
+        t: StackNode = StackNode(item, None, sys.maxsize)
         t.next = self.top
         if self.top is None:
             t.running_min = item
