@@ -101,13 +101,17 @@ class MyStack:
     
     def __bool__(self) -> bool:
         """
-        Returns True if and only if the
-        stack is empty, otherwise False.
+        True is returned when the container is not empty.
+        From https://docs.python.org/3/reference/datamodel.html#object.__bool__ :
+        Called to implement truth value testing and the built-in operation bool();
+        should return False or True. When this method is not defined, len() is called,
+        if it is defined, and the object is considered true if its result is nonzero.
+        If a class defines neither len() nor bool(), all its instances are considered true.
 
         Returns:
-            bool: True if empty, False otherwise
+            bool: False when empty, True otherwise
         """
-        return self.size == 0
+        return self.size > 0
     
     def __str__(self):
         if self.size == 0:
@@ -152,12 +156,6 @@ class TestMyStack(unittest.TestCase):
         top_val = s.peek()
         self.assertEqual(top_val, 99)
     
-    def test_stack_is_empty(self):
-        s = MyStack()
-        self.assertTrue(s)
-        s.push(7)
-        self.assertFalse(s)
-    
     def test_stack_pop(self):
         # first case, attempt to pop an empty stack
         s = MyStack()
@@ -172,7 +170,12 @@ class TestMyStack(unittest.TestCase):
         self.assertEqual(val, 3)
         self.assertEqual(s.size, 2) # size should now be 2
         self.assertEqual(list(s), [2, 1])
-
+    
+    def test__bool__(self):
+        s = MyStack()
+        self.assertFalse(bool(s))
+        s.push(3)
+        self.assertTrue(bool(s))
     
 
 if __name__ == '__main__':
