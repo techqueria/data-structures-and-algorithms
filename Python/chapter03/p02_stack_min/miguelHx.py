@@ -9,15 +9,19 @@ Push, pop and min should all operate in O(1) time.
 import copy
 import unittest
 import sys
-from typing import List
+
+from dataclasses import dataclass
+from typing import Generic, TypeVar
+from typing import List, Optional, Iterator
+
+T = TypeVar('T')
 
 
-class StackNode(object):
-
-    def __init__(self, data):
-        self.data = data
-        self.next = None # next is a pointer to a StackNode object
-        self.running_min = sys.maxsize
+@dataclass
+class StackNode(Generic[T]):
+    data: T
+    next: 'Optional[StackNode[T]]'
+    running_min: int = sys.maxsize
 
 class MyStack(object):
     """
