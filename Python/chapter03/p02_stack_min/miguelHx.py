@@ -173,7 +173,14 @@ class TestMyStack(unittest.TestCase):
         self.assertEqual(s.top.data, 4)
         self.assertEqual(s.top.next.data, 3)
         self.assertEqual(list(s), [4, 3, 2])
-    
+
+        # test adding different types, (float and int)
+        s.push(1.2)
+        self.assertEqual(len(s), 4)
+        self.assertEqual(s.top.data, 1.2)
+        self.assertEqual(s.top.next.data, 4)
+        self.assertEqual(list(s), [1.2, 4, 3, 2])
+
     def test_stack_peek(self):
         s = MyStack()
         with self.assertRaises(IndexError):
