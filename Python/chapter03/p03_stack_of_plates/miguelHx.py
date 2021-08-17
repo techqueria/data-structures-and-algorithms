@@ -164,11 +164,11 @@ class SetofStacks:
             T: popped item
         """
         if self.current_stack_idx == 0:
-            return self._pop()
-        # pop stack, then decrement idx
-        s = self._pop_stack()
+            item: T = self._pop()
+        else:
+            s: MyStack = self._pop_stack()
+            item: T = s.pop()
         self.current_stack_idx -= 1
-        item: T = s.pop()
         self.size -= 1
         return item
     
@@ -207,8 +207,19 @@ class TestSetofStacks(unittest.TestCase):
         self.assertEqual(len(sos.set_of_stacks[1]), 1)
     
     def test_setofstacks_pop(self):
+        # pop empty stack
+        sos = SetofStacks()
+        # with self.assertRaises(IndexError):
+        #     sos.pop()
 
-        pass
+        sos.push(1)
+        sos.push(2)
+        sos.push(3)
+        # size is 3
+        self.assertEqual(len(sos), 3)
+        val = sos.pop()
+        self.assertEqual(val, 3)
+        self.assertEqual(len(sos), 2) # size should now be 2
 
 
 class TestMyStack(unittest.TestCase):
