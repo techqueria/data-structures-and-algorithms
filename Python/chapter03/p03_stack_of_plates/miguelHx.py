@@ -56,7 +56,7 @@ class MyStack:
         self.size -= 1
         return item
 
-    def push(self, item: int) -> None:
+    def push(self, item: T) -> None:
         """
         Adds an item to the top of the stack
         Args:
@@ -68,7 +68,7 @@ class MyStack:
         self.current_node = self.top
         self.size += 1
 
-    def peek(self) -> int:
+    def peek(self) -> T:
         """
         Returns data at the top of the stack
         Raises:
@@ -152,6 +152,9 @@ class SetofStacks:
     
     def _pop(self) -> T:
         return self.set_of_stacks[self.current_stack_idx].pop()
+    
+    def _pop_stack(self) -> MyStack:
+        return self.set_of_stacks.pop(self.current_stack_idx)
 
     def pop(self) -> T:
         """If the current stack is empty
@@ -161,10 +164,11 @@ class SetofStacks:
             T: popped item
         """
         if self.current_stack_idx == 0:
-            # pop the stack
             return self._pop()
-        item = self._pop()
+        # pop stack, then decrement idx
+        s = self._pop_stack()
         self.current_stack_idx -= 1
+        item: T = s.pop()
         self.size -= 1
         return item
     
@@ -203,10 +207,8 @@ class TestSetofStacks(unittest.TestCase):
         self.assertEqual(len(sos.set_of_stacks[1]), 1)
     
     def test_setofstacks_pop(self):
+
         pass
-
-
-
 
 
 class TestMyStack(unittest.TestCase):
