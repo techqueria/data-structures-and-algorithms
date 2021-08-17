@@ -181,7 +181,7 @@ class SetofStacks:
 
 class TestSetofStacks(unittest.TestCase):
 
-    def test_setofstacks_push(self):
+    def test_setofstacks_push_and_peek(self):
         sos = SetofStacks()
         self.assertEqual(len(sos), 0)
         sos.push(5)
