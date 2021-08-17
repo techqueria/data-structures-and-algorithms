@@ -209,9 +209,8 @@ class TestSetofStacks(unittest.TestCase):
     def test_setofstacks_pop(self):
         # pop empty stack
         sos = SetofStacks()
-        # with self.assertRaises(IndexError):
-        #     sos.pop()
-
+        with self.assertRaises(IndexError):
+            sos.pop()
         sos.push(1)
         sos.push(2)
         sos.push(3)
@@ -220,7 +219,6 @@ class TestSetofStacks(unittest.TestCase):
         val = sos.pop()
         self.assertEqual(val, 3)
         self.assertEqual(len(sos), 2) # size should now be 2
-
         sos.push(3)
         sos.push(4) # new stack created, verify that pop works as intended
         self.assertEqual(len(sos), 4)
@@ -234,18 +232,18 @@ class TestSetofStacks(unittest.TestCase):
 class TestMyStack(unittest.TestCase):
     def test_stack_push(self):
         s = MyStack()
-        self.assertEqual(s.size, 0)
+        self.assertEqual(len(s), 0)
         self.assertEqual(s.top, None)
         s.push(2)
-        self.assertEqual(s.size, 1)
+        self.assertEqual(len(s), 1)
         self.assertEqual(s.top.data, 2)
         self.assertEqual(s.top.next, None)
         s.push(3)
-        self.assertEqual(s.size, 2)
+        self.assertEqual(len(s), 2)
         self.assertEqual(s.top.data, 3)
         self.assertEqual(s.top.next.data, 2)
         s.push(4)
-        self.assertEqual(s.size, 3)
+        self.assertEqual(len(s), 3)
         self.assertEqual(s.top.data, 4)
         self.assertEqual(s.top.next.data, 3)
         l = list(s)
@@ -273,7 +271,7 @@ class TestMyStack(unittest.TestCase):
         self.assertEqual(list(s), [3, 2, 1])
         val = s.pop()
         self.assertEqual(val, 3)
-        self.assertEqual(s.size, 2) # size should now be 2
+        self.assertEqual(len(s), 2) # size should now be 2
         self.assertEqual(list(s), [2, 1])
 
     def test__bool__(self):
@@ -281,7 +279,6 @@ class TestMyStack(unittest.TestCase):
         self.assertFalse(s)
         s.push(3)
         self.assertTrue(s)
-
 
 
 if __name__ == '__main__':
