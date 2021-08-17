@@ -168,7 +168,7 @@ class SetofStacks:
         else:
             s: MyStack = self._pop_stack()
             item: T = s.pop()
-        self.current_stack_idx -= 1
+            self.current_stack_idx -= 1
         self.size -= 1
         return item
     
@@ -220,6 +220,15 @@ class TestSetofStacks(unittest.TestCase):
         val = sos.pop()
         self.assertEqual(val, 3)
         self.assertEqual(len(sos), 2) # size should now be 2
+
+        sos.push(3)
+        sos.push(4) # new stack created, verify that pop works as intended
+        self.assertEqual(len(sos), 4)
+        self.assertEqual(sos.current_stack_idx, 1)
+        val = sos.pop()
+        self.assertEqual(val, 4)
+        self.assertEqual(len(sos), 3)
+        self.assertEqual(sos.current_stack_idx, 0)
 
 
 class TestMyStack(unittest.TestCase):
