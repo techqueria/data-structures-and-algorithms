@@ -125,62 +125,12 @@ class MyStack:
         return '->'.join(values)
 
 
-
-class SetofStacks:
-
-    def __init__(self):
-        self.current_stack_idx: int = 0
-        self.set_of_stacks: List[MyStack] = [MyStack()]
-        self.stack_threshold: int = 3
-        self.size: int = 0
-    
-    def push(self, item: T) -> None:
-        # threshold check
-        if len(self.set_of_stacks[self.current_stack_idx]) >= self.stack_threshold:
-            # update current_stack_idx
-            self.current_stack_idx += 1
-            # create new stack
-            self.set_of_stacks.append(MyStack())
-        self.set_of_stacks[self.current_stack_idx].push(item)
-        self.size += 1
-        return
-    
-    def _pop(self) -> T:
-        return self.set_of_stacks[self.current_stack_idx].pop()
-    
-    def _pop_stack(self) -> MyStack:
-        return self.set_of_stacks.pop(self.current_stack_idx)
-
-    def pop(self) -> T:
-        """If the current stack is empty
-        after this pop, then decrement current stack index.
-
-        Returns:
-            T: popped item
-        """
-        if self.current_stack_idx == 0:
-            item: T = self._pop()
-        else:
-            s: MyStack = self._pop_stack()
-            item = s.pop()
-            self.current_stack_idx -= 1
-        self.size -= 1
-        return item
-    
-    def peek(self) -> T:
-        return self.set_of_stacks[self.current_stack_idx].peek()
-    
-    def __len__(self) -> int:
-        return self.size
-
-
 @dataclass
 class QueueNode(Generic[T]):
     data: T
     next: 'Optional[QueueNode[T]]'
 
 class MyQueue:
-
     def __init__(self):
         self._size = 0
         self.stack_one = MyStack()  # will be used as main data container
@@ -283,56 +233,6 @@ class TestMyQueue(unittest.TestCase):
         q.add(100)
         self.assertFalse(q.is_empty())
         self.assertTrue(q)
-
-
-class TestSetofStacks(unittest.TestCase):
-
-    def test_setofstacks_push_and_peek(self):
-        sos = SetofStacks()
-        self.assertEqual(len(sos), 0)
-        sos.push(5)
-        self.assertEqual(len(sos), 1)
-        self.assertEqual(sos.peek(), 5)
-        sos.push(6)
-        self.assertEqual(len(sos), 2)
-        self.assertEqual(sos.peek(), 6)
-        sos.push(7)
-        self.assertEqual(len(sos), 3)
-        self.assertEqual(sos.peek(), 7)
-        self.assertEqual(sos.current_stack_idx, 0)
-
-        # with threshold of 3 (default),
-        # verify that a new stack is created
-        # after the next push
-        sos.push(8)
-        # [5->6->7->, 8->] new stack created because threshold is 3
-        self.assertEqual(len(sos), 4)
-        self.assertEqual(sos.peek(), 8)
-        self.assertEqual(sos.current_stack_idx, 1)
-        self.assertEqual(sos.set_of_stacks[1].peek(), 8)
-        self.assertEqual(len(sos.set_of_stacks[1]), 1)
-    
-    def test_setofstacks_pop(self):
-        # pop empty stack
-        sos = SetofStacks()
-        with self.assertRaises(IndexError):
-            sos.pop()
-        sos.push(1)
-        sos.push(2)
-        sos.push(3)
-        # size is 3
-        self.assertEqual(len(sos), 3)
-        val = sos.pop()
-        self.assertEqual(val, 3)
-        self.assertEqual(len(sos), 2) # size should now be 2
-        sos.push(3)
-        sos.push(4) # new stack created, verify that pop works as intended
-        self.assertEqual(len(sos), 4)
-        self.assertEqual(sos.current_stack_idx, 1)
-        val = sos.pop()
-        self.assertEqual(val, 4)
-        self.assertEqual(len(sos), 3)
-        self.assertEqual(sos.current_stack_idx, 0)
 
 
 class TestMyStack(unittest.TestCase):
