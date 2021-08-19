@@ -26,7 +26,7 @@ class MyStack:
 
     def __init__(self):
         self.top: Optional[StackNode[T]] = None # top is a pointer to StackNode object
-        self.size: int = 0
+        self._size: int = 0
         self.index: int = -1 # tracking current node for iterator use
         self.current_node: Optional[StackNode[T]] = self.top
         return
@@ -44,7 +44,7 @@ class MyStack:
         item = self.top.data
         self.top = self.top.next
         self.current_node = self.top
-        self.size -= 1
+        self._size -= 1
         return item
 
     def push(self, item: T) -> None:
@@ -57,7 +57,7 @@ class MyStack:
         t.next = self.top
         self.top = t
         self.current_node = self.top
-        self.size += 1
+        self._size += 1
 
     def peek(self) -> T:
         """
@@ -70,6 +70,10 @@ class MyStack:
         if self.top is None:
             raise IndexError('Stack is Empty')
         return self.top.data
+    
+    def empty(self) -> None:
+        while self._size > 0:
+            self.pop()
 
     def __iter__(self) -> Iterator:
         """
@@ -85,7 +89,7 @@ class MyStack:
 
     def __next__(self) -> T:
         self.index += 1
-        if self.index == self.size or self.current_node is None:
+        if self.index == self._size or self.current_node is None:
             self.index = -1
             self.current_node = self.top
             raise StopIteration
@@ -104,13 +108,13 @@ class MyStack:
         Returns:
             bool: False when empty, True otherwise
         """
-        return self.size > 0
+        return self._size > 0
     
     def __len__(self) -> int:
-        return self.size
+        return self._size
 
     def __str__(self):
-        if self.size == 0:
+        if self._size == 0:
             return '<Empty>'
         values = []
         n = self.top
@@ -179,35 +183,44 @@ class MyQueue:
 
     def __init__(self):
         self._size = 0
-        self.first: Optional[QueueNode[T]] = None
-        self.last: Optional[QueueNode[T]] = None
+        self.stack_one = MyStack()  # will be used as main data container
+        self.stack_two = MyStack()  # will be used to extract the least recent insertion
     
     def add(self, item: T):
-        t = QueueNode(item, None)
-        if self.last:
-            self.last.next = t
-        self.last = t
-        if self.first is None:
-            self.first = self.last
+        self.stack_one.push(item)
         self._size += 1
     
     def remove(self) -> T:
-        if self.first is None:
+        if self._size == 0:
             raise Exception('No values in stack to remove')
-        data: T = self.first.data
-        self.first = self.first.next
-        if self.first is None:
-            self.last = None
+        # use second stack to extract item of interest
+        data: T = self._extract_first_in('pop')
         self._size -= 1
         return data
 
     def peek(self) -> T:
-        if self.first is None:
+        if self._size == 0:
             raise Exception('No values in stack to remove')
-        return self.first.data
+        return self._extract_first_in('peek')
 
     def is_empty(self) -> bool:
-        return self.first is None
+        return self._size == 0
+    
+    def _extract_first_in(self, operation: str) -> T:
+        # 1. copy values from stack one to stack stack two
+        while len(self.stack_one) > 0:
+            d = self.stack_one.pop()
+            self.stack_two.push(d)
+        # 2. extract value at top of 2nd stack.
+        if operation == 'pop':
+            data: T = self.stack_two.pop()
+        elif operation == 'peek':
+            data = self.stack_two.peek()
+        # 3. move remaining values back to stack one
+        while len(self.stack_two) > 0:
+            d = self.stack_two.pop()
+            self.stack_one.push(d)
+        return data
     
     def __len__(self) -> int:
         return self._size
