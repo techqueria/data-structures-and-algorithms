@@ -23,7 +23,6 @@ class MyStack:
     The most recent item added to the stack is
     the first removed.  Traversal is top to bottom.
     """
-
     def __init__(self):
         self.top: Optional[StackNode[T]] = None # top is a pointer to StackNode object
         self._size: int = 0
@@ -130,6 +129,7 @@ class QueueNode(Generic[T]):
     data: T
     next: 'Optional[QueueNode[T]]'
 
+
 class MyQueue:
     def __init__(self):
         self._size = 0
@@ -190,7 +190,6 @@ class MyQueue:
 
 
 class TestMyQueue(unittest.TestCase):
-
     def test_add(self):
         q = MyQueue()
         self.assertEqual(len(q), 0)
