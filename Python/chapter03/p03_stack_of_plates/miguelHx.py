@@ -131,7 +131,7 @@ class MyStack:
 
 
 
-class SetofStacks:
+class SetofStacks(Generic[T]):
 
     def __init__(self):
         self.current_stack_idx: int = 0
