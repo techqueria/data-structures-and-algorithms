@@ -25,9 +25,9 @@ class Comparable(Protocol):
         pass
 
 @dataclass
-class StackNode(Generic[T, C]):
+class StackNode(Generic[T]):
     data: T
-    next: 'Optional[StackNode[T, C]]'
+    next: 'Optional[StackNode[T]]'
     running_min: T
 
 class MyStack(Generic[T]):
