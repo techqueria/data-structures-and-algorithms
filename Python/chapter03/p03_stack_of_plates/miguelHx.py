@@ -134,46 +134,40 @@ class MyStack:
 class SetofStacks(Generic[T]):
 
     def __init__(self):
-        self.current_stack_idx: int = 0
         self.set_of_stacks: List[MyStack[T]] = [MyStack()]
         self.stack_threshold: int = 3
         self.size: int = 0
     
     def push(self, item: T) -> None:
         # threshold check
-        if len(self.set_of_stacks[self.current_stack_idx]) >= self.stack_threshold:
-            # update current_stack_idx
-            self.current_stack_idx += 1
+        if len(self.set_of_stacks[-1]) >= self.stack_threshold:
             # create new stack
             self.set_of_stacks.append(MyStack())
-        self.set_of_stacks[self.current_stack_idx].push(item)
+        self.set_of_stacks[-1].push(item)
         self.size += 1
         return
     
     def _pop(self) -> T:
-        return self.set_of_stacks[self.current_stack_idx].pop()
+        return self.set_of_stacks[-1].pop()
     
     def _pop_stack(self) -> MyStack:
-        return self.set_of_stacks.pop(self.current_stack_idx)
+        return self.set_of_stacks.pop(-1)
 
     def pop(self) -> T:
-        """If the current stack is empty
-        after this pop, then decrement current stack index.
-
+        """Removes element off of the current stack.
         Returns:
             T: popped item
         """
-        if self.current_stack_idx == 0:
+        if len(self.set_of_stacks) == 1:
             item: T = self._pop()
         else:
             s: MyStack = self._pop_stack()
             item: T = s.pop()
-            self.current_stack_idx -= 1
         self.size -= 1
         return item
     
     def peek(self) -> T:
-        return self.set_of_stacks[self.current_stack_idx].peek()
+        return self.set_of_stacks[-1].peek()
     
     def __len__(self) -> int:
         return self.size
@@ -193,7 +187,6 @@ class TestSetofStacks(unittest.TestCase):
         sos.push(7)
         self.assertEqual(len(sos), 3)
         self.assertEqual(sos.peek(), 7)
-        self.assertEqual(sos.current_stack_idx, 0)
 
         # with threshold of 3 (default),
         # verify that a new stack is created
@@ -202,7 +195,6 @@ class TestSetofStacks(unittest.TestCase):
         # [5->6->7->, 8->] new stack created because threshold is 3
         self.assertEqual(len(sos), 4)
         self.assertEqual(sos.peek(), 8)
-        self.assertEqual(sos.current_stack_idx, 1)
         self.assertEqual(sos.set_of_stacks[1].peek(), 8)
         self.assertEqual(len(sos.set_of_stacks[1]), 1)
     
@@ -222,11 +214,9 @@ class TestSetofStacks(unittest.TestCase):
         sos.push(3)
         sos.push(4) # new stack created, verify that pop works as intended
         self.assertEqual(len(sos), 4)
-        self.assertEqual(sos.current_stack_idx, 1)
         val = sos.pop()
         self.assertEqual(val, 4)
         self.assertEqual(len(sos), 3)
-        self.assertEqual(sos.current_stack_idx, 0)
 
 
 class TestMyStack(unittest.TestCase):
