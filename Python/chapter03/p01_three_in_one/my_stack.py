@@ -18,7 +18,7 @@ class StackNode(Generic[T]):
     next: 'Optional[StackNode[T]]'
 
 
-class MyStack:
+class MyStack(Generic[T]):
     """Stack data structure implementation.
 
     Uses LIFO (last-in first-out) ordering.
