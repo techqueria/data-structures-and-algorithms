@@ -33,12 +33,12 @@ class StackTrio:
         self.num_stacks = 3
         self.stack_capacity = stack_capacity
         first_stack_info = StackInfo(
-            1, # id
-            0, # start index
-            stack_capacity - 1, # end index
-            0, # size
-            0, # top index
-            -1 # top index next
+            id: 1,
+            start_index: 0,
+            end_index: stack_capacity - 1,
+            size: 0,
+            top_index: 0,
+            top_next_index: -1
         )
         second_stack_info = StackInfo(
             2, # id
