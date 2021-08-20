@@ -142,7 +142,6 @@ class SetofStacks(Generic[T]):
             for stack in stack_list_reversed:
                 for item in stack:
                     self.my_list.append(item)
-            print("MY ITERATOR LIST: ", self.my_list)
 
         def __next__(self) -> T:
             if self.index == len(self.my_list):
