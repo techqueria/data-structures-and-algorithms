@@ -26,35 +26,37 @@ class StackInfo:
     top_index: int
     top_index_next: int
 
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
+
 
 class StackTrio:
-
     def __init__(self, stack_capacity = 7):
         self.num_stacks = 3
         self.stack_capacity = stack_capacity
         first_stack_info = StackInfo(
-            id: 1,
-            start_index: 0,
-            end_index: stack_capacity - 1,
-            size: 0,
-            top_index: 0,
-            top_next_index: -1
+            id=1,
+            start=0,
+            end=stack_capacity - 1,
+            size=0,
+            top_index=0,
+            top_index_next=-1
         )
         second_stack_info = StackInfo(
-            2, # id
-            stack_capacity, # start index
-            stack_capacity * 2 - 1, # end index
-            0, # size
-            stack_capacity, # top index
-            -1 # top index next
+            id=2,
+            start=stack_capacity,
+            end=stack_capacity * 2 - 1,
+            size=0,
+            top_index=stack_capacity,
+            top_index_next=-1
         )
         third_stack_info = StackInfo(
-            3, # id
-            stack_capacity * 2, # start index
-            stack_capacity * 3 - 1, # end index
-            0, # size
-            stack_capacity * 2, # top index
-            -1 # top index next
+            id=3,
+            start=stack_capacity * 2,
+            end=stack_capacity * 3 - 1,
+            size=0,
+            top_index=stack_capacity * 2,
+            top_index_next=-1
         )
         self.stack_info = {
             1: first_stack_info,
