@@ -15,12 +15,13 @@ from dataclasses import dataclass
 from typing import Generic, TypeVar
 from typing import List, Optional, Iterator
 
-T = TypeVar('T')
-C = TypeVar('C', bound='Comparable')
+from typing import Protocol
 
-class Comparable(Generic[T, C]):
+T = TypeVar('T', bound='Comparable')
+
+class Comparable(Protocol):
     @abstractmethod
-    def __lt__(self, other: T):
+    def __lt__(self, other: T) -> bool:
         pass
 
 @dataclass
