@@ -51,7 +51,7 @@ class MyStack:
         self.size -= 1
         return item
     
-    def push(self, item: int) -> None:
+    def push(self, item: T) -> None:
         """
         Adds an item to the top of the stack
         Args:
@@ -63,7 +63,7 @@ class MyStack:
         self.current_node = self.top
         self.size += 1
 
-    def peek(self) -> int:
+    def peek(self) -> T:
         """
         Returns data at the top of the stack
 
