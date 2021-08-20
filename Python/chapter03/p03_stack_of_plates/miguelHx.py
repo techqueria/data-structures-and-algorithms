@@ -26,7 +26,7 @@ class StackNode(Generic[T]):
     next: 'Optional[StackNode[T]]'
 
 
-class MyStack:
+class MyStack(Generic[T]):
     """Stack data structure implementation.
     Uses LIFO (last-in first-out) ordering.
     The most recent item added to the stack is
@@ -133,14 +133,32 @@ class MyStack:
 
 class SetofStacks(Generic[T]):
 
+    class SetOfStacksIterator(Generic[T]):
+        def __init__(self, stack_list: List[MyStack[T]]):
+            # build temporary list
+            self.my_list = []
+            self.index = 0
+            stack_list_reversed = stack_list[::-1]
+            for stack in stack_list_reversed:
+                for item in stack:
+                    self.my_list.append(item)
+            print("MY ITERATOR LIST: ", self.my_list)
+
+        def __next__(self) -> T:
+            if self.index == len(self.my_list):
+                raise StopIteration
+            item: T = self.my_list[self.index]
+            self.index += 1
+            return item
+
     def __init__(self):
-        self.set_of_stacks: List[MyStack[T]] = [MyStack()]
+        self.set_of_stacks: List[MyStack[T]] = []
         self.stack_threshold: int = 3
         self.size: int = 0
     
     def push(self, item: T) -> None:
         # threshold check
-        if len(self.set_of_stacks[-1]) >= self.stack_threshold:
+        if (not self.set_of_stacks) or len(self.set_of_stacks[-1]) >= self.stack_threshold:
             # create new stack
             self.set_of_stacks.append(MyStack())
         self.set_of_stacks[-1].push(item)
@@ -155,14 +173,16 @@ class SetofStacks(Generic[T]):
 
     def pop(self) -> T:
         """Removes element off of the current stack.
+        We will only pop a stack if the current stack
+        contains a single value
         Returns:
             T: popped item
         """
-        if len(self.set_of_stacks) == 1:
+        if len(self.set_of_stacks[-1]) > 1:
             item: T = self._pop()
         else:
             s: MyStack = self._pop_stack()
-            item: T = s.pop()
+            item = s.pop()
         self.size -= 1
         return item
     
@@ -171,6 +191,9 @@ class SetofStacks(Generic[T]):
     
     def __len__(self) -> int:
         return self.size
+
+    def __iter__(self) -> SetOfStacksIterator:
+        return self.SetOfStacksIterator(self.set_of_stacks)
 
 
 class TestSetofStacks(unittest.TestCase):
@@ -217,6 +240,74 @@ class TestSetofStacks(unittest.TestCase):
         val = sos.pop()
         self.assertEqual(val, 4)
         self.assertEqual(len(sos), 3)
+
+    def test_setofstacks_pop_three_stacks(self):
+        s = SetofStacks()
+        # No stacks exists in set, yet
+        self.assertEqual(len(s.set_of_stacks), 0)
+        s.push(1)
+        s.push(2)
+        s.push(3)
+        self.assertEqual(len(s.set_of_stacks), 1)
+        # threshold met, should be two after next push
+        s.push(4)
+        # should be 2 stacks now
+        self.assertEqual(len(s.set_of_stacks), 2)
+        s.push(5)
+        s.push(6)
+        self.assertEqual(len(s.set_of_stacks), 2)
+        s.push(7)
+        self.assertEqual(len(s.set_of_stacks), 3)
+        s.push(8)
+        s.push(9)
+        self.assertEqual(len(s.set_of_stacks), 3)
+        s.push(10)
+        # should be four stacks now
+        self.assertEqual(len(s.set_of_stacks), 4)
+        self.assertEqual(list(s), [10, 9, 8 , 7, 6, 5, 4, 3, 2, 1])
+        self.assertEqual(len(s), 10)
+        val = s.pop()
+        self.assertEqual(len(s.set_of_stacks), 3)
+        self.assertEqual(val, 10)
+        self.assertEqual(len(s), 9)
+        self.assertEqual(list(s), [9, 8 , 7, 6, 5, 4, 3, 2, 1])
+        val = s.pop()
+        # length of stacks should still be 3
+        self.assertEqual(len(s.set_of_stacks), 3)
+        self.assertEqual(val, 9)
+        self.assertEqual(len(s), 8)
+        self.assertEqual(list(s), [8, 7, 6, 5, 4, 3, 2, 1])
+        val = s.pop()
+        # after this pop, should still have 3
+        self.assertEqual(len(s.set_of_stacks), 3)
+        self.assertEqual(val, 8)
+        self.assertEqual(len(s), 7)
+        self.assertEqual(list(s), [7, 6, 5, 4, 3, 2, 1])
+        val = s.pop()
+        self.assertEqual(len(s.set_of_stacks), 2)
+        self.assertEqual(val, 7)
+        self.assertEqual(len(s), 6)
+        self.assertEqual(list(s), [6, 5, 4, 3, 2, 1])
+        val = s.pop()
+        self.assertEqual(len(s.set_of_stacks), 2)
+        self.assertEqual(val, 6)
+        self.assertEqual(len(s), 5)
+        self.assertEqual(list(s), [5, 4, 3, 2, 1])
+        val = s.pop()
+        self.assertEqual(len(s.set_of_stacks), 2)
+        self.assertEqual(val, 5)
+        self.assertEqual(len(s), 4)
+        self.assertEqual(list(s), [4, 3, 2, 1])
+        val = s.pop()
+        self.assertEqual(len(s.set_of_stacks), 1)
+        self.assertEqual(val, 4)
+        self.assertEqual(len(s), 3)
+        self.assertEqual(list(s), [3, 2, 1])
+        val = s.pop()
+        self.assertEqual(len(s.set_of_stacks), 1)
+        self.assertEqual(val, 3)
+        self.assertEqual(len(s), 2)
+        self.assertEqual(list(s), [2, 1])
 
 
 class TestMyStack(unittest.TestCase):
