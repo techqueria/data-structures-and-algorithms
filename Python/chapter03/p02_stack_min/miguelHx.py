@@ -29,7 +29,7 @@ class StackNode(Generic[T, C]):
     next: 'Optional[StackNode[T, C]]'
     running_min: T
 
-class MyStack(object):
+class MyStack(Generic[T]):
     """Stack data structure implementation.
     Uses LIFO (last-in first-out) ordering.
     The most recent item added to the stack is
