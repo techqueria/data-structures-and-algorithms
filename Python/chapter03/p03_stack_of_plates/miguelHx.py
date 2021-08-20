@@ -130,26 +130,25 @@ class MyStack(Generic[T]):
         return '->'.join(values)
 
 
+class SetOfStacksIterator(Generic[T]):
+    def __init__(self, stack_list: List[MyStack[T]]):
+        # build temporary list
+        self.my_list = []
+        self.index = 0
+        stack_list_reversed = stack_list[::-1]
+        for stack in stack_list_reversed:
+            for item in stack:
+                self.my_list.append(item)
+
+    def __next__(self) -> T:
+        if self.index == len(self.my_list):
+            raise StopIteration
+        item: T = self.my_list[self.index]
+        self.index += 1
+        return item
+
 
 class SetofStacks(Generic[T]):
-
-    class SetOfStacksIterator(Generic[T]):
-        def __init__(self, stack_list: List[MyStack[T]]):
-            # build temporary list
-            self.my_list = []
-            self.index = 0
-            stack_list_reversed = stack_list[::-1]
-            for stack in stack_list_reversed:
-                for item in stack:
-                    self.my_list.append(item)
-
-        def __next__(self) -> T:
-            if self.index == len(self.my_list):
-                raise StopIteration
-            item: T = self.my_list[self.index]
-            self.index += 1
-            return item
-
     def __init__(self):
         self.set_of_stacks: List[MyStack[T]] = []
         self.stack_threshold: int = 3
@@ -192,7 +191,7 @@ class SetofStacks(Generic[T]):
         return self.size
 
     def __iter__(self) -> SetOfStacksIterator:
-        return self.SetOfStacksIterator(self.set_of_stacks)
+        return SetOfStacksIterator(self.set_of_stacks)
 
 
 class TestSetofStacks(unittest.TestCase):
