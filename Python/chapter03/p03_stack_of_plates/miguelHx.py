@@ -135,7 +135,7 @@ class SetofStacks(Generic[T]):
 
     def __init__(self):
         self.current_stack_idx: int = 0
-        self.set_of_stacks: List[MyStack] = [MyStack()]
+        self.set_of_stacks: List[MyStack[T]] = [MyStack()]
         self.stack_threshold: int = 3
         self.size: int = 0
     
