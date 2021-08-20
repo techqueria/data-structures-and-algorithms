@@ -37,12 +37,23 @@ class MyStack(Generic[T]):
     the first removed.  Traversal is top to bottom.
     """
 
+    class MyStackIterator(Generic[T]):
+        def __init__(self, top: Optional[StackNode[T]], size: int):
+            self.index = -1
+            self.current_node = top
+            self._size = size
+
+        def __next__(self) -> T:
+            self.index += 1
+            if self.index == self._size or self.current_node is None:
+                raise StopIteration
+            n: T = self.current_node.data
+            self.current_node = self.current_node.next
+            return n
+
     def __init__(self):
         self.top: Optional[StackNode[T]] = None # top is a pointer to StackNode object
         self._size: int = 0
-        self.index: int = -1 # for iterator use
-        self.current_node: Optional[StackNode[T]] = self.top # also for iterator use
-        return
     
     def pop(self) -> T:
         """
@@ -58,7 +69,6 @@ class MyStack(Generic[T]):
             raise IndexError('Stack is Empty.')
         item = self.top.data
         self.top = self.top.next
-        self.current_node = self.top
         self._size -= 1
         return item
     
@@ -78,7 +88,6 @@ class MyStack(Generic[T]):
             t.running_min = self.top.running_min
         # print("Stack Node data = {}, local min = {}".format(item, t.running_min))
         self.top = t
-        self.current_node = self.top
         self._size += 1
 
     def min(self) -> T:
@@ -116,17 +125,7 @@ class MyStack(Generic[T]):
         Returns:
             List[int]: list of integers
         """
-        return self
-    
-    def __next__(self) -> T:
-        self.index += 1
-        if self.index == self._size or self.current_node is None:
-            self.index = -1
-            self.current_node = self.top
-            raise StopIteration
-        n: T = self.current_node.data
-        self.current_node = self.current_node.next
-        return n
+        return self.MyStackIterator(self.top, self._size)
     
     def __bool__(self) -> bool:
         """
