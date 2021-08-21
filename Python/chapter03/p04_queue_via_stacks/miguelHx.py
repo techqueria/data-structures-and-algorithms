@@ -17,7 +17,7 @@ class StackNode(Generic[T]):
     next: 'Optional[StackNode[T]]'
 
 
-class MyStack:
+class MyStack(Generic[T]):
     """Stack data structure implementation.
     Uses LIFO (last-in first-out) ordering.
     The most recent item added to the stack is
@@ -130,7 +130,7 @@ class QueueNode(Generic[T]):
     next: 'Optional[QueueNode[T]]'
 
 
-class MyQueue:
+class MyQueue(Generic[T]):
     def __init__(self):
         self._size = 0
         self.stack_one = MyStack()  # will be used as main data container
@@ -140,41 +140,57 @@ class MyQueue:
         self.stack_one.push(item)
         self._size += 1
     
+    def _produce_reversed_stack(self, input_stack: MyStack) -> MyStack:
+        """This function will take in a stack,
+        and return a copy of a reversed version of that
+        stack.
+
+        Args:
+            input_stack (MyStack): Stack of type T
+        """
+        temp_stack = MyStack[T]()
+        while len(input_stack) > 0:
+            d = input_stack.pop()
+            temp_stack.push(d)
+        return temp_stack
+
+    def _pop(self) -> T:
+        # 1. local temp stack
+        temp_stack: MyStack = self._produce_reversed_stack(self.stack_one)
+        # 2. extract value at top of 2nd stack.
+        data: T = temp_stack.pop()
+        # 3. move remaining values back to stack one
+        self.stack_one = self._produce_reversed_stack(temp_stack)
+        return data
+
     def remove(self) -> T:
         if self._size == 0:
             raise Exception('No values in stack to remove')
         # use second stack to extract item of interest
-        data: T = self._extract_first_in('pop')
+        data: T = self._pop()
         self._size -= 1
+        return data
+
+    def _peek(self) -> T:
+        # 1. local temp stack
+        temp_stack: MyStack = self._produce_reversed_stack(self.stack_one)
+        # 2. extract value at top of 2nd stack.
+        data: T = temp_stack.peek()
+        # 3. move remaining values back to stack one
+        self.stack_one = self._produce_reversed_stack(temp_stack)
         return data
 
     def peek(self) -> T:
         if self._size == 0:
             raise Exception('No values in stack to remove')
-        return self._extract_first_in('peek')
+        return self._peek()
 
     def is_empty(self) -> bool:
         return self._size == 0
-    
-    def _extract_first_in(self, operation: str) -> T:
-        # 1. copy values from stack one to stack stack two
-        while len(self.stack_one) > 0:
-            d = self.stack_one.pop()
-            self.stack_two.push(d)
-        # 2. extract value at top of 2nd stack.
-        if operation == 'pop':
-            data: T = self.stack_two.pop()
-        elif operation == 'peek':
-            data = self.stack_two.peek()
-        # 3. move remaining values back to stack one
-        while len(self.stack_two) > 0:
-            d = self.stack_two.pop()
-            self.stack_one.push(d)
-        return data
-    
+
     def __len__(self) -> int:
         return self._size
-    
+
     def __bool__(self) -> bool:
         """
         True is returned when the container is not empty.
