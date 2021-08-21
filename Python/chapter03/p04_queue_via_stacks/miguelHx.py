@@ -133,11 +133,10 @@ class QueueNode(Generic[T]):
 class MyQueue(Generic[T]):
     def __init__(self):
         self._size = 0
-        self.stack_one = MyStack()  # will be used as main data container
-        self.stack_two = MyStack()  # will be used to extract the least recent insertion
+        self.data_stack = MyStack[T]()  # will be used as main data container
     
     def add(self, item: T):
-        self.stack_one.push(item)
+        self.data_stack.push(item)
         self._size += 1
     
     def _produce_reversed_stack(self, input_stack: MyStack) -> MyStack:
@@ -156,11 +155,11 @@ class MyQueue(Generic[T]):
 
     def _pop(self) -> T:
         # 1. local temp stack
-        temp_stack: MyStack = self._produce_reversed_stack(self.stack_one)
+        temp_stack: MyStack = self._produce_reversed_stack(self.data_stack)
         # 2. extract value at top of 2nd stack.
         data: T = temp_stack.pop()
         # 3. move remaining values back to stack one
-        self.stack_one = self._produce_reversed_stack(temp_stack)
+        self.data_stack = self._produce_reversed_stack(temp_stack)
         return data
 
     def remove(self) -> T:
@@ -173,11 +172,11 @@ class MyQueue(Generic[T]):
 
     def _peek(self) -> T:
         # 1. local temp stack
-        temp_stack: MyStack = self._produce_reversed_stack(self.stack_one)
+        temp_stack: MyStack = self._produce_reversed_stack(self.data_stack)
         # 2. extract value at top of 2nd stack.
         data: T = temp_stack.peek()
         # 3. move remaining values back to stack one
-        self.stack_one = self._produce_reversed_stack(temp_stack)
+        self.data_stack = self._produce_reversed_stack(temp_stack)
         return data
 
     def peek(self) -> T:
