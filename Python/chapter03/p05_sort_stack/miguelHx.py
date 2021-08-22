@@ -50,6 +50,12 @@ class MyStack(Generic[T]):
         self.top: Optional[StackNode[T]] = None # top is a pointer to StackNode object
         self._size: int = 0
 
+    def __init__(self, *numbers):
+        self.top: Optional[StackNode[T]] = None # top is a pointer to StackNode object
+        self._size: int = 0
+        for num in numbers:
+            self.push(num)
+
     def pop(self) -> T:
         """
         Removes the top item from the stack
@@ -127,6 +133,26 @@ class MyStack(Generic[T]):
         values.append(str(n.data))
         return '->'.join(values)
 
+    def produce_copy(self):
+        """Produces a copy of this stack instance.
+
+        Returns:
+            MyStack: a fresh copy
+        """
+        if self._size == 0:
+            return []
+        values: List[T] = []
+        n: Optional[StackNode[T]] = self.top
+        while n.next is not None:
+            values.append(n.data)
+            n = n.next
+        values.append(n.data)
+        output: MyStack[T] = MyStack()
+        for t in reversed(values):
+            output.push(t)
+        assert(list(self) == list(output))
+        return output
+
 
 class TestMyStack(unittest.TestCase):
     def test_stack_push(self):
@@ -199,8 +225,48 @@ def sorted_stack(stack: MyStack) -> MyStack:
     Returns:
         MyStack: sorted stack of items, with smallest items on top
     """
-    # make copy of stack argument.
-    temp_stack = MyStack()
+    # create empty output stack
+    output_stack = MyStack()
+    # make copy of input stack.
+    stack_copy = stack.produce_copy()
+    # create temporary auxiliary stack
+    aux_stack = MyStack()
+    # we will extract max values until stack_copy is empty.
+    while len(stack_copy) > 0:
+        # look for index of max item in stack_copy
+        max_index = 0
+        max_value: T = stack_copy.peek()
+        for i, item in enumerate(stack_copy):
+            if item > max_value:
+                max_value = item
+                max_index = i
+        # biggest values at bottom of output stack
+        output_stack.push(max_value)
+        # next, extract max value and clean up
+        # with the help of aux_stack
+        # We need to remove this value from the stack_copy
+        # In setting up for next max value extraction
+        for i in range(max_index+1):
+            aux_stack.push(stack_copy.pop())
+        # value of interest is now at top of aux_stack
+        # we can discard it and rebuild stack_copy
+        aux_stack.pop()
+        for item in aux_stack:
+            stack_copy.push(aux_stack.pop())
+        # begin next iteration...
+    # done. return sorted stack :D
+    return output_stack
+
+
+class TestSortStack(unittest.TestCase):
+    def test_sort_stack(self):
+        s = MyStack(1, 9, 5, 7, 3, 8)
+        # will look like this (leftmost is top of stack):
+        # [8, 3, 7, 5, 9, 1]
+        self.assertEqual(list(s), [8, 3, 7, 5, 9, 1])
+        # after sorting, should look like this (smallest values on top):
+        # [1, 3, 5, 7, 8, 9]
+        self.assertEqual(list(sorted_stack(s)), [1, 3, 5, 7, 8, 9])
 
 if __name__ == '__main__':
     unittest.main()
