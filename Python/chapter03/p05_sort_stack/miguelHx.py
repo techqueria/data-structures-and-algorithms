@@ -18,7 +18,12 @@ from typing import List, Optional, Iterator
 
 from typing import Protocol
 
-T = TypeVar('T')
+T = TypeVar('T', bound='Comparable')
+
+class Comparable(Protocol):
+    @abstractmethod
+    def __gt__(self, other: T) -> bool:
+        pass
 
 @dataclass
 class StackNode(Generic[T]):
