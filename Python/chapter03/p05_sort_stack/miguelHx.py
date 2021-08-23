@@ -32,7 +32,7 @@ class MyStack(Generic[T]):
     the first removed.  Traversal is top to bottom.
     """
 
-    class MyStackIterator:
+    class MyStackIterator(Iterator):
         def __init__(self, top: Optional[StackNode[T]], size: int):
             self.index = -1
             self.current_node = top
@@ -45,10 +45,6 @@ class MyStack(Generic[T]):
             n: T = self.current_node.data
             self.current_node = self.current_node.next
             return n
-
-    def __init__(self):
-        self.top: Optional[StackNode[T]] = None # top is a pointer to StackNode object
-        self._size: int = 0
 
     def __init__(self, *numbers):
         self.top: Optional[StackNode[T]] = None # top is a pointer to StackNode object
@@ -94,6 +90,26 @@ class MyStack(Generic[T]):
             raise IndexError('Stack is Empty')
         return self.top.data
 
+    def produce_copy(self):
+        """Produces a copy of this stack instance.
+
+        Returns:
+            MyStack: a fresh copy
+        """
+        values: List[T] = []
+        n: Optional[StackNode[T]] = self.top
+        if n is None == 0:
+            return MyStack()
+        while n and n.next is not None:
+            values.append(n.data)
+            n = n.next
+        values.append(n.data)
+        output: MyStack = MyStack()
+        for t in reversed(values):
+            output.push(t)
+        assert(list(self) == list(output))
+        return output
+
     def __iter__(self) -> MyStackIterator:
         """
         Builds a list of the current stack state.
@@ -132,26 +148,6 @@ class MyStack(Generic[T]):
             n = n.next
         values.append(str(n.data))
         return '->'.join(values)
-
-    def produce_copy(self):
-        """Produces a copy of this stack instance.
-
-        Returns:
-            MyStack: a fresh copy
-        """
-        if self._size == 0:
-            return []
-        values: List[T] = []
-        n: Optional[StackNode[T]] = self.top
-        while n.next is not None:
-            values.append(n.data)
-            n = n.next
-        values.append(n.data)
-        output: MyStack[T] = MyStack()
-        for t in reversed(values):
-            output.push(t)
-        assert(list(self) == list(output))
-        return output
 
 
 class TestMyStack(unittest.TestCase):
@@ -212,7 +208,7 @@ class TestMyStack(unittest.TestCase):
         self.assertTrue(s)
 
 
-def sorted_stack(stack: MyStack) -> MyStack:
+def sorted_stack(stack: MyStack[T]) -> MyStack[T]:
     """This function will take in a stack
     and return a sorted copy.
     In order to do this, we need to find the biggest
@@ -226,16 +222,17 @@ def sorted_stack(stack: MyStack) -> MyStack:
         MyStack: sorted stack of items, with smallest items on top
     """
     # create empty output stack
-    output_stack = MyStack()
+    output_stack: MyStack = MyStack()
     # make copy of input stack.
-    stack_copy = stack.produce_copy()
+    stack_copy: MyStack = stack.produce_copy()
     # create temporary auxiliary stack
-    aux_stack = MyStack()
+    aux_stack: MyStack = MyStack()
     # we will extract max values until stack_copy is empty.
     while len(stack_copy) > 0:
         # look for index of max item in stack_copy
         max_index = 0
         max_value: T = stack_copy.peek()
+        item: T
         for i, item in enumerate(stack_copy):
             if item > max_value:
                 max_value = item
