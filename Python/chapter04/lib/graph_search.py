@@ -1,5 +1,6 @@
 import unittest
 
+from collections import deque
 from dataclasses import dataclass
 from typing import List
 
@@ -52,7 +53,7 @@ def dfs_search(root: Node) -> List[int]:
     output = []
     if root is None:
         return
-    print(f'Visiting node ({root.id})')
+    # print(f'Visiting node ({root.id})')
     root.visited = True
     # print(root.children)
     output.append(root.id)
@@ -74,8 +75,20 @@ def bfs_search(root: Node) -> List[int]:
         List[int]: List[int]: list of node IDs (i.e. [0, 1, 4])
     """
     output = []
+    output.append(root.id)
+    queue = deque()
+    root.visited = True
+    queue.append(root)
+    while len(queue) >= 1:
+        node = queue.popleft()
+        node.visited = True
+        # print(f'Visiting node ({node.id})')
+        for n in node.children:
+            if not n.visited:
+                n.visited = True
+                queue.append(n)
+                output.append(n.id)
     return output
-
 
 
 class TestMyGraphSearch(unittest.TestCase):
@@ -109,7 +122,8 @@ class TestMyGraphSearch(unittest.TestCase):
         n0.add_child(n1, n4, n5)
         n1.add_child(n3, n4)
         n3.add_child(n2, n4)
-        self.assertEqual(dfs_search(n0), [0, 1, 3, 2, 4, 5])
+        result: List[int] = dfs_search(n0)
+        self.assertEqual(result, [0, 1, 3, 2, 4, 5])
 
     def test_basic_breadth_first_search(self):
         n0 = Node(0, [])
@@ -121,6 +135,8 @@ class TestMyGraphSearch(unittest.TestCase):
         n0.add_child(n1, n4, n5)
         n1.add_child(n3, n4)
         n3.add_child(n2, n4)
+        result: List[int] = bfs_search(n0)
+        self.assertEqual(result, [0, 1, 4, 5, 3, 2])
 
 
 if __name__ == '__main__':
