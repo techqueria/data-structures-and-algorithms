@@ -2,7 +2,7 @@ import unittest
 
 from collections import deque
 from dataclasses import dataclass
-from typing import List
+from typing import List, Deque
 
 
 @dataclass
@@ -76,7 +76,7 @@ def bfs_search(root: Node) -> List[int]:
     """
     output = []
     output.append(root.id)
-    queue = deque()
+    queue: Deque[Node] = deque()
     root.visited = True
     queue.append(root)
     while len(queue) >= 1:
