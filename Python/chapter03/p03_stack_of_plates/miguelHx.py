@@ -16,7 +16,7 @@ import unittest
 
 from dataclasses import dataclass
 from typing import Generic, TypeVar
-from typing import List, Optional, Iterator
+from typing import List, Optional, Generator, Iterator
 
 T = TypeVar('T')
 
@@ -24,7 +24,35 @@ T = TypeVar('T')
 class StackNode(Generic[T]):
     data: T
     next: 'Optional[StackNode[T]]'
+    prev: 'Optional[StackNode[T]]'
 
+class MyStackIterator(Generic[T], Iterator):
+    def __init__(self, top: Optional[StackNode[T]], bottom: Optional[StackNode[T]], size: int):
+        self.forward_index = -1
+        self.backward_index = size
+        self._size = size
+        self.current_node = top
+        self.bottom_node = bottom
+
+    def __next__(self) -> T:
+        self.forward_index += 1
+        if self.forward_index == self._size or self.current_node is None:
+            self.forward_index = -1
+            self.current_node = None
+            raise StopIteration
+        n: T = self.current_node.data
+        self.current_node = self.current_node.next
+        return n
+
+    def __reversed__(self) -> T:
+        self.backward_index -= 1
+        if self.backward_index == -1 or self.bottom_node is None:
+            self.backward_index = self._size
+            self.bottom_node = None
+            raise StopIteration
+        n: T = self.bottom_node.data
+        self.bottom_node = self.bottom_node.prev
+        return n
 
 class MyStack(Generic[T]):
     """Stack data structure implementation.
@@ -35,8 +63,8 @@ class MyStack(Generic[T]):
 
     def __init__(self):
         self.top: Optional[StackNode[T]] = None # top is a pointer to StackNode object
+        self.bottom: Optional[StackNode[T]] = None
         self.size: int = 0
-        self.index: int = -1 # tracking current node for iterator use
         self.current_node: Optional[StackNode[T]] = self.top
         return
 
@@ -52,7 +80,8 @@ class MyStack(Generic[T]):
             raise IndexError('Stack is Empty.')
         item = self.top.data
         self.top = self.top.next
-        self.current_node = self.top
+        if self.size > 1:
+            self.top.prev = None
         self.size -= 1
         return item
 
@@ -62,10 +91,13 @@ class MyStack(Generic[T]):
         Args:
             item (int): data we want at the top of stack
         """
-        t = StackNode(item, None)
+        t = StackNode(item, None, None)
         t.next = self.top
         self.top = t
-        self.current_node = self.top
+        if self.size == 0:
+            self.bottom = t
+        else:
+            t.next.prev = t
         self.size += 1
 
     def peek(self) -> T:
@@ -90,17 +122,7 @@ class MyStack(Generic[T]):
         Returns:
             List[int]: list of integers
         """
-        return self
-
-    def __next__(self) -> T:
-        self.index += 1
-        if self.index == self.size or self.current_node is None:
-            self.index = -1
-            self.current_node = self.top
-            raise StopIteration
-        n: T = self.current_node.data
-        self.current_node = self.current_node.next
-        return n
+        return MyStackIterator(self.top, self.bottom, self.size)
 
     def __bool__(self) -> bool:
         """
@@ -130,22 +152,11 @@ class MyStack(Generic[T]):
         return '->'.join(values)
 
 
-class SetOfStacksIterator(Generic[T]):
-    def __init__(self, stack_list: List[MyStack[T]]):
-        # build temporary list
-        self.my_list = []
-        self.index = 0
-        for stack in reversed(stack_list):
-            for item in stack:
-                self.my_list.append(item)
-
-    def __next__(self) -> T:
-        if self.index == len(self.my_list):
-            raise StopIteration
-        item: T = self.my_list[self.index]
-        self.index += 1
-        return item
-
+def yield_set_of_stacks(stack_list: List[MyStack[T]]):
+    stack: MyStack[T]
+    for stack in reversed(stack_list):
+        for item in stack:
+            yield item
 
 class SetofStacks(Generic[T]):
     def __init__(self):
@@ -189,8 +200,8 @@ class SetofStacks(Generic[T]):
     def __len__(self) -> int:
         return self.size
 
-    def __iter__(self) -> SetOfStacksIterator:
-        return SetOfStacksIterator(self.set_of_stacks)
+    def __iter__(self) -> Generator:
+        return yield_set_of_stacks(self.set_of_stacks)
 
 
 class TestSetofStacks(unittest.TestCase):
