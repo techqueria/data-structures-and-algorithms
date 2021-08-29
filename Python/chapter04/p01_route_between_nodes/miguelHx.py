@@ -79,8 +79,8 @@ def bfs_search(root: Node) -> List[int]:
     Returns:
         List[int]: List[int]: list of node IDs (i.e. [0, 1, 4])
     """
-    output = []
-    output.append(root.id)
+    visited_nodes: List[Node] = []
+    visited_nodes.append(root)
     queue: Deque[Node] = deque()
     root.visited = True
     queue.append(root)
@@ -92,8 +92,11 @@ def bfs_search(root: Node) -> List[int]:
             if not n.visited:
                 n.visited = True
                 queue.append(n)
-                output.append(n.id)
-    return output
+                visited_nodes.append(n)
+    # reset visited state
+    g = Graph(visited_nodes)
+    g.reset_visited()
+    return list(map(lambda n: n.id, visited_nodes))
 
 
 def route_between_nodes(src: Node, dest: Node) -> bool:
@@ -123,7 +126,7 @@ def route_between_nodes(src: Node, dest: Node) -> bool:
     return True if dest.id in ids_visited else False
 
 
-class TestRouteBetweenNodes:
+class TestRouteBetweenNodes(unittest.TestCase):
     def test_route_between_nodes(self):
         n0 = Node(0, [])
         n1 = Node(1, [])
@@ -133,7 +136,11 @@ class TestRouteBetweenNodes:
         n5 = Node(5, [])
         n0.add_child(n1, n4, n5)
         n1.add_child(n3, n4)
+        n2.add_child(n1)
         n3.add_child(n2, n4)
+        # must remember to reset node visited properties
+        # before each fresh run
+        g = Graph([n0, n1, n2, n3, n4, n5])
         # There is a route from node 0 to node 2
         self.assertTrue(route_between_nodes(n0, n2))
         # No route between node 1 and node 0
@@ -171,6 +178,7 @@ class TestMyGraphSearch(unittest.TestCase):
         n5 = Node(5, [])
         n0.add_child(n1, n4, n5)
         n1.add_child(n3, n4)
+        n2.add_child(n1)
         n3.add_child(n2, n4)
         result: List[int] = dfs_search(n0)
         self.assertEqual(result, [0, 1, 3, 2, 4, 5])
@@ -184,6 +192,7 @@ class TestMyGraphSearch(unittest.TestCase):
         n5 = Node(5, [])
         n0.add_child(n1, n4, n5)
         n1.add_child(n3, n4)
+        n2.add_child(n1)
         n3.add_child(n2, n4)
         result: List[int] = bfs_search(n0)
         self.assertEqual(result, [0, 1, 4, 5, 3, 2])
