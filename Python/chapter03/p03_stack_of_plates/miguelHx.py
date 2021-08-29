@@ -80,7 +80,7 @@ class MyStack(Generic[T]):
             raise IndexError('Stack is Empty.')
         item = self.top.data
         self.top = self.top.next
-        if self.size > 1:
+        if self.size > 1 and self.top:
             self.top.prev = None
         self.size -= 1
         return item
@@ -96,7 +96,7 @@ class MyStack(Generic[T]):
         self.top = t
         if self.size == 0:
             self.bottom = t
-        else:
+        elif t.next:
             t.next.prev = t
         self.size += 1
 
