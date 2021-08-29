@@ -135,8 +135,7 @@ class SetOfStacksIterator(Generic[T]):
         # build temporary list
         self.my_list = []
         self.index = 0
-        stack_list_reversed = stack_list[::-1]
-        for stack in stack_list_reversed:
+        for stack in reversed(stack_list):
             for item in stack:
                 self.my_list.append(item)
 
