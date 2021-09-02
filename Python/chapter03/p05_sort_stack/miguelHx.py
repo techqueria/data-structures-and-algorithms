@@ -51,7 +51,7 @@ class MyStack(Generic[T]):
             self.current_node = self.current_node.next
             return n
 
-    def __init__(self, *numbers):
+    def __init__(self, *numbers: T):
         self.top: Optional[StackNode[T]] = None # top is a pointer to StackNode object
         self._size: int = 0
         for num in numbers:
