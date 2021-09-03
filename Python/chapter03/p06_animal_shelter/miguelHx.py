@@ -123,10 +123,13 @@ class AnimalShelterTest(unittest.TestCase):
         self.assertEqual(a.cats[2].timestamp, 6)
         self.assertEqual(a.cats[3].timestamp, 7)
 
-    def test_dequeue_dog_and_cat_queue(self):
+    def test_dequeue_dog_and_cat_both_empty(self):
         a = AnimalShelter()
         self.assertRaises(IndexError, lambda: a.dequeueDog())
         self.assertRaises(IndexError, lambda: a.dequeueCat())
+
+    def test_dequeue_dog_and_cat_queue(self):
+        a = AnimalShelter()
         d1 = Animal('Lucky', 'dog')
         d2 = Animal('Nova', 'dog')
         d3 = Animal('Geralt', 'dog')
@@ -151,9 +154,38 @@ class AnimalShelterTest(unittest.TestCase):
         self.assertEqual(d3, d)
         self.assertRaises(IndexError, lambda: a.dequeueDog())
 
-    def test_dequeue_any(self):
+    def test_dequeue_cat(self):
+        a = AnimalShelter()
+        c1 = Animal('Curio', 'cat')
+        c2 = Animal('Chai', 'cat')
+        c3 = Animal('Alma', 'cat')
+        a.enqueue(c1, c2, c3)
+        self.assertEqual(len(a), 3)
+        self.assertEqual(len(a.dogs), 0)
+        self.assertEqual(len(a.cats), 3)
+        c = a.dequeueCat()
+        self.assertEqual(len(a), 2)
+        self.assertEqual(len(a.dogs), 0)
+        self.assertEqual(len(a.cats), 2)
+        self.assertEqual(c1, c)
+        c = a.dequeueCat()
+        self.assertEqual(len(a), 1)
+        self.assertEqual(len(a.dogs), 0)
+        self.assertEqual(len(a.cats), 1)
+        self.assertEqual(c2, c)
+        c = a.dequeueCat()
+        self.assertEqual(len(a), 0)
+        self.assertEqual(len(a.dogs), 0)
+        self.assertEqual(len(a.cats), 0)
+        self.assertEqual(c3, c)
+        self.assertRaises(IndexError, lambda: a.dequeueCat())
+
+    def test_index_err_raised_on_empty_dequeue(self):
         a = AnimalShelter()
         self.assertRaises(IndexError, lambda: a.dequeueAny())
+
+    def test_dequeue_any_only_dogs(self):
+        a = AnimalShelter()
         # scenario 1: Only dogs
         d1 = Animal('Lucky', 'dog')
         d2 = Animal('Nova', 'dog')
@@ -178,6 +210,9 @@ class AnimalShelterTest(unittest.TestCase):
         self.assertEqual(len(a.cats), 0)
         self.assertEqual(d3, d)
         self.assertRaises(IndexError, lambda: a.dequeueAny())
+
+    def test_dequeue_any_only_cats(self):
+        a = AnimalShelter()
         # scenario 2: Only cats
         c1 = Animal('Curio', 'cat')
         c2 = Animal('Chai', 'cat')
@@ -202,6 +237,9 @@ class AnimalShelterTest(unittest.TestCase):
         self.assertEqual(len(a.cats), 0)
         self.assertEqual(c3, c)
         self.assertRaises(IndexError, lambda: a.dequeueAny())
+
+    def test_dequeue_any_cats_and_dogs_oldest_is_dog(self):
+        a = AnimalShelter()
         # scenario 3: both cats and dogs, but global oldest is dog
         d1 = Animal('Lucky', 'dog')
         d2 = Animal('Nova', 'dog')
@@ -216,12 +254,23 @@ class AnimalShelterTest(unittest.TestCase):
         self.assertEqual(len(a), 5)
         self.assertEqual(len(a.dogs), 2)
         self.assertEqual(len(a.cats), 3)
-        # scenario 4: both cats and dogs, but global oldest is cat (continuing from scenario 3)
+
+    def test_dequeue_any_cats_and_dogs_oldest_is_cat(self):
+        a = AnimalShelter()
+        # scenario 4: both cats and dogs, but global oldest is cat
+        d1 = Animal('Lucky', 'dog')
+        d2 = Animal('Nova', 'dog')
+        d3 = Animal('Geralt', 'dog')
+        c1 = Animal('Curio', 'cat')
+        c2 = Animal('Chai', 'cat')
+        c3 = Animal('Alma', 'cat')
+        a.enqueue(c1, d1, d2, c2, d3, c3)
         oldest = a.dequeueAny()
         self.assertEqual(c1, oldest)
-        self.assertEqual(len(a), 4)
-        self.assertEqual(len(a.dogs), 2)
+        self.assertEqual(len(a), 5)
+        self.assertEqual(len(a.dogs), 3)
         self.assertEqual(len(a.cats), 2)
+
 
 if __name__ == '__main__':
     unittest.main()
