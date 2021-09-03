@@ -24,8 +24,11 @@ class AnimalTypeEnum(Enum):
 class Animal:
     name: str
     species: AnimalTypeEnum
-    timestamp: Optional[int] = None
 
+@dataclass
+class QueuedAnimal:
+    animal: Animal
+    timestamp: int
 
 class AnimalShelter:
     """We will have each animal instance
@@ -34,9 +37,9 @@ class AnimalShelter:
     (based on arrival time) animal.
     """
     def __init__(self):
-        # FIFO, a queue of animals
-        self.dogs = deque()
-        self.cats = deque()
+        # FIFO, a queue of QueuedAnimals
+        self.dogs: Deque[QueuedAnimal] = deque()
+        self.cats: Deque[QueuedAnimal] = deque()
         self._species_map = {
             AnimalTypeEnum.DOG.value: self.dogs,
             AnimalTypeEnum.CAT.value: self.cats
@@ -46,9 +49,11 @@ class AnimalShelter:
     
     def _enqueue(self, animal: Animal) -> None:
         # list will grow right [<animal_1>, <animal_2>, ..., <animal_n>]
-        animal.timestamp = self._global_timestamp
+        # Animal will be encapsulated in QueuedAnimal, so hide the timestamp
+        # usage from the caller
+        queued_animal = QueuedAnimal(animal, self._global_timestamp)
         self._global_timestamp += 1
-        self._species_map[animal.species].append(animal)
+        self._species_map[animal.species].append(queued_animal)
 
     def enqueue(self, *animals: Animal, key: str = '') -> None:
         for animal in animals:
@@ -65,8 +70,8 @@ class AnimalShelter:
         elif len(self.dogs) == 0 and len(self.cats) >= 1:
             return self.dequeueCat()
         # otherwise, pick oldest from overall
-        oldest_dog = self.dogs[0]
-        oldest_cat = self.cats[0]
+        oldest_dog: QueuedAnimal = self.dogs[0]
+        oldest_cat: QueuedAnimal = self.cats[0]
         if oldest_dog.timestamp < oldest_cat.timestamp:
             return self.dequeueDog()
         else:
@@ -75,12 +80,12 @@ class AnimalShelter:
     def dequeueDog(self) -> Animal:
         if len(self.dogs) == 0:
             raise IndexError('No dogs available to adopt.')
-        return self.dogs.popleft()
+        return self.dogs.popleft().animal
 
     def dequeueCat(self) -> Animal:
         if len(self.cats) == 0:
             raise IndexError('No cats available to adopt.')
-        return self.cats.popleft()
+        return self.cats.popleft().animal
 
     def __len__(self) -> int:
         return len(self.dogs) + len(self.cats)
@@ -100,10 +105,10 @@ class AnimalShelterTest(unittest.TestCase):
         self.assertEqual(len(a), 4)
         self.assertEqual(len(a.dogs), 4)
         self.assertEqual(len(a.cats), 0)
-        self.assertEqual(d1.timestamp, 0)
-        self.assertEqual(d2.timestamp, 1)
-        self.assertEqual(d3.timestamp, 2)
-        self.assertEqual(d4.timestamp, 3)
+        self.assertEqual(a.dogs[0].timestamp, 0)
+        self.assertEqual(a.dogs[1].timestamp, 1)
+        self.assertEqual(a.dogs[2].timestamp, 2)
+        self.assertEqual(a.dogs[3].timestamp, 3)
         # now, add a few cats...
         c1 = Animal('Curio', 'cat')
         c2 = Animal('Chai', 'cat')
@@ -113,10 +118,10 @@ class AnimalShelterTest(unittest.TestCase):
         self.assertEqual(len(a), 8)
         self.assertEqual(len(a.dogs), 4)
         self.assertEqual(len(a.cats), 4)
-        self.assertEqual(c1.timestamp, 4)
-        self.assertEqual(c2.timestamp, 5)
-        self.assertEqual(c3.timestamp, 6)
-        self.assertEqual(c4.timestamp, 7)
+        self.assertEqual(a.cats[0].timestamp, 4)
+        self.assertEqual(a.cats[1].timestamp, 5)
+        self.assertEqual(a.cats[2].timestamp, 6)
+        self.assertEqual(a.cats[3].timestamp, 7)
 
     def test_dequeue_dog_and_cat_queue(self):
         a = AnimalShelter()
