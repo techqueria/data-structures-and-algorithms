@@ -55,7 +55,7 @@ class AnimalShelter:
         self._global_timestamp += 1
         self._species_map[animal.species].append(queued_animal)
 
-    def enqueue(self, *animals: Animal, key: str = '') -> None:
+    def enqueue(self, *animals: Animal) -> None:
         for animal in animals:
             self._enqueue(animal)
 
