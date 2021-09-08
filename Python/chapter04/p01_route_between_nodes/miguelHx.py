@@ -7,7 +7,7 @@ import unittest
 
 from collections import deque
 from dataclasses import dataclass
-from typing import List, Deque
+from typing import List, Deque, Set
 
 
 @dataclass
@@ -79,22 +79,18 @@ def bfs_search(root: Node) -> List[int]:
     Returns:
         List[int]: List[int]: list of node IDs (i.e. [0, 1, 4])
     """
-    visited_nodes: List[Node] = []
-    visited_nodes.append(root)
+    visited_list: List[int] = [root.id]
+    visited: Set[int] = set([root.id])
     queue: Deque[Node] = deque([root])
     while queue:
         node = queue.popleft()
         # print(f'Visiting node ({node.id})')
         for n in node.children:
-            if not n.visited:
-                n.visited = True
+            if n.id not in visited:
                 queue.append(n)
-                visited_nodes.append(n)
-    # reset visited state
-    g = Graph(visited_nodes)
-    g.reset_visited()
-    return list(map(lambda n: n.id, visited_nodes))
-
+                visited_list.append(n.id)
+                visited.add(n.id)
+    return visited_list
 
 def route_between_nodes(src: Node, dest: Node) -> bool:
     """This function will return true if a path
