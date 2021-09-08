@@ -27,7 +27,7 @@ class StackNode(Generic[T]):
     prev: 'Optional[StackNode[T]]'
 
 class MyStackIterator(Generic[T], Iterator[T]):
-    def __init__(self, top: Optional[StackNode[T]], bottom: Optional[StackNode[T]], size: int):
+    def __init__(self, top: Optional[StackNode[T]], bottom: Optional[StackNode[T]], size: int) -> None:
         self.forward_index = -1
         self.backward_index = size
         self._size = size
@@ -61,7 +61,7 @@ class MyStack(Generic[T]):
     the first removed.  Traversal is top to bottom.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.top: Optional[StackNode[T]] = None # top is a pointer to StackNode object
         self.bottom: Optional[StackNode[T]] = None
         self.size: int = 0
@@ -159,7 +159,7 @@ def yield_set_of_stacks(stack_list: List[MyStack[T]]) -> Generator[T, None, None
             yield item
 
 class SetofStacks(Generic[T]):
-    def __init__(self):
+    def __init__(self) -> None:
         self.set_of_stacks: List[MyStack[T]] = []
         self.stack_threshold: int = 3
         self.size: int = 0
@@ -206,7 +206,7 @@ class SetofStacks(Generic[T]):
 
 class TestSetofStacks(unittest.TestCase):
 
-    def test_setofstacks_push_and_peek(self):
+    def test_setofstacks_push_and_peek(self) -> None:
         sos = SetofStacks()
         self.assertEqual(len(sos), 0)
         sos.push(5)
@@ -229,7 +229,7 @@ class TestSetofStacks(unittest.TestCase):
         self.assertEqual(sos.set_of_stacks[1].peek(), 8)
         self.assertEqual(len(sos.set_of_stacks[1]), 1)
     
-    def test_setofstacks_pop(self):
+    def test_setofstacks_pop(self) -> None:
         # pop empty stack
         sos = SetofStacks()
         with self.assertRaises(IndexError):
@@ -249,7 +249,7 @@ class TestSetofStacks(unittest.TestCase):
         self.assertEqual(val, 4)
         self.assertEqual(len(sos), 3)
 
-    def test_setofstacks_pop_three_stacks(self):
+    def test_setofstacks_pop_three_stacks(self) -> None:
         s = SetofStacks()
         # No stacks exists in set, yet
         self.assertEqual(len(s.set_of_stacks), 0)
@@ -319,7 +319,7 @@ class TestSetofStacks(unittest.TestCase):
 
 
 class TestMyStack(unittest.TestCase):
-    def test_stack_push(self):
+    def test_stack_push(self) -> None:
         s = MyStack()
         self.assertEqual(len(s), 0)
         self.assertEqual(s.top, None)
@@ -338,7 +338,7 @@ class TestMyStack(unittest.TestCase):
         l = list(s)
         self.assertEqual(l, [4, 3, 2])
 
-    def test_stack_peek(self):
+    def test_stack_peek(self) -> None:
         s = MyStack()
         with self.assertRaises(IndexError):
             s.peek()
@@ -348,7 +348,7 @@ class TestMyStack(unittest.TestCase):
         top_val = s.peek()
         self.assertEqual(top_val, 99)
 
-    def test_stack_pop(self):
+    def test_stack_pop(self) -> None:
         # first case, attempt to pop an empty stack
         s = MyStack()
         with self.assertRaises(IndexError):
@@ -363,7 +363,7 @@ class TestMyStack(unittest.TestCase):
         self.assertEqual(len(s), 2) # size should now be 2
         self.assertEqual(list(s), [2, 1])
 
-    def test__bool__(self):
+    def test__bool__(self) -> None:
         s = MyStack()
         self.assertFalse(s)
         s.push(3)
