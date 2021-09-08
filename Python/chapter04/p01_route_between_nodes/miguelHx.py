@@ -81,9 +81,7 @@ def bfs_search(root: Node) -> List[int]:
     """
     visited_nodes: List[Node] = []
     visited_nodes.append(root)
-    queue: Deque[Node] = deque()
-    root.visited = True
-    queue.append(root)
+    queue: Deque[Node] = deque([root])
     while queue:
         node = queue.popleft()
         # print(f'Visiting node ({node.id})')
