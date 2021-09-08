@@ -37,11 +37,11 @@ class Node:
     def __str__(self):
         return f'Node ({self.id}), children: {self.children_as_str()}'
 
-def bfs_search(root: Node) -> List[int]:
+def bfs_search_exhaustive(root: Node) -> List[int]:
     """Simple BFS.
     takes in a root, returns a list
     of ids of the sequence of visited
-    nodes.
+    nodes. Goes through entire graph.
 
     Args:
         root (Node): starting node
@@ -60,6 +60,35 @@ def bfs_search(root: Node) -> List[int]:
                 queue.append(n)
                 visited_list.append(n.id)
                 visited.add(n.id)
+    return visited_list
+
+
+def bfs_search_for_dest(root: Node, dest: Node) -> List[int]:
+    """Simple BFS.
+    takes in a root, returns a list
+    of ids of the sequence of visited
+    nodes. Stops at destination node
+
+    Args:
+        root (Node): starting node
+
+    Returns:
+        List[int]: List[int]: list of node IDs (i.e. [0, 1, 4])
+    """
+    visited_list: List[int] = [root.id]
+    visited: Set[int] = set([root.id])
+    queue: Deque[Node] = deque([root])
+    while queue:
+        node = queue.popleft()
+        # print(f'Visiting node ({node.id})')
+        for n in node.children:
+            if n.id not in visited:
+                queue.append(n)
+                visited_list.append(n.id)
+                visited.add(n.id)
+            if n.id == dest.id:
+                # done searching
+                return visited_list
     return visited_list
 
 def route_between_nodes(src: Node, dest: Node) -> bool:
@@ -85,7 +114,7 @@ def route_between_nodes(src: Node, dest: Node) -> bool:
     Returns:
         bool: whether a path between src and dest exists
     """
-    ids_visited: List[int] = bfs_search(src)
+    ids_visited: List[int] = bfs_search_for_dest(src, dest)
     return dest.id in ids_visited
 
 
@@ -132,7 +161,7 @@ class TestMyGraphSearch(unittest.TestCase):
         g = Graph(nodes)
         # g.print_graph()
 
-    def test_basic_breadth_first_search(self):
+    def test_basic_breadth_first_search_exhaustive(self):
         n0 = Node(0, [])
         n1 = Node(1, [])
         n2 = Node(2, [])
@@ -143,7 +172,7 @@ class TestMyGraphSearch(unittest.TestCase):
         n1.add_child(n3, n4)
         n2.add_child(n1)
         n3.add_child(n2, n4)
-        result: List[int] = bfs_search(n0)
+        result: List[int] = bfs_search_exhaustive(n0)
         self.assertEqual(result, [0, 1, 4, 5, 3, 2])
 
 
