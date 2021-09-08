@@ -34,10 +34,7 @@ class Node:
             self.children.append(node)
 
     def print_children(self):
-        message = f'Adjacency list for node ({self.id}): '
-        for child in self.children:
-            message += '{}, '.format(child.id)
-        print(message)
+        logging.debug('Adjacency list for node %s: %s', self.id, ', '.join(str(child.id) for child in self.children))
 
     def __str__(self):
         return f'Node ({self.id}), visited: {self.visited}'
