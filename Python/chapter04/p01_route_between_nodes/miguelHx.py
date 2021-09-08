@@ -122,7 +122,7 @@ def route_between_nodes(src: Node, dest: Node) -> bool:
         bool: whether a path between src and dest exists
     """
     ids_visited: List[int] = bfs_search(src)
-    return True if dest.id in ids_visited else False
+    return dest.id in ids_visited
 
 
 class TestRouteBetweenNodes(unittest.TestCase):
