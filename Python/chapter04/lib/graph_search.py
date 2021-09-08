@@ -2,7 +2,7 @@ import unittest
 
 from collections import deque
 from dataclasses import dataclass
-from typing import List, Deque
+from typing import List, Deque, Set
 
 
 @dataclass
@@ -29,10 +29,7 @@ class Node:
             self.children.append(node)
 
     def print_children(self):
-        message = f'Adjacency list for node ({self.id}): '
-        for child in self.children:
-            message += '{}, '.format(child.id)
-        print(message)
+        logging.debug('Adjacency list for node %s: %s', self.id, ', '.join(str(child.id) for child in self.children))
 
     def __str__(self):
         return f'Node ({self.id}), visited: {self.visited}'
@@ -74,21 +71,18 @@ def bfs_search(root: Node) -> List[int]:
     Returns:
         List[int]: List[int]: list of node IDs (i.e. [0, 1, 4])
     """
-    output = []
-    output.append(root.id)
-    queue: Deque[Node] = deque()
-    root.visited = True
-    queue.append(root)
-    while len(queue) >= 1:
+    visited_list: List[int] = [root.id]
+    visited: Set[int] = set([root.id])
+    queue: Deque[Node] = deque([root])
+    while queue:
         node = queue.popleft()
-        node.visited = True
         # print(f'Visiting node ({node.id})')
         for n in node.children:
-            if not n.visited:
-                n.visited = True
+            if n.id not in visited:
                 queue.append(n)
-                output.append(n.id)
-    return output
+                visited_list.append(n.id)
+                visited.add(n.id)
+    return visited_list
 
 
 class TestMyGraphSearch(unittest.TestCase):
