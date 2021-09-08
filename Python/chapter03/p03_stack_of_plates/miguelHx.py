@@ -26,7 +26,7 @@ class StackNode(Generic[T]):
     next: 'Optional[StackNode[T]]'
     prev: 'Optional[StackNode[T]]'
 
-class MyStackIterator(Generic[T], Iterator):
+class MyStackIterator(Generic[T], Iterator[T]):
     def __init__(self, top: Optional[StackNode[T]], bottom: Optional[StackNode[T]], size: int):
         self.forward_index = -1
         self.backward_index = size
@@ -112,7 +112,7 @@ class MyStack(Generic[T]):
             raise IndexError('Stack is Empty')
         return self.top.data
 
-    def __iter__(self) -> Iterator:
+    def __iter__(self) -> Iterator[T]:
         """
         Builds a list of the current stack state.
         For example, given the following stack:
@@ -140,7 +140,7 @@ class MyStack(Generic[T]):
     def __len__(self) -> int:
         return self.size
 
-    def __str__(self):
+    def __str__(self) -> str:
         if self.size == 0:
             return '<Empty>'
         values = []
@@ -152,7 +152,7 @@ class MyStack(Generic[T]):
         return '->'.join(values)
 
 
-def yield_set_of_stacks(stack_list: List[MyStack[T]]):
+def yield_set_of_stacks(stack_list: List[MyStack[T]]) -> Generator[T, None, None]:
     stack: MyStack[T]
     for stack in reversed(stack_list):
         for item in stack:
@@ -176,7 +176,7 @@ class SetofStacks(Generic[T]):
     def _pop(self) -> T:
         return self.set_of_stacks[-1].pop()
     
-    def _pop_stack(self) -> MyStack:
+    def _pop_stack(self) -> MyStack[T]:
         return self.set_of_stacks.pop(-1)
 
     def pop(self) -> T:
@@ -189,7 +189,7 @@ class SetofStacks(Generic[T]):
         if len(self.set_of_stacks[-1]) > 1:
             item: T = self._pop()
         else:
-            s: MyStack = self._pop_stack()
+            s: MyStack[T] = self._pop_stack()
             item = s.pop()
         self.size -= 1
         return item
@@ -200,7 +200,7 @@ class SetofStacks(Generic[T]):
     def __len__(self) -> int:
         return self.size
 
-    def __iter__(self) -> Generator:
+    def __iter__(self) -> Generator[T, None, None]:
         return yield_set_of_stacks(self.set_of_stacks)
 
 
