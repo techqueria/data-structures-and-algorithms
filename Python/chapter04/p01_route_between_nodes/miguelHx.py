@@ -86,7 +86,6 @@ def bfs_search(root: Node) -> List[int]:
     queue.append(root)
     while queue:
         node = queue.popleft()
-        node.visited = True
         # print(f'Visiting node ({node.id})')
         for n in node.children:
             if not n.visited:
