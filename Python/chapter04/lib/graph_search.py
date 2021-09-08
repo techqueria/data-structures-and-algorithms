@@ -35,7 +35,7 @@ class Node:
         return f'Node ({self.id}), visited: {self.visited}'
 
 
-def dfs_search(root: Node) -> List[int]:
+def dfs_search(root: Node, visited: Set[int] = set()) -> List[int]:
     """Simple DFS.
     takes in a root, returns a list
     of ids of the sequence of visited
@@ -47,17 +47,18 @@ def dfs_search(root: Node) -> List[int]:
     Returns:
         List[int]: list of node IDs (i.e. [0, 1, 3])
     """
-    output = []
     if root is None:
-        return
+        raise TypeError
+    visited_list: List[int] = [root.id]
+    if not visited:
+        visited.add(root.id)
     # print(f'Visiting node ({root.id})')
-    root.visited = True
     # print(root.children)
-    output.append(root.id)
     for node in root.children:
-        if not node.visited:
-            output.extend(dfs_search(node))
-    return output
+        if node.id not in visited:
+            visited.add(node.id)
+            visited_list.extend(dfs_search(node, visited))
+    return visited_list
 
 def bfs_search(root: Node) -> List[int]:
     """Simple BFS.
