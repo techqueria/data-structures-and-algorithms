@@ -145,10 +145,11 @@ class MyStack(Generic[T]):
             return '<Empty>'
         values = []
         n = self.top
-        while n.next is not None:
+        while n and n.next:
             values.append(str(n.data))
             n = n.next
-        values.append(str(n.data))
+        if n:
+            values.append(str(n.data))
         return '->'.join(values)
 
 
