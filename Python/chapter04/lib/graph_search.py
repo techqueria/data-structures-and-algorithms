@@ -50,8 +50,12 @@ def dfs_search(root: Node, visited: Set[int] = set()) -> List[int]:
     if root is None:
         raise TypeError
     visited_list: List[int] = [root.id]
-    if not visited:
-        visited.add(root.id)
+    # if already added, won't add to set.
+    # line 55 is mainly for initial empty set.
+    # future .adds will attempt to add value that
+    # already exists in the set.
+    # result will be a no-op
+    visited.add(root.id)
     # print(f'Visiting node ({root.id})')
     # print(root.children)
     for node in root.children:
