@@ -18,26 +18,24 @@ class Graph:
         for node in self.nodes:
             node.print_children()
 
-    def reset_visited(self):
-        for node in self.nodes:
-            node.visited = False
-
 
 @dataclass
 class Node:
     id: int
     children: 'List[Node]'
-    visited: bool = False
 
     def add_child(self, *nodes: 'Node'):
         for node in nodes:
             self.children.append(node)
 
+    def children_as_str(self) -> str:
+        return ', '.join(str(child.id) for child in self.children)
+
     def print_children(self):
-        logging.debug('Adjacency list for node %s: %s', self.id, ', '.join(str(child.id) for child in self.children))
+        logging.debug('Adjacency list for node %s: %s', self.id, self.children_as_str())
 
     def __str__(self):
-        return f'Node ({self.id}), visited: {self.visited}'
+        return f'Node ({self.id}), children: {self.children_as_str()}'
 
 def bfs_search(root: Node) -> List[int]:
     """Simple BFS.
