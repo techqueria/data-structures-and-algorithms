@@ -213,7 +213,7 @@ def sorted_stack(stack: MyStack[T]) -> MyStack[T]:
     # create temporary auxiliary stack
     aux_stack: MyStack = MyStack()
     # we will extract max values until stack_copy is empty.
-    while len(stack_copy) > 0:
+    while stack_copy:
         # look for index of max item in stack_copy
         max_index = 0
         max_value: T = stack_copy.peek()
