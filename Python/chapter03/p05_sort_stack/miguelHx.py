@@ -95,26 +95,6 @@ class MyStack(Generic[T]):
             raise IndexError('Stack is Empty')
         return self.top.data
 
-    def produce_copy(self):
-        """Produces a copy of this stack instance.
-
-        Returns:
-            MyStack: a fresh copy
-        """
-        values: List[T] = []
-        n: Optional[StackNode[T]] = self.top
-        if n is None == 0:
-            return MyStack()
-        while n and n.next is not None:
-            values.append(n.data)
-            n = n.next
-        values.append(n.data)
-        output: MyStack = MyStack()
-        for t in reversed(values):
-            output.push(t)
-        assert(list(self) == list(output))
-        return output
-
     def __iter__(self) -> MyStackIterator:
         """
         Builds a list of the current stack state.
@@ -229,7 +209,7 @@ def sorted_stack(stack: MyStack[T]) -> MyStack[T]:
     # create empty output stack
     output_stack: MyStack = MyStack()
     # make copy of input stack.
-    stack_copy: MyStack = stack.produce_copy()
+    stack_copy: MyStack = copy.copy(stack)
     # create temporary auxiliary stack
     aux_stack: MyStack = MyStack()
     # we will extract max values until stack_copy is empty.
