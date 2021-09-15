@@ -37,7 +37,7 @@ class MyStack(Generic[T]):
     the first removed.  Traversal is top to bottom.
     """
 
-    class MyStackIterator(Iterator):
+    class MyStackIterator(Iterator[T]):
         def __init__(self, top: Optional[StackNode[T]], size: int):
             self.index = -1
             self.current_node = top
@@ -78,7 +78,7 @@ class MyStack(Generic[T]):
         Args:
             item (T): data we want at the top of stack
         """
-        t: StackNode = StackNode(item, None)
+        t: StackNode[T] = StackNode(item, None)
         t.next = self.top
         self.top = t
         self._size += 1
@@ -95,7 +95,7 @@ class MyStack(Generic[T]):
             raise IndexError('Stack is Empty')
         return self.top.data
 
-    def __iter__(self) -> MyStackIterator:
+    def __iter__(self) -> MyStackIterator[T]:
         """
         Builds a list of the current stack state.
         For example, given the following stack:
@@ -123,21 +123,22 @@ class MyStack(Generic[T]):
     def __len__(self) -> int:
         return self._size
 
-    def __str__(self):
+    def __str__(self) -> str:
         if self._size == 0:
             return '<Empty>'
         values = []
         n = self.top
-        while n.next is not None:
+        while n and n.next:
             values.append(str(n.data))
             n = n.next
-        values.append(str(n.data))
+        if n:
+            values.append(str(n.data))
         return '->'.join(values)
 
 
-class TestMyStack(unittest.TestCase):
-    def test_stack_push(self):
-        s = MyStack()
+class TestMyStack(unittest.TestCase, Generic[T]):
+    def test_stack_push(self) -> None:
+        s: MyStack[T] = MyStack()
         self.assertEqual(len(s), 0)
         self.assertEqual(s.top, None)
         s.push(2)
@@ -161,8 +162,8 @@ class TestMyStack(unittest.TestCase):
         self.assertEqual(s.top.next.data, 4)
         self.assertEqual(list(s), [1.2, 4, 3, 2])
 
-    def test_stack_peek(self):
-        s = MyStack()
+    def test_stack_peek(self) -> None:
+        s: MyStack[T] = MyStack()
         with self.assertRaises(IndexError):
             s.peek()
         s.push(1)
@@ -171,9 +172,9 @@ class TestMyStack(unittest.TestCase):
         top_val = s.peek()
         self.assertEqual(top_val, 99)
 
-    def test_stack_pop(self):
+    def test_stack_pop(self) -> None:
         # first case, attempt to pop an empty stack
-        s = MyStack()
+        s: MyStack[T] = MyStack()
         with self.assertRaises(IndexError):
             s.pop()
         s.push(1)
@@ -186,8 +187,8 @@ class TestMyStack(unittest.TestCase):
         self.assertEqual(s._size, 2) # size should now be 2
         self.assertEqual(list(s), [2, 1])
 
-    def test__bool__(self):
-        s = MyStack()
+    def test__bool__(self) -> None:
+        s: MyStack[T] = MyStack()
         self.assertFalse(s)
         s.push(3)
         self.assertTrue(s)
@@ -204,9 +205,9 @@ def sorted_stack(stack: MyStack[T]) -> None:
         stack (MyStack): stack of items
     """
     # create temporary auxiliary stack
-    aux_stack: MyStack = MyStack()
+    aux_stack: MyStack[T] = MyStack()
     while stack:
-        t = stack.pop()
+        t: T = stack.pop()
         while aux_stack and aux_stack.peek() > t:
             stack.push(aux_stack.pop())
         aux_stack.push(t)
@@ -216,9 +217,9 @@ def sorted_stack(stack: MyStack[T]) -> None:
         stack.push(aux_stack.pop())
 
 
-class TestSortStack(unittest.TestCase):
-    def test_sort_stack(self):
-        s = MyStack(1, 9, 5, 7, 3, 8)
+class TestSortStack(unittest.TestCase, Generic[T]):
+    def test_sort_stack(self) -> None:
+        s: MyStack[T] = MyStack(1, 9, 5, 7, 3, 8)
         # will look like this (leftmost is top of stack):
         # [8, 3, 7, 5, 9, 1]
         self.assertEqual(list(s), [8, 3, 7, 5, 9, 1])
