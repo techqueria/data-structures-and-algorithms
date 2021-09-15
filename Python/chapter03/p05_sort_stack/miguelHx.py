@@ -193,51 +193,27 @@ class TestMyStack(unittest.TestCase):
         self.assertTrue(s)
 
 
-def sorted_stack(stack: MyStack[T]) -> MyStack[T]:
+def sorted_stack(stack: MyStack[T]) -> None:
     """This function will take in a stack
-    and return a sorted copy.
-    In order to do this, we need to find the biggest
-    number in an input stack copy, and then push it to the
-    output stack. Repeat until input stack copy is empty.
+    and modify the input stack to be sorted such 
+    that the smallest elements are at the top.
+    Runtime: O(n^2)
+    Space: O(n) where n is the number of elements in the input stack.
 
     Args:
         stack (MyStack): stack of items
-
-    Returns:
-        MyStack: sorted stack of items, with smallest items on top
     """
-    # create empty output stack
-    output_stack: MyStack = MyStack()
-    # make copy of input stack.
-    stack_copy: MyStack = copy.copy(stack)
     # create temporary auxiliary stack
     aux_stack: MyStack = MyStack()
-    # we will extract max values until stack_copy is empty.
-    while stack_copy:
-        # look for index of max item in stack_copy
-        max_index = 0
-        max_value: T = stack_copy.peek()
-        item: T
-        for i, item in enumerate(stack_copy):
-            if item > max_value:
-                max_value = item
-                max_index = i
-        # biggest values at bottom of output stack
-        output_stack.push(max_value)
-        # next, extract max value and clean up
-        # with the help of aux_stack
-        # We need to remove this value from the stack_copy
-        # In setting up for next max value extraction
-        for i in range(max_index+1):
-            aux_stack.push(stack_copy.pop())
-        # value of interest is now at top of aux_stack
-        # we can discard it and rebuild stack_copy
-        aux_stack.pop()
-        for item in aux_stack:
-            stack_copy.push(aux_stack.pop())
-        # begin next iteration...
-    # done. return sorted stack :D
-    return output_stack
+    while stack:
+        t = stack.pop()
+        while aux_stack and aux_stack.peek() > t:
+            stack.push(aux_stack.pop())
+        aux_stack.push(t)
+    # elements are in order with highest values
+    # on top. Need to put elements back into original stack.
+    while aux_stack:
+        stack.push(aux_stack.pop())
 
 
 class TestSortStack(unittest.TestCase):
@@ -248,7 +224,8 @@ class TestSortStack(unittest.TestCase):
         self.assertEqual(list(s), [8, 3, 7, 5, 9, 1])
         # after sorting, should look like this (smallest values on top):
         # [1, 3, 5, 7, 8, 9]
-        self.assertEqual(list(sorted_stack(s)), [1, 3, 5, 7, 8, 9])
+        sorted_stack(s)
+        self.assertEqual(list(s), [1, 3, 5, 7, 8, 9])
 
 if __name__ == '__main__':
     unittest.main()
