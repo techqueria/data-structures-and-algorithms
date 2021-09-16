@@ -205,28 +205,66 @@ def sorted_stack(stack: MyStack[T]) -> None:
         stack (MyStack): stack of items
     """
     # create temporary auxiliary stack
+    num_ops = 0
     aux_stack: MyStack[T] = MyStack()
     while stack:
         t: T = stack.pop()
+        num_ops += 1
         while aux_stack and aux_stack.peek() > t:
+            num_ops += 1
             stack.push(aux_stack.pop())
         aux_stack.push(t)
     # elements are in order with highest values
     # on top. Need to put elements back into original stack.
+    print("num core operations (operations dependent on size of stack) when n is {}: {}".format(len(aux_stack), num_ops))
     while aux_stack:
         stack.push(aux_stack.pop())
 
 
 class TestSortStack(unittest.TestCase, Generic[T]):
-    def test_sort_stack(self) -> None:
+    def test_sort_stack_average_case(self) -> None:
         s: MyStack[T] = MyStack(1, 9, 5, 7, 3, 8)
         # will look like this (leftmost is top of stack):
         # [8, 3, 7, 5, 9, 1]
         self.assertEqual(list(s), [8, 3, 7, 5, 9, 1])
         # after sorting, should look like this (smallest values on top):
         # [1, 3, 5, 7, 8, 9]
+        print("Sorting stack average case")
         sorted_stack(s)
         self.assertEqual(list(s), [1, 3, 5, 7, 8, 9])
+
+    def test_sort_stack_ascending_order_worst_case(self):
+        # ascending order runtime is worst case with a complexity
+        # of O(n^2).
+        # Why? Because for every element e in stack of size n,
+        # we will need to shift more elements as we get closer
+        # to sorting completion and the number of operations
+        # increases parabolically.
+        s: MyStack[T] = MyStack(1, 2, 3, 4, 5)
+        # will look like this (leftmost is top of stack):
+        # [5, 4, 3, 2, 1]
+        self.assertEqual(list(s), [5, 4, 3, 2, 1])
+        # after sorting, should look like this (smallest values on top):
+        # [1, 2, 3, 4, 5]
+        print("Sorting stack ascending order (worst case)")
+        sorted_stack(s)
+        self.assertEqual(list(s), [1, 2, 3, 4, 5])
+
+    def test_sort_stack_descending_order_best_case(self) -> None:
+        # smallest items will be on top of stack. Basically,
+        # already sorted.
+        # with a stack in already sorted order, algorithm
+        # will act the fastest.
+        s: MyStack[T] = MyStack(5, 4, 3, 2, 1)
+        # will look like this (leftmost is top of stack):
+        # [1, 2, 3, 4]
+        self.assertEqual(list(s), [1, 2, 3, 4, 5])
+        # after sorting, should look like this (smallest values on top):
+        # [1, 2, 3, 4]
+        print("Sorting stack ascending order (best case)")
+        sorted_stack(s)
+        self.assertEqual(list(s), [1, 2, 3, 4, 5])
+
 
 if __name__ == '__main__':
     unittest.main()
