@@ -1,179 +1,109 @@
 """Python Version 3.9.2
-4.1 - Route Between Nodes:
-Given a directed graph, design an algorithm to
-find out whether there is a route between two nodes.
+4.2 - Minimal Tree:
+Given a sorted (increasing order) array with unique integer elements,
+write an algorithm to create a binary search tree with minimal height.
 """
 import unittest
 
-from collections import deque
+from abc import abstractmethod
 from dataclasses import dataclass
-from typing import List, Deque, Set
+from typing import Generic, TypeVar
+from typing import Optional, Protocol
+from typing import Generator
 
+
+T = TypeVar('T', bound='Comparable')
+
+class Comparable(Protocol):
+    @abstractmethod
+    def __lt__(self, other: T) -> bool:
+        pass
+
+    @abstractmethod
+    def __gt__(self, other: T) -> bool:
+        pass
+
+    @abstractmethod
+    def __eq__(self, other: T) -> bool:
+        pass
 
 @dataclass
-class Graph:
-    nodes: 'List[Node]'
-
-    def print_graph(self):
-        for node in self.nodes:
-            node.print_children()
-
-
-@dataclass
-class Node:
-    id: int
-    children: 'List[Node]'
-
-    def add_child(self, *nodes: 'Node'):
-        for node in nodes:
-            self.children.append(node)
-
-    def children_as_str(self) -> str:
-        return ', '.join(str(child.id) for child in self.children)
-
-    def print_children(self):
-        logging.debug('Adjacency list for node %s: %s', self.id, self.children_as_str())
+class BSTNode:
+    val: int
+    left_child: 'Optional[BSTNode]' = None
+    right_child: 'Optional[BSTNode]' = None
 
     def __str__(self):
-        return f'Node ({self.id}), children: {self.children_as_str()}'
+        return f'Node ({self.id}), Left ID: {self.left_child.id}, Right ID: {self.right_child.id}'
 
-def bfs_search_exhaustive(root: Node) -> List[int]:
-    """Simple BFS.
-    takes in a root, returns a list
-    of ids of the sequence of visited
-    nodes. Goes through entire graph.
+class BSTIterator:
 
-    Args:
-        root (Node): starting node
+    def __init__(self, root: BSTNode):
+        self.gen = self.in_order_traversal_generator(root)
 
-    Returns:
-        List[int]: List[int]: list of node IDs (i.e. [0, 1, 4])
-    """
-    visited_list: List[int] = [root.id]
-    visited: Set[int] = set([root.id])
-    queue: Deque[Node] = deque([root])
-    while queue:
-        node = queue.popleft()
-        # print(f'Visiting node ({node.id})')
-        for n in node.children:
-            if n.id not in visited:
-                queue.append(n)
-                visited_list.append(n.id)
-                visited.add(n.id)
-    return visited_list
+    def in_order_traversal_generator(self, node: BSTNode) -> Generator:
+        if node.left_child:
+            yield from self.in_order_traversal_generator(node.left_child)
+        yield node.val
+        if node.right_child:
+            yield from self.in_order_traversal_generator(node.right_child)
 
+    def __next__(self) -> T:
+        return next(self.gen)
 
-def bfs_search_for_dest(root: Node, dest: Node) -> List[int]:
-    """Simple BFS.
-    takes in a root, returns a list
-    of ids of the sequence of visited
-    nodes. Stops at destination node
+@dataclass
+class BinarySearchTree:
+    root: 'Optional[BSTNode]'
 
-    Args:
-        root (Node): starting node
+    def insert(self, value: T) -> None:
+        if not self.root:
+            self.root = BSTNode(value)
+        else:
+            self._insert(value, self.root)
 
-    Returns:
-        List[int]: List[int]: list of node IDs (i.e. [0, 1, 4])
-    """
-    visited_list: List[int] = [root.id]
-    visited: Set[int] = set([root.id])
-    queue: Deque[Node] = deque([root])
-    while queue:
-        node = queue.popleft()
-        # print(f'Visiting node ({node.id})')
-        for n in node.children:
-            if n.id not in visited:
-                queue.append(n)
-                visited_list.append(n.id)
-                visited.add(n.id)
-            if n.id == dest.id:
-                # done searching
-                return visited_list
-    return visited_list
+    def _insert(self, value: T, curr_node: BSTNode) -> None:
+        if value < curr_node.val:
+            if not curr_node.left_child:
+                # insert here
+                curr_node.left_child = BSTNode(value)
+            else:
+                # otherwise, keep searching left subtree
+                self._insert(value, curr_node.left_child)
+        elif value > curr_node.val:
+            if not curr_node.right_child:
+                # insert here
+                curr_node.right_child = BSTNode(value)
+            else:
+                # otherwise, keep searching right subtree
+                self._insert(value, curr_node.right_child)
+        else:
+            raise ValueError(f'Value {value} already exists in tree.')
 
-def route_between_nodes(src: Node, dest: Node) -> bool:
-    """This function will return true if a path
-    is found between two nodes, false otherwise.
-    The idea is to perform a breadth first search
-    from src to dest. After obtaining a list of
-    nodes visited, we simply check to see if destination
-    node id is in there.
+    def print_tree(self):
+        if self.root:
+            self._print_tree(self.root)
 
-    Runtime Complexity:
-        O(V + E) where V represents the number of
-        nodes in the graph and E represents the number
-        of edges in this graph.
-    Space Complexity:
-        O(V) where V represents the number of existing nodes
-        in the graph.
+    def _print_tree(self, curr_node: BSTNode) -> None:
+        if curr_node:
+            self._print_tree(curr_node.left_child)
+            print(curr_node.val)
+            self._print_tree(curr_node.right_child)
 
-    Args:
-        src (Node): from node
-        dest (Node): destination node
-
-    Returns:
-        bool: whether a path between src and dest exists
-    """
-    ids_visited: List[int] = bfs_search_for_dest(src, dest)
-    return dest.id in ids_visited
+    def __iter__(self) -> Generator:
+        return BSTIterator(self.root)
 
 
-class TestRouteBetweenNodes(unittest.TestCase):
-    def test_route_between_nodes(self):
-        n0 = Node(0, [])
-        n1 = Node(1, [])
-        n2 = Node(2, [])
-        n3 = Node(3, [])
-        n4 = Node(4, [])
-        n5 = Node(5, [])
-        n0.add_child(n1, n4, n5)
-        n1.add_child(n3, n4)
-        n2.add_child(n1)
-        n3.add_child(n2, n4)
-        # must remember to reset node visited properties
-        # before each fresh run
-        g = Graph([n0, n1, n2, n3, n4, n5])
-        # There is a route from node 0 to node 2
-        self.assertTrue(route_between_nodes(n0, n2))
-        # No route between node 1 and node 0
-        self.assertFalse(route_between_nodes(n1, n0))
-        # There is a route from node 2 to node 3
-        self.assertTrue(route_between_nodes(n2, n3))
+class TestBinarySearchTree(unittest.TestCase):
 
-class TestMyGraphSearch(unittest.TestCase):
-
-    def test_basic_graph_creation(self):
-        n0 = Node(0, [])
-        n1 = Node(1, [])
-        n2 = Node(2, [])
-        n3 = Node(3, [])
-        n4 = Node(4, [])
-        n5 = Node(5, [])
-        n6 = Node(6, [])
-        n0.add_child(n1)
-        n1.add_child(n2)
-        n2.add_child(n0, n3)
-        n3.add_child(n2)
-        n4.add_child(n6)
-        n5.add_child(n4)
-        n6.add_child(n5)
-        nodes = [n0, n1, n2, n3, n4, n5, n6]
-        g = Graph(nodes)
-        # g.print_graph()
-
-    def test_basic_breadth_first_search_exhaustive(self):
-        n0 = Node(0, [])
-        n1 = Node(1, [])
-        n2 = Node(2, [])
-        n3 = Node(3, [])
-        n4 = Node(4, [])
-        n5 = Node(5, [])
-        n0.add_child(n1, n4, n5)
-        n1.add_child(n3, n4)
-        n2.add_child(n1)
-        n3.add_child(n2, n4)
-        result: List[int] = bfs_search_exhaustive(n0)
-        self.assertEqual(result, [0, 1, 4, 5, 3, 2])
+    def test_binary_search_tree_creation(self):
+        bst = BinarySearchTree(None)
+        bst.insert(8)
+        bst.insert(4)
+        bst.insert(10)
+        bst.insert(2)
+        bst.insert(6)
+        bst.insert(20)
+        self.assertEqual(list(bst), [2, 4, 6, 8, 10, 20])
 
 
 if __name__ == '__main__':
