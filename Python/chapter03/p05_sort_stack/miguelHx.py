@@ -198,7 +198,10 @@ def sorted_stack(stack: MyStack[T]) -> None:
     """This function will take in a stack
     and modify the input stack to be sorted such 
     that the smallest elements are at the top.
-    Runtime: O(n^2)
+    Runtime:
+        Worst Case: O(n^2)
+        Best Case: O(n)
+        Avg. Case: O(n^2)
     Space: O(n) where n is the number of elements in the input stack.
 
     Args:
