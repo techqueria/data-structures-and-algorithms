@@ -15,7 +15,7 @@ from typing import Generator, List
 
 T = TypeVar('T', bound='Comparable')
 
-class Comparable(Protocol):
+class Comparable(Protocol[T]):
     @abstractmethod
     def __lt__(self, other: T) -> bool:
         pass
@@ -25,12 +25,12 @@ class Comparable(Protocol):
         pass
 
     @abstractmethod
-    def __eq__(self, other: T) -> bool:
+    def __eq__(self, other: object) -> bool:
         pass
 
 @dataclass
-class BSTNode:
-    val: int
+class BSTNode(Generic[T]):
+    val: T
     left_child: 'Optional[BSTNode]' = None
     right_child: 'Optional[BSTNode]' = None
 
@@ -39,10 +39,12 @@ class BSTNode:
 
 class BSTIterator:
 
-    def __init__(self, root: BSTNode):
+    def __init__(self, root: Optional[BSTNode]):
         self.gen = self.in_order_traversal_generator(root)
 
-    def in_order_traversal_generator(self, node: BSTNode) -> Generator:
+    def in_order_traversal_generator(self, node: Optional[BSTNode]) -> Generator:
+        if not node:
+            raise StopIteration
         if node.left_child:
             yield from self.in_order_traversal_generator(node.left_child)
         yield node.val
@@ -93,7 +95,7 @@ class BinarySearchTree:
         if self.root:
             self._print_tree(self.root)
 
-    def _print_tree(self, curr_node: BSTNode) -> None:
+    def _print_tree(self, curr_node: Optional[BSTNode]) -> None:
         if curr_node:
             self._print_tree(curr_node.left_child)
             print(curr_node.val)
