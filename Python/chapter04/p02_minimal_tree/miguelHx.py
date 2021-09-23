@@ -10,7 +10,7 @@ from abc import abstractmethod
 from dataclasses import dataclass
 from typing import Generic, TypeVar
 from typing import Optional, Protocol
-from typing import Generator, List
+from typing import Generator, List, Iterator
 
 
 T = TypeVar('T', bound='Comparable')
@@ -37,7 +37,7 @@ class BSTNode(Generic[T]):
     def __str__(self):
         return f'Node ({self.id}), Left ID: {self.left_child.id}, Right ID: {self.right_child.id}'
 
-class BSTIterator:
+class BSTIterator(Iterator[T]):
 
     def __init__(self, root: Optional[BSTNode]):
         self.gen = self.in_order_traversal_generator(root)
@@ -101,7 +101,7 @@ class BinarySearchTree:
             print(curr_node.val)
             self._print_tree(curr_node.right_child)
 
-    def __iter__(self) -> Generator:
+    def __iter__(self) -> BSTIterator:
         return BSTIterator(self.root)
 
 
