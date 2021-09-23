@@ -33,22 +33,25 @@ class Comparable(Protocol):
 class BTNode(Generic[T]):
     val: T
     depth: int = 0
-    left_child: 'Optional[BTNode]' = None
-    right_child: 'Optional[BTNode]' = None
+    left_child: 'Optional[BTNode[T]]' = None
+    right_child: 'Optional[BTNode[T]]' = None
 
     @property
-    def children(self) -> 'List[Optional[BTNode]]':
+    def children(self) -> 'List[Optional[BTNode[T]]]':
         return [self.left_child, self.right_child]
 
-    def __str__(self):
-        return f'Node ({self.id}), Left ID: {self.left_child.id}, Right ID: {self.right_child.id}'
+    def children_as_str(self) -> str:
+        return ', '.join(str(child.val) if child else '' for child in self.children)
+
+    def __str__(self) -> str:
+        return f'Node ({self.val}), children: {self.children_as_str()}'
 
 class BSTIterator(Iterator[T]):
 
-    def __init__(self, root: Optional[BTNode]):
+    def __init__(self, root: Optional[BTNode[T]]):
         self.gen = self.in_order_traversal_generator(root)
 
-    def in_order_traversal_generator(self, node: Optional[BTNode]) -> Generator:
+    def in_order_traversal_generator(self, node: Optional[BTNode[T]]) -> Generator[T, Optional[BTNode[T]], None]:
         if not node:
             raise StopIteration
         if node.left_child:
@@ -61,8 +64,8 @@ class BSTIterator(Iterator[T]):
         return next(self.gen)
 
 @dataclass
-class BinaryTree:
-    root: 'Optional[BTNode]' = None
+class BinaryTree(Generic[T]):
+    root: 'Optional[BTNode[T]]' = None
 
     def insert(self, value: T) -> None:
         if not self.root:
@@ -70,7 +73,7 @@ class BinaryTree:
         else:
             self._insert(value, self.root, 1)
 
-    def _insert(self, value: T, curr_node: BTNode, curr_depth: int) -> None:
+    def _insert(self, value: T, curr_node: BTNode[T], curr_depth: int) -> None:
         if value < curr_node.val:
             if not curr_node.left_child:
                 # insert here
@@ -91,27 +94,27 @@ class BinaryTree:
     def height(self) -> int:
         return self._height(self.root)
 
-    def _height(self, node: Optional[BTNode]) -> int:
+    def _height(self, node: Optional[BTNode[T]]) -> int:
         if not node:
             return 0
         else:
             return 1 + max(self._height(node.left_child), self._height(node.right_child))
 
-    def print_tree(self):
+    def print_tree(self) -> None:
         if self.root:
             self._print_tree(self.root)
 
-    def _print_tree(self, curr_node: Optional[BTNode]) -> None:
+    def _print_tree(self, curr_node: Optional[BTNode[T]]) -> None:
         if curr_node:
             self._print_tree(curr_node.left_child)
             print(curr_node.val)
             self._print_tree(curr_node.right_child)
 
-    def __iter__(self) -> BSTIterator:
+    def __iter__(self) -> BSTIterator[T]:
         return BSTIterator(self.root)
 
 
-def list_of_depths(bt: BinaryTree) -> Dict[int, Deque[T]]:
+def list_of_depths(bt: BinaryTree[T]) -> Dict[int, Deque[T]]:
     """Given a binary tree, design an algorithm which creates
     a linked list of all the nodes at each depth
     (e.g., if you have a tree with depth D, you'll have D linked lists).
@@ -135,7 +138,7 @@ def list_of_depths(bt: BinaryTree) -> Dict[int, Deque[T]]:
     # initialize
     for d in range(1, total_depth):
         depth_list_map[d] = deque()
-    queue: Deque[BTNode] = deque([bt.root])
+    queue: Deque[BTNode[T]] = deque([bt.root])
     # root is depth 0
     while queue:
         bt_node = queue.popleft()
@@ -150,8 +153,8 @@ def list_of_depths(bt: BinaryTree) -> Dict[int, Deque[T]]:
 
 class TestBinaryTree(unittest.TestCase):
 
-    def test_binary_search_tree_creation_height_3(self):
-        bt = BinaryTree()
+    def test_binary_search_tree_creation_height_3(self) -> None:
+        bt: BinaryTree = BinaryTree()
         bt.insert(8)
         bt.insert(4)
         bt.insert(10)
@@ -161,8 +164,8 @@ class TestBinaryTree(unittest.TestCase):
         self.assertEqual(list(bt), [2, 4, 6, 8, 10, 20])
         self.assertEqual(bt.height(), 3)
 
-    def test_binary_search_tree_creation_height_4(self):
-        bt = BinaryTree()
+    def test_binary_search_tree_creation_height_4(self) -> None:
+        bt: BinaryTree = BinaryTree()
         bt.insert(8)
         bt.insert(2)
         bt.insert(10)
@@ -175,8 +178,8 @@ class TestBinaryTree(unittest.TestCase):
 
 class TestListOfDepths(unittest.TestCase):
 
-    def test_list_of_depths_full_btree_height_3(self):
-        bt = BinaryTree()
+    def test_list_of_depths_full_btree_height_3(self) -> None:
+        bt: BinaryTree = BinaryTree()
         bt.insert(8)
         bt.insert(4)
         bt.insert(10)
