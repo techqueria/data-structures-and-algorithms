@@ -15,7 +15,7 @@ from typing import Generator, List, Iterator
 
 T = TypeVar('T', bound='Comparable')
 
-class Comparable(Protocol[T]):
+class Comparable(Protocol):
     @abstractmethod
     def __lt__(self, other: T) -> bool:
         pass
