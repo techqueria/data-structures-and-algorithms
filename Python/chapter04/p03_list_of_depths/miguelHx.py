@@ -129,7 +129,7 @@ def list_of_depths(bt: BinaryTree) -> Dict[int, Deque[T]]:
         return {}
     # first, what is depth of tree?
     total_depth = bt.height()
-    depth_list_map: Dict[int, Deque[BTNode]] = {
+    depth_list_map: Dict[int, Deque[T]] = {
         0: deque([bt.root.val])
     }
     # initialize
