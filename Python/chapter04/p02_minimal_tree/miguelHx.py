@@ -3,13 +3,14 @@
 Given a sorted (increasing order) array with unique integer elements,
 write an algorithm to create a binary search tree with minimal height.
 """
+import math
 import unittest
 
 from abc import abstractmethod
 from dataclasses import dataclass
 from typing import Generic, TypeVar
 from typing import Optional, Protocol
-from typing import Generator
+from typing import Generator, List
 
 
 T = TypeVar('T', bound='Comparable')
@@ -53,7 +54,7 @@ class BSTIterator:
 
 @dataclass
 class BinarySearchTree:
-    root: 'Optional[BSTNode]'
+    root: 'Optional[BSTNode]' = None
 
     def insert(self, value: T) -> None:
         if not self.root:
@@ -79,6 +80,15 @@ class BinarySearchTree:
         else:
             raise ValueError(f'Value {value} already exists in tree.')
 
+    def height(self) -> int:
+        return self._height(self.root)
+
+    def _height(self, node: Optional[BSTNode]) -> int:
+        if not node:
+            return 0
+        else:
+            return 1 + max(self._height(node.left_child), self._height(node.right_child))
+
     def print_tree(self):
         if self.root:
             self._print_tree(self.root)
@@ -93,10 +103,43 @@ class BinarySearchTree:
         return BSTIterator(self.root)
 
 
+
+def minimal_tree(arr: List[T], bst: Optional[BinarySearchTree] = None) -> BinarySearchTree:
+    """Given a sorted (increasing order) array
+    with unique integer elements, write an algorithm
+    to create a binary search tree with minimal height.
+    Basic steps:
+    1. get midpoint
+    2. insert midpoint into bst
+    3. turn left to get left midpoint until no more values
+    4. turn right to insert right midpoint until no more values
+
+    Time Complexity: O(n) where n is size of arr
+    Space Complexity: O(n)
+
+    Args:
+        arr (List[T]): list of unique numbers sorted, in incr. order.
+
+    Returns:
+        BinarySearchTree: A binary search tree with minimal height.
+    """
+    bst = BinarySearchTree() if not bst else bst
+    if not arr:
+        return bst
+    # middle value gets inserted first before going left or right
+    middle = math.floor(len(arr) / 2)
+    bst.insert(arr[middle])
+    left_subarr = arr[:middle]
+    right_subarr = arr[middle+1:]
+    minimal_tree(left_subarr, bst)
+    minimal_tree(right_subarr, bst)
+    return bst
+
+
 class TestBinarySearchTree(unittest.TestCase):
 
-    def test_binary_search_tree_creation(self):
-        bst = BinarySearchTree(None)
+    def test_binary_search_tree_creation_height_3(self):
+        bst = BinarySearchTree()
         bst.insert(8)
         bst.insert(4)
         bst.insert(10)
@@ -104,6 +147,28 @@ class TestBinarySearchTree(unittest.TestCase):
         bst.insert(6)
         bst.insert(20)
         self.assertEqual(list(bst), [2, 4, 6, 8, 10, 20])
+        self.assertEqual(bst.height(), 3)
+
+    def test_binary_search_tree_creation_height_4(self):
+        bst = BinarySearchTree()
+        bst.insert(8)
+        bst.insert(2)
+        bst.insert(10)
+        bst.insert(4)
+        bst.insert(6)
+        bst.insert(20)
+        self.assertEqual(list(bst), [2, 4, 6, 8, 10, 20])
+        self.assertEqual(bst.height(), 4)
+
+
+class TestMinimalTree(unittest.TestCase):
+
+    def test_minimal_tree(self):
+        # sorted, increasing order array
+        arr = [2, 4, 6, 8, 9, 10, 20]
+        bst = minimal_tree(arr)
+        self.assertEqual(list(bst), [2, 4, 6, 8, 9, 10, 20])
+        self.assertEqual(bst.height(), 3)
 
 
 if __name__ == '__main__':
