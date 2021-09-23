@@ -9,7 +9,7 @@ import unittest
 from abc import abstractmethod
 from collections import deque
 from dataclasses import dataclass
-from typing import Generic, TypeVar
+from typing import Generic, TypeVar, Dict
 from typing import Optional, Protocol, Deque
 from typing import Generator, List, Iterator
 
@@ -34,6 +34,10 @@ class BTNode(Generic[T]):
     val: T
     left_child: 'Optional[BTNode]' = None
     right_child: 'Optional[BTNode]' = None
+
+    @property
+    def children(self) -> List[BTNode]:
+        return [left_child, right_child]
 
     def __str__(self):
         return f'Node ({self.id}), Left ID: {self.left_child.id}, Right ID: {self.right_child.id}'
@@ -106,7 +110,7 @@ class BinaryTree:
         return BSTIterator(self.root)
 
 
-def list_of_depths(bt: BinaryTree) -> List[Deque[BTNode]]:
+def list_of_depths(bt: BinaryTree) -> Dict[int, Deque[BTNode]]:
     """Given a binary tree, design an algorithm which creates
     a linked list of all the nodes at each depth
     (e.g., if you have a tree with depth D, you'll have D linked lists).
@@ -116,8 +120,27 @@ def list_of_depths(bt: BinaryTree) -> List[Deque[BTNode]]:
     Returns:
         List[Deque[BTNode]]: list of nodes at each depth
     """
-    return []
-
+    # first, what is depth of tree?
+    total_depth = bt.height()
+    depth_list_map: Dict[int, Deque[BTNode]] = {
+        0: deque([bt.root])
+    }
+    # initialize
+    for d in range(1, total_depth):
+        depth_list_map[d] = deque()
+    queue: Deque[BTNode] = deque(bt.root)
+    # root is depth 0
+    curr_depth = 1
+    while queue:
+        bt_node = queue.popLeft()
+        for n in bt_node.children:
+            if not n:
+                continue
+            # otherwise,
+            queue.append(n)
+            depth_list_map[curr_depth].append(n)
+        curr_depth += 1
+    return depth_list_map
 
 
 class TestBinaryTree(unittest.TestCase):
