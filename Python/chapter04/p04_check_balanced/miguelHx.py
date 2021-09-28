@@ -116,56 +116,54 @@ class BinaryTree(Generic[T]):
         return BTIterator(self.root)
 
 
-def list_of_depths(bt: BinaryTree[T]) -> Dict[int, Deque[T]]:
-    """Given a binary tree, design an algorithm which creates
-    a linked list of all the nodes at each depth
-    (e.g., if you have a tree with depth D, you'll have D linked lists).
 
-    Note: The original problem statement said to return a list of nodes for
-    each depth. However, I am instead creating a list of node vals for each depth.
+def calculate_height_of_node(node: Optional[BTNode[T]]) -> int:
+    """This function will calculate the height of the input
+    node.
 
     Args:
-        bt (BinaryTree): input binary tree
+        node (Optional[BTNode[T]]): a node to start at.
 
     Returns:
-        List[Deque[BTNode]]: list of nodes at each depth
+        int: height of current node
     """
-    if not bt.root:
-        return {}
-    # first, what is depth of tree?
-    total_depth = bt.height()
-    depth_list_map: Dict[int, Deque[T]] = {
-        0: deque([bt.root.val])
-    }
-    # initialize
-    for d in range(1, total_depth):
-        depth_list_map[d] = deque()
-    queue: Deque[BTNode[T]] = deque([bt.root])
-    # root is depth 0
-    while queue:
-        bt_node = queue.popleft()
-        for n in bt_node.children:
-            if not n:
-                continue
-            # otherwise,
-            queue.append(n)
-            depth_list_map[n.depth].append(n.val)
-    return depth_list_map
+    if not node:
+        return 0
+    else:
+        return 1 + max(
+            calculate_height_of_node(node.left_child),
+            calculate_height_of_node(node.right_child)
+        )
 
-
-def check_balanced(bt: BinaryTree[T]) -> bool:
+def check_balanced(node: Optional[BTNode[T]]) -> bool:
     """This function will check if the
     binary tree bt is balanced. Will return True
     if the heights of the two subtrees of any node
     never differ by more than one, False otherwise.
+    Initially, we expect the input to start with the root
+    node.
 
     Args:
-        bt (BinaryTree[T]): input binary tree to check
+        node (Optional[BTNode[T]]): input binary tree to check
 
     Returns:
         bool: True if bt is balanced, False otherwise
     """
-    pass
+    # We want to calculate left and right subtree of every
+    # node. Starting at the root.
+    # Calculate left and right subtree heights of root,
+    # then do the same for every node until finished.
+    if not node:
+        # base case, empty node will be considered to be balanced.
+        return True
+    left_subtree_height = calculate_height_of_node(node.left_child)
+    right_subtree_height = calculate_height_of_node(node.right_child)
+    diff = abs(left_subtree_height - right_subtree_height)
+    if diff > 1:
+        return False
+    else:
+        return check_balanced(node.left_child) and check_balanced(node.right_child)
+
 
 class TestBinaryTree(unittest.TestCase):
 
@@ -194,8 +192,8 @@ class TestBinaryTree(unittest.TestCase):
 
 class TestCheckBalanced(unittest.TestCase):
 
-    def test_check_balanced_balanced_tree(self) -> None:
-        # balanced tree
+    def test_check_balanced_balanced_tree_diff_0(self) -> None:
+        # perfectly balanced tree
         bt: BinaryTree = BinaryTree()
         bt.insert(8)
         bt.insert(4)
@@ -206,9 +204,11 @@ class TestCheckBalanced(unittest.TestCase):
         bt.insert(20)
         self.assertEqual(list(bt), [2, 4, 6, 8, 9, 10, 20])
         self.assertEqual(bt.height(), 3)
-    
-    def test_check_balanced_non_balanced_tree(self) -> None:
-        # non balanced tree
+        result = check_balanced(bt.root)
+        self.assertEqual(result, True)
+
+    def test_check_balanced_non_balanced_tree_diff_2(self) -> None:
+        # non balanced tree, with a subtree diff of 2 at node (2)
         bt: BinaryTree = BinaryTree()
         bt.insert(8)
         bt.insert(2)
@@ -218,6 +218,27 @@ class TestCheckBalanced(unittest.TestCase):
         bt.insert(20)
         self.assertEqual(list(bt), [2, 4, 6, 8, 10, 20])
         self.assertEqual(bt.height(), 4)
+        # false because at node 2, left subtree height is 0
+        # while right subtree has a height of 2.
+        result = check_balanced(bt.root)
+        self.assertEqual(result, False)
+
+    def test_check_balanced_balanced_tree_diff_1(self) -> None:
+        # balanced tree, with a subtree diff of 1 at node (2)
+        bt: BinaryTree = BinaryTree()
+        bt.insert(8)
+        bt.insert(2)
+        bt.insert(10)
+        bt.insert(4)
+        bt.insert(6)
+        bt.insert(20)
+        bt.insert(1)
+        self.assertEqual(list(bt), [1, 2, 4, 6, 8, 10, 20])
+        self.assertEqual(bt.height(), 4)
+        # false because at node 2, left subtree height is 0
+        # while right subtree has a height of 2.
+        result = check_balanced(bt.root)
+        self.assertEqual(result, True)
 
 
 if __name__ == '__main__':
