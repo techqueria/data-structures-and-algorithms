@@ -69,6 +69,63 @@ class BTIterator(Iterator[T]):
 class BinaryTree(Generic[T]):
     root: 'Optional[BTNode[T]]' = None
 
+    def insert_left(self, value: T) -> None:
+        if not self.root:
+            self.root = BTNode(value)
+        else:
+            self._insert_left(value, self.root, 1)
+
+    def _insert_left(self, value: T, curr_node: BTNode[T], curr_depth: int) -> None:
+        if not curr_node.left_child:
+            curr_node.left_child = BTNode(value, curr_depth)
+        elif not curr_node.right_child:
+            curr_node.right_child = BTNode(value, curr_depth)
+        elif value == curr_node.val:
+            raise ValueError(f'Value {value} already exists in tree.')
+        else:
+            self._insert_left(value, curr_node.left_child, curr_depth + 1)
+
+    def insert_right(self, value: T) -> None:
+        if not self.root:
+            self.root = BTNode(value)
+        else:
+            self._insert_right(value, self.root, 1)
+
+    def _insert_right(self, value: T, curr_node: BTNode[T], curr_depth: int) -> None:
+        if not curr_node.right_child:
+            curr_node.right_child = BTNode(value, curr_depth)
+        elif not curr_node.left_child:
+            curr_node.left_child = BTNode(value, curr_depth)
+        elif value == curr_node.val:
+            raise ValueError(f'Value {value} already exists in tree.')
+        else:
+            self._insert_right(value, curr_node.right_child, curr_depth + 1)
+
+    def height(self) -> int:
+        return self._height(self.root)
+
+    def _height(self, node: Optional[BTNode[T]]) -> int:
+        if not node:
+            return 0
+        else:
+            return 1 + max(self._height(node.left_child), self._height(node.right_child))
+
+    def print_tree(self) -> None:
+        if self.root:
+            self._print_tree(self.root)
+
+    def _print_tree(self, curr_node: Optional[BTNode[T]]) -> None:
+        if curr_node:
+            self._print_tree(curr_node.left_child)
+            print(curr_node.val)
+            self._print_tree(curr_node.right_child)
+
+    def __iter__(self) -> BTIterator[T]:
+        return BTIterator(self.root)
+
+@dataclass
+class BinarySearchTree(BinaryTree[T]):
+
     def insert(self, value: T) -> None:
         if not self.root:
             self.root = BTNode(value)
@@ -93,28 +150,68 @@ class BinaryTree(Generic[T]):
         else:
             raise ValueError(f'Value {value} already exists in tree.')
 
-    def height(self) -> int:
-        return self._height(self.root)
 
-    def _height(self, node: Optional[BTNode[T]]) -> int:
-        if not node:
-            return 0
-        else:
-            return 1 + max(self._height(node.left_child), self._height(node.right_child))
+def _calculate_max_value_of_subtree(node: Optional[BTNode[T]], max_value: T) -> T:
+    """This helper function will calculate the max value between
+    the current node's value and its subtree.
 
-    def print_tree(self) -> None:
-        if self.root:
-            self._print_tree(self.root)
+    Args:
+        node (Optional[BTNode[T]]): a binary tree node
+        max_value (T): max value used to pass down to each node
 
-    def _print_tree(self, curr_node: Optional[BTNode[T]]) -> None:
-        if curr_node:
-            self._print_tree(curr_node.left_child)
-            print(curr_node.val)
-            self._print_tree(curr_node.right_child)
+    Returns:
+        T: max value of left/right subtree and current node
+    """
+    if not node:
+        return max_value
+    else:
+        return max(
+            node.val,
+            _calculate_max_value_of_subtree(node.left_child, max_value),
+            _calculate_max_value_of_subtree(node.right_child, max_value)
+        )
 
-    def __iter__(self) -> BTIterator[T]:
-        return BTIterator(self.root)
+def _calculate_min_value_of_subtree(node: Optional[BTNode[T]], min_value: T) -> T:
+    """Same as _calculate_max_value_of_subtree but min instead of max.
 
+    Args:
+        node (Optional[BTNode[T]]): binary tree node
+        min_value (T): min value used to pass to each node
+
+    Returns:
+        T: min value of left/right subtree and current node
+    """
+    if not node:
+        return min_value
+    else:
+        return min(
+            node.val,
+            _calculate_min_value_of_subtree(node.left_child, min_value),
+            _calculate_min_value_of_subtree(node.right_child, min_value)
+        )
+
+def _validate_bst(node: Optional[BTNode[T]]) -> bool:
+    """Helper function to validate_bst. Difference is,
+    this function takes in a node rather than a binary tree
+    instance. This will handle the logic for checking if we have
+    a binary search tree or not.
+
+    Args:
+        node (Optional[BTNode[T]]): current node to validate left and right subtrees
+
+    Returns:
+        bool: True if bst properties are intact, False otherwise
+    """
+    if not node:
+        # empty node is considered a binary search tree
+        return True
+    max_val_left_subtree = _calculate_max_value_of_subtree(node.left_child, node.val)
+    min_val_right_subtree = _calculate_min_value_of_subtree(node.right_child, node.val)
+    if max_val_left_subtree > node.val:
+        return False
+    if min_val_right_subtree < node.val:
+        return False
+    return _validate_bst(node.left_child) and _validate_bst(node.right_child)
 
 
 def validate_bst(bt: BinaryTree[T]) -> bool:
@@ -136,49 +233,75 @@ def validate_bst(bt: BinaryTree[T]) -> bool:
     Returns:
         bool: True if tree is a binary search tree, False otherwise
     """
-    return False
+    return _validate_bst(bt.root)
 
 class TestBinarySearchTree(unittest.TestCase):
 
     def test_binary_search_tree_creation_height_3(self) -> None:
-        bt: BinaryTree = BinaryTree()
-        bt.insert(8)
-        bt.insert(4)
-        bt.insert(10)
-        bt.insert(2)
-        bt.insert(6)
-        bt.insert(20)
-        self.assertEqual(list(bt), [2, 4, 6, 8, 10, 20])
-        self.assertEqual(bt.height(), 3)
+        bst: BinarySearchTree = BinarySearchTree()
+        bst.insert(8)
+        bst.insert(4)
+        bst.insert(10)
+        bst.insert(2)
+        bst.insert(6)
+        bst.insert(20)
+        self.assertEqual(list(bst), [2, 4, 6, 8, 10, 20])
+        self.assertEqual(bst.height(), 3)
 
     def test_binary_search_tree_creation_height_4(self) -> None:
-        bt: BinaryTree = BinaryTree()
-        bt.insert(8)
-        bt.insert(2)
-        bt.insert(10)
-        bt.insert(4)
-        bt.insert(6)
-        bt.insert(20)
-        self.assertEqual(list(bt), [2, 4, 6, 8, 10, 20])
-        self.assertEqual(bt.height(), 4)
+        bst: BinarySearchTree = BinarySearchTree()
+        bst.insert(8)
+        bst.insert(2)
+        bst.insert(10)
+        bst.insert(4)
+        bst.insert(6)
+        bst.insert(20)
+        self.assertEqual(list(bst), [2, 4, 6, 8, 10, 20])
+        self.assertEqual(bst.height(), 4)
 
 
 class TestValidateBST(unittest.TestCase):
 
     def test_validate_bst_true_case(self) -> None:
-        bt: BinaryTree = BinaryTree()
-        bt.insert(8)
-        bt.insert(4)
-        bt.insert(10)
-        bt.insert(2)
-        bt.insert(6)
-        bt.insert(20)
-        self.assertEqual(list(bt), [2, 4, 6, 8, 10, 20])
-        self.assertEqual(bt.height(), 3)
-
-        result = validate_bst(bt)
+        bst: BinarySearchTree = BinarySearchTree()
+        bst.insert(8)
+        bst.insert(4)
+        bst.insert(10)
+        bst.insert(2)
+        bst.insert(6)
+        bst.insert(20)
+        self.assertEqual(list(bst), [2, 4, 6, 8, 10, 20])
+        self.assertEqual(bst.height(), 3)
+        result = validate_bst(bst)
         self.assertEqual(result, True)
 
+    def test_validate_bst_false_case_left_subtree(self) -> None:
+        bt: BinaryTree = BinaryTree()
+        bt.insert_left(8)
+        bt.insert_left(4)
+        bt.insert_left(10)
+        bt.insert_left(2)
+        bt.insert_left(1000)
+        bt.insert_right(20)
+        bt.insert_right(9)
+        self.assertEqual(list(bt), [2, 4, 1000, 8, 9, 10, 20])
+        self.assertEqual(bt.height(), 3)
+        result = validate_bst(bt)
+        self.assertEqual(result, False)
+
+    def test_validate_bst_false_case_right_subtree(self) -> None:
+        bt: BinaryTree = BinaryTree()
+        bt.insert_left(8)
+        bt.insert_left(4)
+        bt.insert_left(10)
+        bt.insert_left(2)
+        bt.insert_left(1000)
+        bt.insert_right(-100)
+        bt.insert_right(9)
+        self.assertEqual(list(bt), [2, 4, 1000, 8, 9, 10, -100])
+        self.assertEqual(bt.height(), 3)
+        result = validate_bst(bt)
+        self.assertEqual(result, False)
 
 if __name__ == '__main__':
     unittest.main()
