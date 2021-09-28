@@ -46,7 +46,7 @@ class BTNode(Generic[T]):
     def __str__(self) -> str:
         return f'Node ({self.val}), children: {self.children_as_str()}'
 
-class BSTIterator(Iterator[T]):
+class BTIterator(Iterator[T]):
 
     def __init__(self, root: Optional[BTNode[T]]):
         self.gen = self.in_order_traversal_generator(root)
@@ -110,8 +110,8 @@ class BinaryTree(Generic[T]):
             print(curr_node.val)
             self._print_tree(curr_node.right_child)
 
-    def __iter__(self) -> BSTIterator[T]:
-        return BSTIterator(self.root)
+    def __iter__(self) -> BTIterator[T]:
+        return BTIterator(self.root)
 
 
 def list_of_depths(bt: BinaryTree[T]) -> Dict[int, Deque[T]]:
@@ -123,7 +123,7 @@ def list_of_depths(bt: BinaryTree[T]) -> Dict[int, Deque[T]]:
     each depth. However, I am instead creating a list of node vals for each depth.
 
     Args:
-        bst (BinaryTree): input binary tree
+        bt (BinaryTree): input binary tree
 
     Returns:
         List[Deque[BTNode]]: list of nodes at each depth
