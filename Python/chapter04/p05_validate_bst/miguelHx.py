@@ -303,5 +303,43 @@ class TestValidateBST(unittest.TestCase):
         result = validate_bst(bt)
         self.assertEqual(result, False)
 
+    def test_calculate_max_value_of_subtree(self) -> None:
+        bt: BinaryTree = BinaryTree()
+        bt.insert_left(8)
+        bt.insert_left(4)
+        bt.insert_left(10)
+        bt.insert_left(2)
+        bt.insert_left(1000)
+        bt.insert_right(20)
+        bt.insert_right(9)
+        # expected result of left subtree is be 1000
+        result = _calculate_max_value_of_subtree(bt.root.left_child, bt.root.left_child.val)
+        self.assertEqual(result, 1000)
+        # expected result of overall max value is still 1000
+        result = _calculate_max_value_of_subtree(bt.root, bt.root.val)
+        self.assertEqual(result, 1000)
+        # expected result of right subtree is 20
+        result = _calculate_max_value_of_subtree(bt.root.right_child, bt.root.right_child.val)
+        self.assertEqual(result, 20)
+
+    def test_calculate_min_value_of_subtree(self) -> None:
+        bt: BinaryTree = BinaryTree()
+        bt.insert_left(8)
+        bt.insert_left(4)
+        bt.insert_left(10)
+        bt.insert_left(2)
+        bt.insert_left(1000)
+        bt.insert_right(-100)
+        bt.insert_right(9)
+        # left subtree min should be 2
+        result = _calculate_min_value_of_subtree(bt.root.left_child, bt.root.left_child.val)
+        self.assertEqual(result, 2)
+        # overall min value should be -100
+        result = _calculate_min_value_of_subtree(bt.root, bt.root.val)
+        self.assertEqual(result, -100)
+        # right subtree min should be -100
+        result = _calculate_min_value_of_subtree(bt.root.right_child, bt.root.right_child.val)
+        self.assertEqual(result, -100)
+
 if __name__ == '__main__':
     unittest.main()
