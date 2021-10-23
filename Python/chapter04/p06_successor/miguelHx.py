@@ -36,6 +36,7 @@ class BTNode(Generic[T]):
     depth: int = 0
     left_child: 'Optional[BTNode[T]]' = None
     right_child: 'Optional[BTNode[T]]' = None
+    parent: 'Optional[BTNode[T]]' = None
 
     @property
     def children(self) -> 'List[Optional[BTNode[T]]]':
@@ -77,8 +78,10 @@ class BinaryTree(Generic[T]):
     def _insert_left(self, value: T, curr_node: BTNode[T], curr_depth: int) -> None:
         if not curr_node.left_child:
             curr_node.left_child = BTNode(value, curr_depth)
+            curr_node.left_child.parent = curr_node
         elif not curr_node.right_child:
             curr_node.right_child = BTNode(value, curr_depth)
+            curr_node.right_child.parent = curr_node
         elif value == curr_node.val:
             raise ValueError(f'Value {value} already exists in tree.')
         else:
@@ -93,8 +96,10 @@ class BinaryTree(Generic[T]):
     def _insert_right(self, value: T, curr_node: BTNode[T], curr_depth: int) -> None:
         if not curr_node.right_child:
             curr_node.right_child = BTNode(value, curr_depth)
+            curr_node.right_child.parent = curr_node
         elif not curr_node.left_child:
             curr_node.left_child = BTNode(value, curr_depth)
+            curr_node.left_child.parent = curr_node
         elif value == curr_node.val:
             raise ValueError(f'Value {value} already exists in tree.')
         else:
@@ -136,6 +141,7 @@ class BinarySearchTree(BinaryTree[T]):
             if not curr_node.left_child:
                 # insert here
                 curr_node.left_child = BTNode(value, curr_depth)
+                curr_node.left_child.parent = curr_node
             else:
                 # otherwise, keep searching left subtree
                 self._insert(value, curr_node.left_child, curr_depth + 1)
@@ -143,6 +149,7 @@ class BinarySearchTree(BinaryTree[T]):
             if not curr_node.right_child:
                 # insert here
                 curr_node.right_child = BTNode(value, curr_depth)
+                curr_node.right_child.parent = curr_node
             else:
                 # otherwise, keep searching right subtree
                 self._insert(value, curr_node.right_child, curr_depth + 1)
@@ -198,12 +205,28 @@ def successor(node: BTNode[T]) -> Optional[BTNode[T]]:
     as the next node in in-order traversal of the binary tree.
     In-order successor is NULL for the last node in in-order
     traversal.
+
+    If the right subtree of the input node is not None, then
+    the successor will lie in the right subtree.
+
+    If the right subtree of the input node is None, then the
+    successor is one of the ancestors. That is, the parent
+    of the first node up the parent chain where that node is the
+    left child of its parent.
+
     Args:
         node (BTNode[T]): node of interest
 
     Returns:
         Optional[BTNode[T]]: successor to input node
     """
+
+    # first, check right subtree
+    if node.right_child:
+        return _calculate_min_value_of_subtree(node, node.val)
+    
+    # otherwise, go up the parent tree
+
     pass
 
 
