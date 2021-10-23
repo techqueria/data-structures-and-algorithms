@@ -224,7 +224,7 @@ def successor(node: BTNode[T]) -> Optional[T]:
     if node.right_child:
         return _calculate_min_value_of_subtree(node.right_child, node.right_child.val)
     # check if current node is left child of parent
-    if node == node.parent.left_child:
+    if node.parent and node == node.parent.left_child:
         return node.parent.val
     # otherwise, go up the parent tree
     p = node.parent
@@ -318,9 +318,11 @@ class TestSuccessor(unittest.TestCase):
         bst.insert(22)
         self.assertEqual(list(bst), [4, 8, 10, 12, 14, 20, 22])
         self.assertEqual(bst.height(), 4)
-        leftmost_node = bst.root.left_child.left_child
-        self.assertEqual(leftmost_node.val, 4)
-        self.assertEqual(successor(leftmost_node), 8)
+        if bst.root and bst.root.left_child:
+            leftmost_node = bst.root.left_child.left_child
+        if leftmost_node:
+            self.assertEqual(leftmost_node.val, 4)
+            self.assertEqual(successor(leftmost_node), 8)
 
     def test_successor_of_root(self) -> None:
         bst: BinarySearchTree = BinarySearchTree()
@@ -333,8 +335,9 @@ class TestSuccessor(unittest.TestCase):
         bst.insert(22)
         self.assertEqual(list(bst), [4, 8, 10, 12, 14, 20, 22])
         self.assertEqual(bst.height(), 4)
-        self.assertEqual(bst.root.val, 20)
-        self.assertEqual(successor(bst.root), 22)
+        if bst.root:
+            self.assertEqual(bst.root.val, 20)
+            self.assertEqual(successor(bst.root), 22)
 
     def test_successor_of_8(self) -> None:
         bst: BinarySearchTree = BinarySearchTree()
@@ -347,10 +350,12 @@ class TestSuccessor(unittest.TestCase):
         bst.insert(22)
         self.assertEqual(list(bst), [4, 8, 10, 12, 14, 20, 22])
         self.assertEqual(bst.height(), 4)
-        self.assertEqual(bst.root.val, 20)
-        node_val_eight = bst.root.left_child
-        self.assertEqual(node_val_eight.val, 8)
-        self.assertEqual(successor(node_val_eight), 10)
+        if bst.root:
+            self.assertEqual(bst.root.val, 20)
+            node_val_eight = bst.root.left_child
+        if node_val_eight:
+            self.assertEqual(node_val_eight.val, 8)
+            self.assertEqual(successor(node_val_eight), 10)
 
     def test_successor_of_10_leaf(self) -> None:
         bst: BinarySearchTree = BinarySearchTree()
@@ -363,10 +368,13 @@ class TestSuccessor(unittest.TestCase):
         bst.insert(22)
         self.assertEqual(list(bst), [4, 8, 10, 12, 14, 20, 22])
         self.assertEqual(bst.height(), 4)
-        self.assertEqual(bst.root.val, 20)
-        node_val_ten_leaf = bst.root.left_child.right_child.left_child
-        self.assertEqual(node_val_ten_leaf.val, 10)
-        self.assertEqual(successor(node_val_ten_leaf), 12)
+        if bst.root:
+            self.assertEqual(bst.root.val, 20)
+        if bst.root and bst.root.left_child and bst.root.left_child.right_child:
+            node_val_ten_leaf = bst.root.left_child.right_child.left_child
+        if node_val_ten_leaf:
+            self.assertEqual(node_val_ten_leaf.val, 10)
+            self.assertEqual(successor(node_val_ten_leaf), 12)
 
     def test_successor_of_12(self) -> None:
         bst: BinarySearchTree = BinarySearchTree()
@@ -379,10 +387,13 @@ class TestSuccessor(unittest.TestCase):
         bst.insert(22)
         self.assertEqual(list(bst), [4, 8, 10, 12, 14, 20, 22])
         self.assertEqual(bst.height(), 4)
-        self.assertEqual(bst.root.val, 20)
-        node_val_twelve = bst.root.left_child.right_child
-        self.assertEqual(node_val_twelve.val, 12)
-        self.assertEqual(successor(node_val_twelve), 14)
+        if bst.root:
+            self.assertEqual(bst.root.val, 20)
+        if bst.root and bst.root.left_child:
+            node_val_twelve = bst.root.left_child.right_child
+        if node_val_twelve:
+            self.assertEqual(node_val_twelve.val, 12)
+            self.assertEqual(successor(node_val_twelve), 14)
 
     def test_successor_of_14_leaf(self) -> None:
         bst: BinarySearchTree = BinarySearchTree()
@@ -395,11 +406,13 @@ class TestSuccessor(unittest.TestCase):
         bst.insert(22)
         self.assertEqual(list(bst), [4, 8, 10, 12, 14, 20, 22])
         self.assertEqual(bst.height(), 4)
-        self.assertEqual(bst.root.val, 20)
-        node_val_14_leaf = bst.root.left_child.right_child.right_child
-        self.assertEqual(node_val_14_leaf.val, 14)
-        # self.assertEqual(successor(node_val_14_leaf), 20)
-        self.assertEqual(bst.root.left_child.parent.val, 20)
+        if bst.root:
+            self.assertEqual(bst.root.val, 20)
+        if bst.root and bst.root.left_child and bst.root.left_child.right_child:
+            node_val_14_leaf = bst.root.left_child.right_child.right_child
+        if node_val_14_leaf:
+            self.assertEqual(node_val_14_leaf.val, 14)
+            self.assertEqual(successor(node_val_14_leaf), 20)
 
     def test_successor_of_rightmost_element(self) -> None:
         bst: BinarySearchTree = BinarySearchTree()
@@ -412,10 +425,13 @@ class TestSuccessor(unittest.TestCase):
         bst.insert(22)
         self.assertEqual(list(bst), [4, 8, 10, 12, 14, 20, 22])
         self.assertEqual(bst.height(), 4)
-        rightmost_node = bst.root.right_child
-        self.assertEqual(rightmost_node.val, 22)
-        # last element has no successor
-        self.assertEqual(successor(rightmost_node), None)
+        if bst.root:
+            self.assertEqual(bst.root.val, 20)
+            rightmost_node = bst.root.right_child
+        if rightmost_node:
+            self.assertEqual(rightmost_node.val, 22)
+            # last element has no successor
+            self.assertEqual(successor(rightmost_node), None)
 
 
 if __name__ == '__main__':
