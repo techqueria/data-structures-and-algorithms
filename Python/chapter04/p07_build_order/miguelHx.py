@@ -16,7 +16,7 @@ import unittest
 
 from collections import deque
 from dataclasses import dataclass
-from typing import List, Deque, Set
+from typing import List, Deque, Set, Tuple
 
 
 @dataclass
@@ -118,6 +118,30 @@ def route_between_nodes(src: Node, dest: Node) -> bool:
     """
     ids_visited: List[int] = bfs_search_for_dest(src, dest)
     return dest.id in ids_visited
+
+
+def build_order(projects: List[str], dependencies: List[Tuple[str, str]]) -> List[str]:
+    """Given a list of projects and dependencies,
+    this function will find a build order that will
+    allow the projects to be build given the dependencies.
+    If there is no valid build order, an error will be raised.
+
+    EXAMPLE
+    Input:
+        projects:  a, b, c, d, e, f
+        dependencies: (a, d), (f, b), (b, d), (f, a), (d, c)
+    Output:
+        f, e, a, b, d, c
+
+    Args:
+        projects (List[str]): a list of projects
+        dependencies (List[Tuple[str, str]]):
+            a list of pairs of dependencies (2nd project is dependent on 1st)
+
+    Returns:
+        List[str]: a valid build order
+    """
+    pass
 
 
 class TestRouteBetweenNodes(unittest.TestCase):
