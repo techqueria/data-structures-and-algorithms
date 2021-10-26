@@ -41,7 +41,7 @@ class Node:
         return ', '.join(str(child.id) for child in self.children)
 
     def print_children(self):
-        logging.debug('Adjacency list for node %s: %s', self.id, self.children_as_str())
+        print('Adjacency list for node {}: {}'.format(self.id, self.children_as_str()))
 
     def __str__(self):
         return f'Node ({self.id}), children: {self.children_as_str()}'
@@ -120,11 +120,40 @@ def route_between_nodes(src: Node, dest: Node) -> bool:
     return dest.id in ids_visited
 
 
+@dataclass
+class DependencyNode:
+    id: str
+    children: 'List[DependencyNode]'
+
+    def add_child(self, *nodes: 'DependencyNode'):
+        for node in nodes:
+            self.children.append(node)
+
+    def children_as_str(self) -> str:
+        return ', '.join(str(child.id) for child in self.children)
+
+    def print_children(self):
+        print('Adjacency list for node {}: {}'.format(self.id, self.children_as_str()))
+
+    def __str__(self):
+        return f'Node ({self.id}), children: {self.children_as_str()}'
+
+@dataclass
+class DependencyGraph:
+    nodes: 'List[DependencyNode]'
+
+    def print_graph(self):
+        for node in self.nodes:
+            node.print_children()
+
+
 def build_order(projects: List[str], dependencies: List[Tuple[str, str]]) -> List[str]:
     """Given a list of projects and dependencies,
     this function will find a build order that will
     allow the projects to be build given the dependencies.
     If there is no valid build order, an error will be raised.
+    All of a project's dependencies must be built before the project
+    is.
 
     EXAMPLE
     Input:
@@ -141,8 +170,27 @@ def build_order(projects: List[str], dependencies: List[Tuple[str, str]]) -> Lis
     Returns:
         List[str]: a valid build order
     """
-    pass
+    # 0. define output
+    output: List[str] = []
+    # 1. build a dependency graph
+    project_to_node_map = {}
+    for p in projects:
+        project_to_node_map[p] = DependencyNode(p, [])
+    for d in dependencies:
+        p1 = d[0]
+        p2 = d[1]
+        project_to_node_map[p2].add_child(project_to_node_map[p1])
+    nodes = []
+    for node in project_to_node_map.values():
+        nodes.append(node)
+    g = DependencyGraph(nodes)
+    print("BUILT GRAPH, HERE IS RESULT:")
+    g.print_graph()
 
+    # 2. define set to keep track of what we already built
+    projects_built: Set[str] = set()
+    # 3. perform a breadth-first search to build proper ordering
+    return output
 
 class TestRouteBetweenNodes(unittest.TestCase):
     def test_route_between_nodes(self):
@@ -165,6 +213,21 @@ class TestRouteBetweenNodes(unittest.TestCase):
         self.assertFalse(route_between_nodes(n1, n0))
         # There is a route from node 2 to node 3
         self.assertTrue(route_between_nodes(n2, n3))
+
+
+class TestBuildOrder(unittest.TestCase):
+    def test_build_order_ctci_example(self) -> None:
+        projects = ['a', 'b', 'c', 'd', 'e', 'f']
+        dependencies = [
+            ('a', 'd'),
+            ('f', 'b'),
+            ('b', 'd'),
+            ('f', 'a'),
+            ('d', 'c')
+        ]
+        result = build_order(projects, dependencies)
+        self.assertEqual(result, ['f', 'e', 'a', 'b', 'd', 'c'])
+
 
 class TestMyGraphSearch(unittest.TestCase):
 
