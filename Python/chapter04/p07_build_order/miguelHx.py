@@ -16,7 +16,7 @@ import unittest
 
 from collections import deque
 from dataclasses import dataclass
-from typing import List, Deque, Set, Tuple
+from typing import List, Deque, Set, Tuple, Dict
 
 
 @dataclass
@@ -173,7 +173,7 @@ def build_order(projects: List[str], dependencies: List[Tuple[str, str]]) -> Lis
     # 0. define output
     output: List[str] = []
     # 1. build a dependency graph
-    project_to_node_map = {}
+    project_to_node_map: Dict[str, DependencyNode] = {}
     for p in projects:
         project_to_node_map[p] = DependencyNode(p, [])
     for d in dependencies:
@@ -183,13 +183,50 @@ def build_order(projects: List[str], dependencies: List[Tuple[str, str]]) -> Lis
     nodes = []
     for node in project_to_node_map.values():
         nodes.append(node)
-    g = DependencyGraph(nodes)
-    print("BUILT GRAPH, HERE IS RESULT:")
-    g.print_graph()
+    # g = DependencyGraph(nodes)
+    # print("BUILT GRAPH, HERE IS RESULT:")
+    # g.print_graph()
 
     # 2. define set to keep track of what we already built
     projects_built: Set[str] = set()
-    # 3. perform a breadth-first search to build proper ordering
+    # 3. for each project node, perform a depth-first search
+    for project_node in project_to_node_map.values():
+        # 4. perform a depth first search
+        visited = set()
+        stack = []
+        stack.append(project_node)
+        not_built = []
+        while stack:
+            node = stack.pop()
+            if node.id not in visited:
+                visited.add(node.id)
+            # get adjacent vertices of popped node.
+            # if it has not been visited, push it to stack
+            for n in node.children:
+                if n.id not in visited and n.id not in projects_built:
+                    stack.append(n)
+            # check if all children are built.
+            all_adjacent_built = True
+            for n in node.children:
+                if n.id not in projects_built:
+                    all_adjacent_built = False
+            # if all adjacent nodes are built,
+            # then this node can be safely built.
+            if all_adjacent_built and node.id not in projects_built:
+                projects_built.add(node.id)
+                output.append(node.id)
+            else:
+                not_built.append(node)
+        # after traversing, we may have built all children.
+        # check nodes that haven't been built from this traversal.
+        for node in not_built:
+            all_adjacent_built = True
+            for n in node.children:
+                if n.id not in projects_built:
+                    all_adjacent_built = False
+            if all_adjacent_built and node.id not in projects_built:
+                projects_built.add(node.id)
+                output.append(node.id)
     return output
 
 class TestRouteBetweenNodes(unittest.TestCase):
@@ -226,7 +263,10 @@ class TestBuildOrder(unittest.TestCase):
             ('d', 'c')
         ]
         result = build_order(projects, dependencies)
-        self.assertEqual(result, ['f', 'e', 'a', 'b', 'd', 'c'])
+        # this is the textbook answer, but it is possible to get a
+        # different valid build order (depends on algorithm)
+        # self.assertEqual(result, ['f', 'e', 'a', 'b', 'd', 'c'])
+        self.assertEqual(result, ['f', 'a', 'b', 'd', 'c', 'e'])
 
 
 class TestMyGraphSearch(unittest.TestCase):
