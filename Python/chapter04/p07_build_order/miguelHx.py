@@ -129,6 +129,8 @@ def build_order(projects: List[str], dependencies: List[Tuple[str, str]]) -> Lis
                     all_adjacent_built = False
             # if all adjacent nodes are built,
             # then this node can be safely built.
+            # otherwise, add to not_built list to check
+            # if children are built after traversal
             if all_adjacent_built and node.id not in projects_built:
                 projects_built.add(node.id)
                 output.append(node.id)
